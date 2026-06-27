@@ -135,6 +135,21 @@ export const learnerGuardianFormSchema = z.object({
   address: z.string().max(500).trim().optional(),
 });
 
+export const promotionBatchFormSchema = z
+  .object({
+    sourceSchoolYearId: z.uuid(),
+    targetSchoolYearId: z.uuid(),
+    sourceGradeLevelId: z.coerce.number().int().positive().optional(),
+    sourceSectionId: z.uuid().optional(),
+    targetGradeLevelId: z.coerce.number().int().positive(),
+    targetSectionId: z.uuid().optional(),
+    enrolledOn: z.iso.date().optional(),
+  })
+  .refine((value) => value.sourceSchoolYearId !== value.targetSchoolYearId, {
+    message: "Choose different source and target school years.",
+    path: ["targetSchoolYearId"],
+  });
+
 export const attendanceRecordSchema = z.object({
   enrollmentId: z.uuid(),
   attendanceDateId: z.uuid(),
