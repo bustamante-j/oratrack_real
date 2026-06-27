@@ -78,3 +78,21 @@ export async function requireRole(pathname: string) {
 
   return session;
 }
+
+export async function requireAdminProfile() {
+  const session = await getSessionProfile();
+
+  if (session.kind === "unconfigured") {
+    throw new Error("Supabase is not configured.");
+  }
+
+  if (session.kind === "anonymous") {
+    redirect("/login");
+  }
+
+  if (session.profile.role !== "admin_principal") {
+    redirect(getRoleLandingPath(session.profile.role));
+  }
+
+  return session.profile;
+}

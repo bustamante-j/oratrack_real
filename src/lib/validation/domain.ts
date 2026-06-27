@@ -13,6 +13,42 @@ export const teacherAccountSchema = z.object({
   isActive: z.boolean().default(true),
 });
 
+export const schoolYearFormSchema = z
+  .object({
+    name: z.string().min(3).max(40).trim(),
+    startsOn: z.iso.date(),
+    endsOn: z.iso.date(),
+  })
+  .refine((value) => value.startsOn < value.endsOn, {
+    message: "School year start date must be before the end date.",
+    path: ["endsOn"],
+  });
+
+export const schoolYearStatusFormSchema = z.object({
+  id: z.uuid(),
+  status: z.enum(["draft", "active", "closed"]),
+});
+
+export const subjectFormSchema = z.object({
+  code: z.string().min(2).max(30).trim(),
+  name: z.string().min(2).max(120).trim(),
+  gradeLevelId: z.coerce.number().int().positive().optional(),
+});
+
+export const sectionFormSchema = z.object({
+  schoolYearId: z.uuid(),
+  gradeLevelId: z.coerce.number().int().positive(),
+  name: z.string().min(1).max(80).trim(),
+  adviserId: z.uuid().optional(),
+  room: z.string().max(80).trim().optional(),
+});
+
+export const sectionSubjectFormSchema = z.object({
+  sectionId: z.uuid(),
+  subjectId: z.uuid(),
+  teacherId: z.uuid().optional(),
+});
+
 export const learnerSchema = z.object({
   lrn: z.string().min(1).max(20).trim(),
   firstName: z.string().min(1).max(80).trim(),
