@@ -1,5 +1,6 @@
 import type { AppRole } from "@/types/domain";
 import type { AttendanceStatus } from "@/types/domain";
+import type { InterventionStatus, RatingLevel } from "@/types/domain";
 
 export type Json =
   | string
@@ -29,6 +30,10 @@ export type Database = {
       school_year_status: "draft" | "active" | "closed";
       learner_status: "active" | "inactive" | "archived" | "transferred";
       attendance_status: AttendanceStatus;
+      rating_level: RatingLevel;
+      intervention_status: InterventionStatus;
+      risk_type: "attendance" | "academic" | "literacy" | "numeracy" | "manual";
+      risk_severity: "low" | "moderate" | "high" | "critical";
     };
     Tables: {
       profiles: Table<
@@ -364,6 +369,104 @@ export type Database = {
           field_name?: string | null;
           message: string;
           raw_value?: Json;
+        }
+      >;
+      literacy_numeracy_records: Table<
+        {
+          id: string;
+          enrollment_id: string;
+          school_year_id: string;
+          literacy_rating: RatingLevel;
+          numeracy_rating: RatingLevel;
+          remarks: string | null;
+          encoded_by: string | null;
+          encoded_at: string;
+          updated_at: string;
+        },
+        {
+          id?: string;
+          enrollment_id: string;
+          school_year_id: string;
+          literacy_rating: RatingLevel;
+          numeracy_rating: RatingLevel;
+          remarks?: string | null;
+          encoded_by?: string | null;
+        }
+      >;
+      risk_flags: Table<
+        {
+          id: string;
+          learner_id: string;
+          enrollment_id: string | null;
+          risk_type:
+            | "attendance"
+            | "academic"
+            | "literacy"
+            | "numeracy"
+            | "manual";
+          severity: "low" | "moderate" | "high" | "critical";
+          reason: string;
+          detected_at: string;
+          resolved_at: string | null;
+          created_by: string | null;
+        },
+        {
+          id?: string;
+          learner_id: string;
+          enrollment_id?: string | null;
+          risk_type:
+            | "attendance"
+            | "academic"
+            | "literacy"
+            | "numeracy"
+            | "manual";
+          severity?: "low" | "moderate" | "high" | "critical";
+          reason: string;
+          resolved_at?: string | null;
+          created_by?: string | null;
+        }
+      >;
+      interventions: Table<
+        Timestamped & {
+          id: string;
+          learner_id: string;
+          enrollment_id: string | null;
+          teacher_id: string;
+          category: string;
+          status: InterventionStatus;
+          started_on: string;
+          follow_up_on: string | null;
+          notes: string;
+        },
+        {
+          id?: string;
+          learner_id: string;
+          enrollment_id?: string | null;
+          teacher_id: string;
+          category: string;
+          status?: InterventionStatus;
+          started_on?: string;
+          follow_up_on?: string | null;
+          notes: string;
+        }
+      >;
+      intervention_updates: Table<
+        {
+          id: string;
+          intervention_id: string;
+          status: InterventionStatus | null;
+          notes: string;
+          follow_up_on: string | null;
+          created_by: string;
+          created_at: string;
+        },
+        {
+          id?: string;
+          intervention_id: string;
+          status?: InterventionStatus | null;
+          notes: string;
+          follow_up_on?: string | null;
+          created_by: string;
         }
       >;
       audit_logs: Table<

@@ -16,6 +16,24 @@ export const attendanceStatuses = [
 
 export type AttendanceStatus = (typeof attendanceStatuses)[number];
 
+export const ratingLevels = [
+  "beginning",
+  "developing",
+  "proficient",
+  "advanced",
+] as const;
+
+export type RatingLevel = (typeof ratingLevels)[number];
+
+export const interventionStatuses = [
+  "planned",
+  "ongoing",
+  "completed",
+  "cancelled",
+] as const;
+
+export type InterventionStatus = (typeof interventionStatuses)[number];
+
 export type NavItem = {
   href: string;
   label: string;

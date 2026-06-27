@@ -85,6 +85,10 @@ a {
   outline: none;
 }
 
+.input-icon-left {
+  padding-left: 3.25rem;
+}
+
 .label {
   margin-bottom: 0.375rem;
   display: block;

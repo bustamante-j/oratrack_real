@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
-import { ArrowLeft, LockKeyhole, Mail } from "lucide-react";
+import { ArrowLeft, LoaderCircle, LockKeyhole, Mail } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
@@ -40,7 +40,7 @@ export function LoginForm() {
             />
             <input
               autoComplete="email"
-              className="input py-3 pl-12 pr-4"
+              className="input input-icon-left py-3 pr-4"
               name="email"
               placeholder="admin@gmail.com"
               type="email"
@@ -62,7 +62,7 @@ export function LoginForm() {
             />
             <input
               autoComplete="current-password"
-              className="input py-3 pl-12 pr-4"
+              className="input input-icon-left py-3 pr-4"
               name="password"
               placeholder="Enter password"
               type="password"
@@ -83,7 +83,14 @@ export function LoginForm() {
       ) : null}
 
       <Button className="mt-6 w-full" disabled={pending} type="submit">
-        {pending ? "Signing in..." : "Sign in"}
+        {pending ? (
+          <>
+            <LoaderCircle className="animate-spin" size={17} />
+            Signing in...
+          </>
+        ) : (
+          "Sign in"
+        )}
       </Button>
 
       <div className="mt-4 flex justify-end text-sm">

@@ -1,9 +1,16 @@
 import { z } from "zod";
 
-import { appRoles, attendanceStatuses } from "@/types/domain";
+import {
+  appRoles,
+  attendanceStatuses,
+  interventionStatuses,
+  ratingLevels,
+} from "@/types/domain";
 
 export const appRoleSchema = z.enum(appRoles);
 export const attendanceStatusSchema = z.enum(attendanceStatuses);
+export const ratingLevelSchema = z.enum(ratingLevels);
+export const interventionStatusSchema = z.enum(interventionStatuses);
 export const accountStatusSchema = z.enum(["active", "inactive"]);
 export const learnerStatusSchema = z.enum([
   "active",
@@ -203,16 +210,35 @@ export const gradeImportRowSchema = z.object({
 export const literacyNumeracyRecordSchema = z.object({
   enrollmentId: z.uuid(),
   schoolYearId: z.uuid(),
-  literacyRating: z.enum(["beginning", "developing", "proficient", "advanced"]),
-  numeracyRating: z.enum(["beginning", "developing", "proficient", "advanced"]),
+  literacyRating: ratingLevelSchema,
+  numeracyRating: ratingLevelSchema,
   remarks: z.string().max(500).trim().optional(),
+});
+
+export const literacyNumeracySheetFormSchema = z.object({
+  sectionId: z.uuid(),
+  schoolYearId: z.uuid(),
+  records: z.array(literacyNumeracyRecordSchema).min(1),
 });
 
 export const interventionSchema = z.object({
   learnerId: z.uuid(),
   category: z.string().min(1).max(80).trim(),
   startedOn: z.iso.date(),
-  status: z.enum(["planned", "ongoing", "completed", "cancelled"]),
+  status: interventionStatusSchema,
+  notes: z.string().min(1).max(4000).trim(),
+  followUpOn: z.iso.date().optional(),
+});
+
+export const interventionCreateFormSchema = interventionSchema
+  .omit({ learnerId: true })
+  .extend({
+    enrollmentId: z.uuid(),
+  });
+
+export const interventionUpdateFormSchema = z.object({
+  interventionId: z.uuid(),
+  status: interventionStatusSchema,
   notes: z.string().min(1).max(4000).trim(),
   followUpOn: z.iso.date().optional(),
 });
