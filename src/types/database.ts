@@ -1,4 +1,5 @@
 import type { AppRole } from "@/types/domain";
+import type { AttendanceStatus } from "@/types/domain";
 
 export type Json =
   | string
@@ -27,6 +28,7 @@ export type Database = {
       account_status: "active" | "inactive";
       school_year_status: "draft" | "active" | "closed";
       learner_status: "active" | "inactive" | "archived" | "transferred";
+      attendance_status: AttendanceStatus;
     };
     Tables: {
       profiles: Table<
@@ -240,6 +242,128 @@ export type Database = {
           promoted_from_enrollment_id?: string | null;
           enrolled_on?: string;
           created_by?: string | null;
+        }
+      >;
+      attendance_dates: Table<
+        Timestamped & {
+          id: string;
+          school_year_id: string;
+          section_id: string;
+          attendance_on: string;
+          created_by: string | null;
+        },
+        {
+          id?: string;
+          school_year_id: string;
+          section_id: string;
+          attendance_on: string;
+          created_by?: string | null;
+        }
+      >;
+      attendance_records: Table<
+        Timestamped & {
+          id: string;
+          attendance_date_id: string;
+          enrollment_id: string;
+          am_status: AttendanceStatus;
+          pm_status: AttendanceStatus;
+          remarks: string | null;
+          recorded_by: string | null;
+        },
+        {
+          id?: string;
+          attendance_date_id: string;
+          enrollment_id: string;
+          am_status?: AttendanceStatus;
+          pm_status?: AttendanceStatus;
+          remarks?: string | null;
+          recorded_by?: string | null;
+        }
+      >;
+      grade_periods: Table<
+        {
+          id: string;
+          school_year_id: string | null;
+          code: string;
+          name: string;
+          sort_order: number;
+          starts_on: string | null;
+          ends_on: string | null;
+        },
+        {
+          id?: string;
+          school_year_id?: string | null;
+          code: string;
+          name: string;
+          sort_order: number;
+          starts_on?: string | null;
+          ends_on?: string | null;
+        }
+      >;
+      grade_import_batches: Table<
+        {
+          id: string;
+          school_year_id: string;
+          section_id: string;
+          subject_id: string;
+          imported_by: string;
+          source_file_path: string | null;
+          status: string;
+          row_count: number;
+          error_count: number;
+          created_at: string;
+        },
+        {
+          id?: string;
+          school_year_id: string;
+          section_id: string;
+          subject_id: string;
+          imported_by: string;
+          source_file_path?: string | null;
+          status?: string;
+          row_count?: number;
+          error_count?: number;
+        }
+      >;
+      grades: Table<
+        Timestamped & {
+          id: string;
+          enrollment_id: string;
+          subject_id: string;
+          grade_period_id: string;
+          numeric_grade: number;
+          remarks: string | null;
+          encoded_by: string | null;
+          batch_id: string | null;
+        },
+        {
+          id?: string;
+          enrollment_id: string;
+          subject_id: string;
+          grade_period_id: string;
+          numeric_grade: number;
+          remarks?: string | null;
+          encoded_by?: string | null;
+          batch_id?: string | null;
+        }
+      >;
+      grade_import_errors: Table<
+        {
+          id: string;
+          batch_id: string;
+          row_number: number;
+          field_name: string | null;
+          message: string;
+          raw_value: Json;
+          created_at: string;
+        },
+        {
+          id?: string;
+          batch_id: string;
+          row_number: number;
+          field_name?: string | null;
+          message: string;
+          raw_value?: Json;
         }
       >;
       audit_logs: Table<

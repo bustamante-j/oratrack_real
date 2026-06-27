@@ -1,10 +1,17 @@
-import { CalendarDays, CheckCircle2, Circle, Lock } from "lucide-react";
+import {
+  BookOpenCheck,
+  CalendarDays,
+  CheckCircle2,
+  Circle,
+  Lock,
+} from "lucide-react";
 
 import { EmptyState } from "@/components/ui/empty-state";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 import {
+  createStandardGradePeriodsAction,
   createSchoolYearAction,
   updateSchoolYearStatusAction,
 } from "./actions";
@@ -13,19 +20,53 @@ export const metadata = {
   title: "School Years",
 };
 
+type SchoolYear = {
+  id: string;
+  name: string;
+  starts_on: string;
+  ends_on: string;
+  status: "draft" | "active" | "closed";
+  created_at: string;
+};
+
+type GradePeriod = {
+  id: string;
+  school_year_id: string | null;
+  code: string;
+  name: string;
+  sort_order: number;
+};
+
 export default async function SchoolYearsPage() {
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("school_years")
-    .select("id,name,starts_on,ends_on,status,created_at")
-    .order("starts_on", { ascending: false });
+  const [schoolYearResult, gradePeriodResult] = await Promise.all([
+    supabase
+      .from("school_years")
+      .select("id,name,starts_on,ends_on,status,created_at")
+      .order("starts_on", { ascending: false }),
+    supabase
+      .from("grade_periods")
+      .select("id,school_year_id,code,name,sort_order")
+      .order("sort_order", { ascending: true }),
+  ]);
 
-  if (error) {
-    throw new Error(error.message);
+  const firstError = schoolYearResult.error ?? gradePeriodResult.error;
+
+  if (firstError) {
+    throw new Error(firstError.message);
   }
 
-  const schoolYears = data ?? [];
+  const schoolYears = (schoolYearResult.data ?? []) as SchoolYear[];
+  const gradePeriods = (gradePeriodResult.data ?? []) as GradePeriod[];
   const activeYear = schoolYears.find((year) => year.status === "active");
+  const periodsByYear = gradePeriods.reduce((map, period) => {
+    if (!period.school_year_id) return map;
+
+    const current = map.get(period.school_year_id) ?? [];
+    current.push(period);
+    map.set(period.school_year_id, current);
+    return map;
+  }, new Map<string, GradePeriod[]>());
 
   return (
     <div className="space-y-8">
@@ -100,6 +141,10 @@ export default async function SchoolYearsPage() {
               </p>
               <p className="mt-1 text-sm text-slate-600">
                 {activeYear.starts_on} to {activeYear.ends_on}
+              </p>
+              <p className="mt-3 text-sm font-semibold text-navy-950">
+                {(periodsByYear.get(activeYear.id) ?? []).length} grade periods
+                configured
               </p>
             </div>
           ) : (
@@ -187,6 +232,100 @@ export default async function SchoolYearsPage() {
           <div className="mt-5">
             <EmptyState
               message="Production starts empty. Add the first school year to unlock section setup."
+              title="No school years yet"
+            />
+          </div>
+        )}
+      </section>
+
+      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+        <div className="flex items-start gap-3">
+          <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+            <BookOpenCheck size={24} />
+          </span>
+          <div>
+            <h2 className="font-display text-xl font-extrabold text-navy-950">
+              Grade periods
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Create the standard quarterly periods used by teacher grade
+              encoding and Excel imports.
+            </p>
+          </div>
+        </div>
+
+        {schoolYears.length ? (
+          <div className="mt-5 grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
+            <form
+              action={createStandardGradePeriodsAction}
+              className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
+            >
+              <label>
+                <span className="label">School year</span>
+                <select
+                  className="input"
+                  defaultValue={activeYear?.id ?? schoolYears[0]?.id}
+                  name="schoolYearId"
+                  required
+                >
+                  {schoolYears.map((year) => (
+                    <option key={year.id} value={year.id}>
+                      {year.name} ({year.status})
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="mt-4">
+                <SubmitButton>Create standard quarters</SubmitButton>
+              </div>
+            </form>
+
+            <div className="overflow-hidden rounded-2xl border border-slate-200">
+              <table className="min-w-full text-left text-sm">
+                <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
+                  <tr>
+                    <th className="px-4 py-3">School year</th>
+                    <th className="px-4 py-3">Periods</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {schoolYears.map((year) => {
+                    const periods = periodsByYear.get(year.id) ?? [];
+
+                    return (
+                      <tr key={year.id}>
+                        <td className="px-4 py-4 font-semibold text-navy-950">
+                          {year.name}
+                        </td>
+                        <td className="px-4 py-4">
+                          {periods.length ? (
+                            <div className="flex flex-wrap gap-2">
+                              {periods.map((period) => (
+                                <span
+                                  className="rounded-full bg-skybrand-50 px-3 py-1 text-xs font-bold text-navy-900"
+                                  key={period.id}
+                                >
+                                  {period.code} - {period.name}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-slate-500">
+                              No periods yet
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-5">
+            <EmptyState
+              message="Create a school year before adding grade periods."
               title="No school years yet"
             />
           </div>

@@ -8,7 +8,15 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   schoolYearFormSchema,
   schoolYearStatusFormSchema,
+  standardGradePeriodsFormSchema,
 } from "@/lib/validation/domain";
+
+const standardGradePeriods = [
+  { code: "Q1", name: "Quarter 1", sort_order: 1 },
+  { code: "Q2", name: "Quarter 2", sort_order: 2 },
+  { code: "Q3", name: "Quarter 3", sort_order: 3 },
+  { code: "Q4", name: "Quarter 4", sort_order: 4 },
+];
 
 export async function createSchoolYearAction(formData: FormData) {
   const admin = await requireAdminProfile();
@@ -85,4 +93,40 @@ export async function updateSchoolYearStatusAction(formData: FormData) {
 
   revalidatePath("/admin/school-years");
   revalidatePath("/admin/sections");
+}
+
+export async function createStandardGradePeriodsAction(formData: FormData) {
+  const admin = await requireAdminProfile();
+  const parsed = standardGradePeriodsFormSchema.parse({
+    schoolYearId: formData.get("schoolYearId"),
+  });
+  const supabase = await createSupabaseServerClient();
+
+  const { error } = await supabase.from("grade_periods").upsert(
+    standardGradePeriods.map((period) => ({
+      school_year_id: parsed.schoolYearId,
+      code: period.code,
+      name: period.name,
+      sort_order: period.sort_order,
+    })),
+    { onConflict: "school_year_id,code" },
+  );
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  await logAuditEvent(supabase, {
+    actorId: admin.userId,
+    action: "grade_periods_seeded",
+    entityTable: "grade_periods",
+    metadata: {
+      schoolYearId: parsed.schoolYearId,
+      codes: standardGradePeriods.map((period) => period.code),
+    },
+  });
+
+  revalidatePath("/admin/school-years");
+  revalidatePath("/teacher/grades");
+  revalidatePath("/admin/analytics");
 }

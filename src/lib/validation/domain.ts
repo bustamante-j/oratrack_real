@@ -69,6 +69,10 @@ export const schoolYearStatusFormSchema = z.object({
   status: z.enum(["draft", "active", "closed"]),
 });
 
+export const standardGradePeriodsFormSchema = z.object({
+  schoolYearId: z.uuid(),
+});
+
 export const subjectFormSchema = z.object({
   code: z.string().min(2).max(30).trim(),
   name: z.string().min(2).max(120).trim(),
@@ -156,6 +160,36 @@ export const attendanceRecordSchema = z.object({
   amStatus: attendanceStatusSchema,
   pmStatus: attendanceStatusSchema,
   remarks: z.string().max(500).trim().optional(),
+});
+
+export const attendanceDateFormSchema = z.object({
+  schoolYearId: z.uuid(),
+  sectionId: z.uuid(),
+  attendanceOn: z.iso.date(),
+});
+
+export const attendanceSheetFormSchema = z.object({
+  attendanceDateId: z.uuid(),
+  sectionId: z.uuid(),
+  records: z.array(attendanceRecordSchema).min(1),
+});
+
+export const gradeRecordFormSchema = z.object({
+  assignmentId: z.uuid(),
+  gradePeriodId: z.uuid(),
+  records: z
+    .array(
+      z.object({
+        enrollmentId: z.uuid(),
+        numericGrade: z.coerce.number().min(0).max(100),
+        remarks: z.string().max(500).trim().optional(),
+      }),
+    )
+    .min(1),
+});
+
+export const gradeImportFormSchema = z.object({
+  assignmentId: z.uuid(),
 });
 
 export const gradeImportRowSchema = z.object({
