@@ -26,6 +26,7 @@ export type Database = {
       app_role: AppRole;
       account_status: "active" | "inactive";
       school_year_status: "draft" | "active" | "closed";
+      learner_status: "active" | "inactive" | "archived" | "transferred";
     };
     Tables: {
       profiles: Table<
@@ -162,6 +163,82 @@ export type Database = {
           subject_id?: string | null;
           starts_on?: string | null;
           ends_on?: string | null;
+          created_by?: string | null;
+        }
+      >;
+      learners: Table<
+        Timestamped & {
+          id: string;
+          lrn: string;
+          first_name: string;
+          middle_name: string | null;
+          last_name: string;
+          extension_name: string | null;
+          sex: "female" | "male";
+          birth_date: string;
+          address: string | null;
+          status: "active" | "inactive" | "archived" | "transferred";
+          archived_at: string | null;
+          created_by: string | null;
+        },
+        {
+          id?: string;
+          lrn: string;
+          first_name: string;
+          middle_name?: string | null;
+          last_name: string;
+          extension_name?: string | null;
+          sex: "female" | "male";
+          birth_date: string;
+          address?: string | null;
+          status?: "active" | "inactive" | "archived" | "transferred";
+          archived_at?: string | null;
+          created_by?: string | null;
+        }
+      >;
+      learner_guardians: Table<
+        Timestamped & {
+          id: string;
+          learner_id: string;
+          full_name: string;
+          relationship: string;
+          phone: string | null;
+          email: string | null;
+          address: string | null;
+          is_primary: boolean;
+        },
+        {
+          id?: string;
+          learner_id: string;
+          full_name: string;
+          relationship: string;
+          phone?: string | null;
+          email?: string | null;
+          address?: string | null;
+          is_primary?: boolean;
+        }
+      >;
+      learner_enrollments: Table<
+        Timestamped & {
+          id: string;
+          learner_id: string;
+          school_year_id: string;
+          grade_level_id: number;
+          section_id: string | null;
+          enrollment_status: string;
+          promoted_from_enrollment_id: string | null;
+          enrolled_on: string;
+          created_by: string | null;
+        },
+        {
+          id?: string;
+          learner_id: string;
+          school_year_id: string;
+          grade_level_id: number;
+          section_id?: string | null;
+          enrollment_status?: string;
+          promoted_from_enrollment_id?: string | null;
+          enrolled_on?: string;
           created_by?: string | null;
         }
       >;

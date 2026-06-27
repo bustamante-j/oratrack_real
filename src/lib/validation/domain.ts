@@ -5,6 +5,12 @@ import { appRoles, attendanceStatuses } from "@/types/domain";
 export const appRoleSchema = z.enum(appRoles);
 export const attendanceStatusSchema = z.enum(attendanceStatuses);
 export const accountStatusSchema = z.enum(["active", "inactive"]);
+export const learnerStatusSchema = z.enum([
+  "active",
+  "inactive",
+  "archived",
+  "transferred",
+]);
 
 export const teacherAccountSchema = z.object({
   email: z.email().trim(),
@@ -91,6 +97,41 @@ export const learnerSchema = z.object({
   extensionName: z.string().max(20).trim().optional(),
   sex: z.enum(["female", "male"]),
   birthDate: z.iso.date(),
+  address: z.string().max(500).trim().optional(),
+});
+
+export const learnerCreateFormSchema = learnerSchema.extend({
+  guardianFullName: z.string().max(160).trim().optional(),
+  guardianRelationship: z.string().max(80).trim().optional(),
+  guardianPhone: z.string().max(40).trim().optional(),
+  guardianEmail: z.email().trim().optional(),
+  guardianAddress: z.string().max(500).trim().optional(),
+});
+
+export const learnerUpdateFormSchema = learnerSchema.extend({
+  id: z.uuid(),
+});
+
+export const learnerStatusFormSchema = z.object({
+  id: z.uuid(),
+  status: learnerStatusSchema,
+});
+
+export const learnerEnrollmentFormSchema = z.object({
+  learnerId: z.uuid(),
+  schoolYearId: z.uuid(),
+  gradeLevelId: z.coerce.number().int().positive(),
+  sectionId: z.uuid().optional(),
+  enrollmentStatus: z.string().min(1).max(40).trim().default("enrolled"),
+  enrolledOn: z.iso.date().optional(),
+});
+
+export const learnerGuardianFormSchema = z.object({
+  learnerId: z.uuid(),
+  fullName: z.string().min(2).max(160).trim(),
+  relationship: z.string().min(1).max(80).trim(),
+  phone: z.string().max(40).trim().optional(),
+  email: z.email().trim().optional(),
   address: z.string().max(500).trim().optional(),
 });
 
