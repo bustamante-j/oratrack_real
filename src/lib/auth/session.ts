@@ -96,3 +96,17 @@ export async function requireAdminProfile() {
 
   return session.profile;
 }
+
+export async function requireAuthenticatedProfile() {
+  const session = await getSessionProfile();
+
+  if (session.kind === "unconfigured") {
+    throw new Error("Supabase is not configured.");
+  }
+
+  if (session.kind === "anonymous") {
+    redirect("/login");
+  }
+
+  return session.profile;
+}

@@ -4,6 +4,7 @@ import { appRoles, attendanceStatuses } from "@/types/domain";
 
 export const appRoleSchema = z.enum(appRoles);
 export const attendanceStatusSchema = z.enum(attendanceStatuses);
+export const accountStatusSchema = z.enum(["active", "inactive"]);
 
 export const teacherAccountSchema = z.object({
   email: z.email().trim(),
@@ -11,6 +12,39 @@ export const teacherAccountSchema = z.object({
   role: appRoleSchema,
   employeeNumber: z.string().max(40).trim().optional(),
   isActive: z.boolean().default(true),
+});
+
+export const teacherAccountCreateSchema = z.object({
+  email: z.email().trim(),
+  fullName: z.string().min(2).max(160).trim(),
+  role: appRoleSchema,
+  status: accountStatusSchema.default("active"),
+  temporaryPassword: z.string().min(8).max(128),
+  phone: z.string().max(40).trim().optional(),
+  employeeNumber: z.string().max(40).trim().optional(),
+  positionTitle: z.string().max(120).trim().optional(),
+  gradeSpecialization: z.string().max(120).trim().optional(),
+});
+
+export const teacherAccountUpdateSchema = z.object({
+  userId: z.uuid(),
+  fullName: z.string().min(2).max(160).trim(),
+  role: appRoleSchema,
+  status: accountStatusSchema,
+  phone: z.string().max(40).trim().optional(),
+  employeeNumber: z.string().max(40).trim().optional(),
+  positionTitle: z.string().max(120).trim().optional(),
+  gradeSpecialization: z.string().max(120).trim().optional(),
+});
+
+export const teacherPasswordResetSchema = z.object({
+  userId: z.uuid(),
+  temporaryPassword: z.string().min(8).max(128),
+});
+
+export const staffProfileUpdateSchema = z.object({
+  fullName: z.string().min(2).max(160).trim(),
+  phone: z.string().max(40).trim().optional(),
 });
 
 export const schoolYearFormSchema = z

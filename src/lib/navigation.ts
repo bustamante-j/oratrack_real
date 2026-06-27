@@ -21,6 +21,7 @@ export const adminNavItems: NavItem[] = [
   { href: "/admin/certificates", label: "Certificates" },
   { href: "/admin/lesson-plans", label: "Lesson Plans" },
   { href: "/admin/ai", label: "AI Assistant" },
+  { href: "/admin/profile", label: "My Profile" },
 ];
 
 export const teacherNavItems: NavItem[] = [
@@ -34,4 +35,5 @@ export const teacherNavItems: NavItem[] = [
   { href: "/teacher/certificates", label: "Certificates" },
   { href: "/teacher/lesson-plans", label: "Lesson Plans" },
   { href: "/teacher/ai", label: "AI Assistant" },
+  { href: "/teacher/profile", label: "My Profile" },
 ];
