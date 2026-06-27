@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ORATRACK Real
 
-## Getting Started
+Production-style rebuild of ORATRACK for Balili Elementary School.
 
-First, run the development server:
+This project is intentionally separate from the old prototype. It starts with
+empty production data and prepares the app for Supabase Auth, PostgreSQL, RLS,
+private storage, reports, Excel imports, and permission-aware AI assistance.
+
+## Stack
+
+- Next.js App Router, TypeScript, React, Tailwind CSS
+- Supabase Auth, PostgreSQL, Storage, Row Level Security
+- Zod validation
+- PDFKit for initial PDF reports
+- ExcelJS for import/export templates
+
+## Local Setup
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Copy `.env.example` to `.env.local` after the Supabase project exists:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+OPENAI_API_KEY=
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Do not expose `SUPABASE_SERVICE_ROLE_KEY` to the browser.
 
-## Learn More
+## Current State
 
-To learn more about Next.js, take a look at the following resources:
+- Public school website routes are scaffolded.
+- Auth routes, role shells, and protected Admin/Teacher areas are scaffolded.
+- Initial Supabase migration is in `supabase/migrations`.
+- Production data is empty by design.
+- AI endpoint is safe/stubbed until provider behavior is approved.
+- Temporary report and Excel template endpoints are included.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Intervention Points
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+You will need to provide or approve:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Supabase project URL, anon key, service role key for local server use only
+- Auth settings, invite/reset behavior, and optional admin MFA
+- Attendance statuses, grading periods, subject list, rating scales, promotion rules
+- Official certificate, report, and Excel templates
+- Final AI write-confirmation policy and provider configuration

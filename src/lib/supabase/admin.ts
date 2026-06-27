@@ -1,0 +1,22 @@
+import "server-only";
+
+import { createClient } from "@supabase/supabase-js";
+
+import { getSupabasePublicEnv, getSupabaseServiceRoleKey } from "@/lib/env";
+import type { Database } from "@/types/database";
+
+export function createSupabaseAdminClient() {
+  const { url } = getSupabasePublicEnv();
+  const serviceRoleKey = getSupabaseServiceRoleKey();
+
+  if (!url || !serviceRoleKey) {
+    throw new Error("Supabase admin client is not configured.");
+  }
+
+  return createClient<Database>(url, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+}
