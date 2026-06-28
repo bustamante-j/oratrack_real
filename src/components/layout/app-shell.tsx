@@ -1,10 +1,19 @@
+"use client";
+
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ArrowUpRight } from "lucide-react";
+import {
+  ArrowSquareOut,
+  Bell,
+  House,
+  SignOut,
+  UserCircle,
+} from "@phosphor-icons/react";
 
 import { FloatingAiLauncher } from "@/components/ai/floating-ai-launcher";
 import { BrandLogo } from "@/components/brand-logo";
 import { PortalNavLinks } from "@/components/layout/portal-nav";
+import { logoutAction } from "@/lib/auth/actions";
 import type { SessionState } from "@/lib/auth/session";
 import { roleLabels, school } from "@/lib/constants";
 import type { NavItem } from "@/types/domain";
@@ -28,59 +37,110 @@ export function AppShell({
           email: "Supabase not connected",
           role: "admin_principal" as const,
         };
+  const today = new Intl.DateTimeFormat("en-PH", {
+    weekday: "short",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date());
+  const initials = profile.fullName
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
   return (
     <div className="min-h-screen min-w-0 overflow-x-hidden bg-[#f4f8fc]">
-      <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-white/10 bg-navy-950 text-white lg:flex lg:flex-col">
-        <div className="border-b border-white/10 p-5">
+      <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 overflow-hidden bg-gradient-to-b from-[#061a31] via-navy-950 to-[#092c50] text-white shadow-2xl lg:flex lg:flex-col">
+        <div className="flex h-20 items-center border-b border-white/10 px-5">
           <Link className="flex items-center gap-3" href="/">
             <BrandLogo compact inverse />
           </Link>
-          <p className="mt-3 text-xs font-semibold text-skybrand-300">
+        </div>
+        <div className="border-b border-white/10 px-5 py-4">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-skybrand-300">
+            {school.platform}
+          </p>
+          <p className="mt-1 font-display text-sm font-extrabold text-white">
             {title}
           </p>
         </div>
-        <div className="flex-1 overflow-y-auto p-3">
+        <div className="scroll-soft flex-1 overflow-y-auto px-3 py-5">
           <PortalNavLinks navItems={navItems} />
         </div>
         <div className="border-t border-white/10 p-4">
-          <p className="text-sm font-semibold text-white">{profile.fullName}</p>
-          <p className="mt-1 text-xs text-slate-400">{profile.email}</p>
-          <p className="mt-2 text-xs font-bold text-skybrand-300">
-            {roleLabels[profile.role]}
-          </p>
+          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white text-xs font-extrabold text-navy-950 shadow-lg">
+              {initials || <UserCircle size={20} weight="duotone" />}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-white">
+                {profile.fullName}
+              </p>
+              <p className="truncate text-[11px] text-slate-300">
+                {profile.email}
+              </p>
+              <p className="mt-1 text-[10px] font-bold uppercase tracking-wide text-skybrand-300">
+                {roleLabels[profile.role]}
+              </p>
+            </div>
+          </div>
+          <form action={logoutAction} className="mt-3">
+            <button
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 px-3 py-2.5 text-xs font-bold text-slate-300 transition hover:bg-white/10 hover:text-white"
+              type="submit"
+            >
+              <SignOut size={17} weight="duotone" />
+              Log out
+            </button>
+          </form>
         </div>
       </aside>
-      <div className="lg:pl-72">
-        <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 px-4 py-3 shadow-[0_10px_35px_rgba(7,27,51,.06)] backdrop-blur sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex min-w-0 items-center gap-3 lg:hidden">
+      <div className="lg:pl-64">
+        <header className="sticky top-0 z-20 flex h-20 items-center border-b border-white/80 bg-white/80 px-4 shadow-[0_8px_30px_rgba(15,55,95,.04)] backdrop-blur-xl sm:px-6 lg:px-8">
+          <div className="flex w-full items-center justify-between gap-4">
+            <div className="flex min-w-0 items-center gap-3">
               <Link className="shrink-0 lg:hidden" href="/">
                 <BrandLogo compact />
               </Link>
               <div className="min-w-0">
-                <p className="truncate text-xs font-bold uppercase text-skybrand-600">
-                  {school.platform}
+                <p className="hidden truncate text-xs text-slate-500 sm:block">
+                  {today}
                 </p>
-                <p className="truncate text-sm font-semibold text-navy-950">
+                <p className="truncate font-display text-sm font-bold text-navy-950">
                   {title}
                 </p>
               </div>
             </div>
-            <div className="hidden min-w-0 lg:block">
-              <p className="text-xs font-bold uppercase text-skybrand-600">
-                {school.platform}
-              </p>
-              <p className="text-sm font-semibold text-navy-950">{title}</p>
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+              <button
+                aria-label="Notifications"
+                className="relative grid size-10 place-items-center rounded-xl text-slate-500 transition hover:bg-slate-100"
+                type="button"
+              >
+                <Bell size={20} weight="duotone" />
+                <span className="absolute right-2 top-2 size-2 rounded-full bg-rose-500 ring-2 ring-white" />
+              </button>
+              <Link
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:border-skybrand-300 hover:bg-skybrand-50 hover:text-navy-900"
+                href="/"
+              >
+                <House size={17} weight="duotone" />
+                <span className="hidden sm:inline">Public site</span>
+                <ArrowSquareOut className="hidden sm:block" size={15} />
+              </Link>
+              <form action={logoutAction}>
+                <button
+                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-rose-600 transition hover:border-rose-200 hover:bg-rose-50"
+                  type="submit"
+                >
+                  <SignOut size={17} weight="duotone" />
+                  <span className="hidden sm:inline">Log out</span>
+                </button>
+              </form>
             </div>
-            <Link
-              className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-bold text-slate-700 transition hover:border-skybrand-300 hover:bg-skybrand-50 hover:text-navy-900"
-              href="/"
-            >
-              <span className="hidden sm:inline">Public site</span>
-              <span className="sm:hidden">Site</span>
-              <ArrowUpRight size={15} />
-            </Link>
           </div>
         </header>
         <div className="sticky top-[4.25rem] z-10 border-b border-slate-200 bg-[#f4f8fc]/95 shadow-[0_12px_28px_rgba(7,27,51,.05)] backdrop-blur lg:hidden">
