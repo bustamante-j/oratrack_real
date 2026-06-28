@@ -303,14 +303,10 @@ export default async function HomePage() {
 
         <div className="relative mx-auto flex min-h-[620px] max-w-7xl items-center px-4 pb-28 pt-20 sm:min-h-[690px] sm:px-6 lg:min-h-[800px] lg:px-8 lg:pb-44">
           <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase text-skybrand-200 backdrop-blur-md">
-              <Sparkles size={14} />
-              Welcome to Balili Elementary School
-            </span>
-            <p className="mt-7 font-display text-sm font-extrabold uppercase text-skybrand-200 sm:text-base">
+            <p className="font-display text-sm font-extrabold uppercase text-skybrand-200 sm:text-base">
               {school.name}
             </p>
-            <h1 className="text-balance mt-4 max-w-4xl font-editorial text-5xl font-extrabold leading-[0.96] sm:text-6xl lg:text-[5.8rem]">
+            <h1 className="text-balance mt-4 max-w-4xl font-display text-5xl font-extrabold leading-[1.02] sm:text-6xl lg:text-[5.2rem]">
               Growing minds.
               <span className="block bg-gradient-to-r from-skybrand-300 via-white to-skybrand-100 bg-clip-text text-transparent">
                 Building bright futures.
@@ -553,15 +549,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-white py-24">
-        <div className="absolute inset-0 newsprint opacity-80" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="bg-white py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col justify-between gap-5 border-b-2 border-navy-950 pb-6 sm:flex-row sm:items-end">
             <div>
               <p className="text-xs font-extrabold uppercase text-skybrand-600">
                 From our school community
               </p>
-              <h2 className="mt-3 font-editorial text-5xl font-extrabold leading-none text-navy-950 sm:text-6xl">
+              <h2 className="mt-3 font-display text-5xl font-extrabold leading-none text-navy-950 sm:text-6xl">
                 The Balili Bulletin
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
@@ -624,7 +619,7 @@ export default async function HomePage() {
                       <p className="text-xs font-extrabold uppercase text-skybrand-200">
                         School update - {formatPublishedDate(lead.published_at)}
                       </p>
-                      <h3 className="mt-3 font-editorial text-4xl font-extrabold leading-none sm:text-5xl">
+                      <h3 className="mt-3 font-display text-4xl font-extrabold leading-none sm:text-5xl">
                         {lead.title}
                       </h3>
                       <p className="mt-5 max-w-2xl text-base leading-8 text-slate-200">
