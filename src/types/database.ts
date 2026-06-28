@@ -598,6 +598,54 @@ export type Database = {
           proposed_action?: Json;
         }
       >;
+      public_announcements: Table<
+        Timestamped & {
+          id: string;
+          title: string;
+          body: string;
+          published_at: string | null;
+          created_by: string | null;
+        },
+        {
+          id?: string;
+          title: string;
+          body: string;
+          published_at?: string | null;
+          created_by?: string | null;
+        }
+      >;
+      public_events: Table<
+        Timestamped & {
+          id: string;
+          title: string;
+          body: string | null;
+          starts_at: string;
+          ends_at: string | null;
+          published_at: string | null;
+          created_by: string | null;
+          location: string | null;
+          event_type: string;
+          review_status: "pending" | "approved" | "rejected";
+          reviewed_by: string | null;
+          reviewed_at: string | null;
+          review_notes: string | null;
+        },
+        {
+          id?: string;
+          title: string;
+          body?: string | null;
+          starts_at: string;
+          ends_at?: string | null;
+          published_at?: string | null;
+          created_by?: string | null;
+          location?: string | null;
+          event_type?: string;
+          review_status?: "pending" | "approved" | "rejected";
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          review_notes?: string | null;
+        }
+      >;
       audit_logs: Table<
         {
           id: string;

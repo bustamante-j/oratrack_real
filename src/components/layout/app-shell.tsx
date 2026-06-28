@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowUpRight } from "lucide-react";
 
+import { FloatingAiLauncher } from "@/components/ai/floating-ai-launcher";
 import { BrandLogo } from "@/components/brand-logo";
 import { PortalNavLinks } from "@/components/layout/portal-nav";
 import type { SessionState } from "@/lib/auth/session";
@@ -95,6 +96,9 @@ export function AppShell({
         <main className="portal-shell min-h-[calc(100vh-4.5rem)] px-4 py-8 sm:px-6 lg:px-8">
           <div className="mx-auto w-full max-w-[96rem] min-w-0">{children}</div>
         </main>
+        {session.kind === "authenticated" ? (
+          <FloatingAiLauncher role={session.profile.role} />
+        ) : null}
       </div>
     </div>
   );

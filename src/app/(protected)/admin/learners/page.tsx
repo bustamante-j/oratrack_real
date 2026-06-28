@@ -1,20 +1,26 @@
+import Link from "next/link";
 import {
   Archive,
   BookUser,
+  Download,
+  FileSpreadsheet,
   GraduationCap,
   Search,
   Shield,
   Undo2,
+  Upload,
   UserPlus,
   UsersRound,
 } from "lucide-react";
 
+import { ButtonLink } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 import {
   createLearnerAction,
+  importLearnersWorkbookAction,
   setLearnerStatusAction,
   updateLearnerAction,
   upsertLearnerEnrollmentAction,
@@ -336,96 +342,220 @@ export default async function LearnersPage({
         <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
           <div className="flex items-start gap-3">
             <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-              <GraduationCap size={24} />
+              <FileSpreadsheet size={24} />
             </span>
             <div>
               <h2 className="font-display text-xl font-extrabold text-navy-950">
-                Enroll or assign
+                Bulk import learners
               </h2>
               <p className="mt-1 text-sm text-slate-500">
-                Create or update one learner enrollment per school year.
+                Download the Excel template, fill learner details, then upload
+                the workbook to register and enroll many learners at once.
               </p>
             </div>
           </div>
 
-          {learners.length && schoolYears.length && gradeLevels.length ? (
-            <form
-              action={upsertLearnerEnrollmentAction}
-              className="mt-6 grid gap-4"
+          <div className="mt-6 flex flex-wrap gap-3">
+            <ButtonLink
+              href="/api/templates/learner-import"
+              variant="secondary"
             >
-              <label>
-                <span className="label">Learner</span>
-                <select className="input" name="learnerId" required>
-                  {learners.map((learner) => (
-                    <option key={learner.id} value={learner.id}>
-                      {learnerName(learner)} - {learner.lrn}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                <span className="label">School year</span>
-                <select
-                  className="input"
-                  defaultValue={activeYear?.id ?? schoolYears[0]?.id}
-                  name="schoolYearId"
-                  required
-                >
-                  {schoolYears.map((year) => (
-                    <option key={year.id} value={year.id}>
-                      {year.name} ({year.status})
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                <span className="label">Grade level</span>
-                <select className="input" name="gradeLevelId" required>
-                  {gradeLevels.map((grade) => (
-                    <option key={grade.id} value={grade.id}>
-                      {grade.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                <span className="label">Section</span>
-                <select className="input" name="sectionId">
-                  <option value="">Unassigned</option>
-                  {sections.map((section) => (
-                    <option key={section.id} value={section.id}>
-                      {sectionLabel(section)}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <Download size={17} />
+              Download learner template
+            </ButtonLink>
+          </div>
+
+          <form
+            action={importLearnersWorkbookAction}
+            className="mt-5 grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5"
+          >
+            <label>
+              <span className="label">Filled workbook</span>
+              <input
+                accept=".xlsx"
+                className="input bg-white"
+                name="learnerFile"
+                required
+                type="file"
+              />
+            </label>
+            <SubmitButton pendingLabel="Importing learners...">
+              <Upload size={17} />
+              Import learners
+            </SubmitButton>
+          </form>
+
+          <div className="mt-5 rounded-2xl bg-skybrand-50 p-4 text-sm leading-7 text-slate-700">
+            The workbook uses existing school year, grade level, and section
+            names. Rows are upserted by LRN, so corrected uploads update the
+            same learner record instead of duplicating it.
+          </div>
+        </section>
+      </div>
+
+      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+        <div className="flex items-start gap-3">
+          <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+            <GraduationCap size={24} />
+          </span>
+          <div>
+            <h2 className="font-display text-xl font-extrabold text-navy-950">
+              Enrolled learners
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Manage section assignment separately from learner registration.
+              This keeps identity records and school-year enrollment workflows
+              distinct.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+          <div>
+            {learners.length && schoolYears.length && gradeLevels.length ? (
+              <form
+                action={upsertLearnerEnrollmentAction}
+                className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5"
+              >
                 <label>
-                  <span className="label">Enrollment status</span>
-                  <input
-                    className="input"
-                    defaultValue="enrolled"
-                    name="enrollmentStatus"
+                  <span className="label">Learner</span>
+                  <select className="input bg-white" name="learnerId" required>
+                    {learners.map((learner) => (
+                      <option key={learner.id} value={learner.id}>
+                        {learnerName(learner)} - {learner.lrn}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  <span className="label">School year</span>
+                  <select
+                    className="input bg-white"
+                    defaultValue={activeYear?.id ?? schoolYears[0]?.id}
+                    name="schoolYearId"
                     required
-                  />
+                  >
+                    {schoolYears.map((year) => (
+                      <option key={year.id} value={year.id}>
+                        {year.name} ({year.status})
+                      </option>
+                    ))}
+                  </select>
                 </label>
                 <label>
-                  <span className="label">Enrolled on</span>
-                  <input className="input" name="enrolledOn" type="date" />
+                  <span className="label">Grade level</span>
+                  <select
+                    className="input bg-white"
+                    name="gradeLevelId"
+                    required
+                  >
+                    {gradeLevels.map((grade) => (
+                      <option key={grade.id} value={grade.id}>
+                        {grade.label}
+                      </option>
+                    ))}
+                  </select>
                 </label>
-              </div>
-              <SubmitButton>Save enrollment</SubmitButton>
-            </form>
-          ) : (
-            <div className="mt-6">
+                <label>
+                  <span className="label">Section</span>
+                  <select className="input bg-white" name="sectionId">
+                    <option value="">Unassigned</option>
+                    {sections.map((section) => (
+                      <option key={section.id} value={section.id}>
+                        {sectionLabel(section)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <label>
+                    <span className="label">Enrollment status</span>
+                    <input
+                      className="input bg-white"
+                      defaultValue="enrolled"
+                      name="enrollmentStatus"
+                      required
+                    />
+                  </label>
+                  <label>
+                    <span className="label">Enrolled on</span>
+                    <input
+                      className="input bg-white"
+                      name="enrolledOn"
+                      type="date"
+                    />
+                  </label>
+                </div>
+                <SubmitButton>Save enrollment</SubmitButton>
+              </form>
+            ) : (
               <EmptyState
                 message="Add a learner and school setup before assigning sections."
                 title="Enrollment setup incomplete"
               />
-            </div>
-          )}
-        </section>
-      </div>
+            )}
+          </div>
+
+          <div className="overflow-x-auto rounded-2xl border border-slate-200">
+            <table className="min-w-[760px] text-left text-sm">
+              <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
+                <tr>
+                  <th className="px-4 py-3">Learner</th>
+                  <th className="px-4 py-3">School year</th>
+                  <th className="px-4 py-3">Grade</th>
+                  <th className="px-4 py-3">Section</th>
+                  <th className="px-4 py-3">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 bg-white">
+                {(activeYear
+                  ? enrollments.filter(
+                      (enrollment) =>
+                        enrollment.school_year_id === activeYear.id,
+                    )
+                  : enrollments
+                )
+                  .slice(0, 12)
+                  .map((enrollment) => {
+                    const learner = learners.find(
+                      (item) => item.id === enrollment.learner_id,
+                    );
+                    return (
+                      <tr key={enrollment.id}>
+                        <td className="px-4 py-4">
+                          <p className="font-semibold text-navy-950">
+                            {learner ? learnerName(learner) : "Learner"}
+                          </p>
+                          <p className="mt-1 text-xs font-bold uppercase text-slate-500">
+                            LRN {learner?.lrn ?? "Unrecorded"}
+                          </p>
+                        </td>
+                        <td className="px-4 py-4 text-slate-600">
+                          {yearById.get(enrollment.school_year_id)?.name ??
+                            "School year"}
+                        </td>
+                        <td className="px-4 py-4 text-slate-600">
+                          {gradeById.get(enrollment.grade_level_id)?.label ??
+                            "Grade"}
+                        </td>
+                        <td className="px-4 py-4 text-slate-600">
+                          {enrollment.section_id
+                            ? sectionById.get(enrollment.section_id)?.name
+                            : "Unassigned"}
+                        </td>
+                        <td className="px-4 py-4">
+                          <span className="rounded-full bg-skybrand-50 px-3 py-1 text-xs font-bold text-skybrand-700">
+                            {enrollment.enrollment_status}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
       <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
@@ -516,6 +646,12 @@ export default async function LearnersPage({
                       <h3 className="mt-4 font-display text-xl font-extrabold text-navy-950">
                         {learnerName(learner)}
                       </h3>
+                      <Link
+                        className="mt-3 inline-flex items-center gap-2 rounded-xl bg-navy-900 px-3 py-2 text-xs font-bold text-white transition hover:bg-skybrand-600"
+                        href={`/admin/learners/${learner.id}`}
+                      >
+                        View performance
+                      </Link>
                       <div className="mt-4 grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
                         <p>
                           <span className="font-bold text-slate-700">Sex:</span>{" "}

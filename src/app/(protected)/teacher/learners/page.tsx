@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   BookUser,
   GraduationCap,
@@ -296,6 +297,12 @@ export default async function TeacherLearnersPage({
                   <h3 className="mt-4 font-display text-xl font-extrabold text-navy-950">
                     {learnerName(learner)}
                   </h3>
+                  <Link
+                    className="mt-3 inline-flex items-center gap-2 rounded-xl bg-navy-900 px-3 py-2 text-xs font-bold text-white transition hover:bg-skybrand-600"
+                    href={`/teacher/learners/${learner.id}`}
+                  >
+                    View performance
+                  </Link>
 
                   <div className="mt-4 grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
                     <p>

@@ -15,9 +15,7 @@ import {
   Leaf,
   MapPin,
   Medal,
-  Megaphone,
   Palette,
-  Pin,
   Play,
   Quote,
   Salad,
@@ -31,6 +29,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { school } from "@/lib/constants";
+import { getHomePageData, type HomeEvent } from "@/lib/public/home-data";
 
 const quickLinks = [
   {
@@ -86,29 +85,6 @@ const communityFeatures = [
   },
 ];
 
-const stats = [
-  {
-    value: "180+",
-    label: "Learners supported",
-    icon: UsersRound,
-  },
-  {
-    value: "30",
-    label: "Dedicated teachers",
-    icon: UserRoundCheck,
-  },
-  {
-    value: "95.1%",
-    label: "Current attendance",
-    icon: BarChart3,
-  },
-  {
-    value: "6",
-    label: "Grade levels",
-    icon: BookOpen,
-  },
-];
-
 const programs = [
   {
     icon: BookOpen,
@@ -160,58 +136,26 @@ const programs = [
   },
 ];
 
-const announcements = [
+const announcementStyles = [
   {
-    id: "A-001",
-    title: "First Quarter Parent Meeting",
-    category: "School Update",
-    date: "2026-06-26",
-    audience: "Parents and guardians",
-    content:
-      "Parents and guardians are invited to the school covered court for orientation, class updates, and family partnership reminders.",
-    pinned: true,
-    icon: Megaphone,
+    icon: BellRing,
     gradient: "from-skybrand-500 to-blue-600",
     accent: "bg-skybrand-500",
     ink: "text-skybrand-600",
   },
   {
-    id: "A-002",
-    title: "Nutrition Month Activities",
-    category: "Student Activity",
-    date: "2026-07-03",
-    audience: "All learners",
-    content:
-      "Classes will prepare healthy meal posters and join a school-wide wellness program.",
-    pinned: false,
     icon: Sparkles,
     gradient: "from-amber-400 to-orange-500",
     accent: "bg-amber-500",
     ink: "text-amber-700",
   },
   {
-    id: "A-003",
-    title: "School Supplies Donation Drive",
-    category: "Community",
-    date: "2026-07-08",
-    audience: "School community",
-    content:
-      "The school is accepting notebooks, pencils, art supplies, and gently used storybooks at the main office.",
-    pinned: false,
     icon: HeartHandshake,
     gradient: "from-emerald-500 to-teal-600",
     accent: "bg-emerald-500",
     ink: "text-emerald-700",
   },
   {
-    id: "A-004",
-    title: "Quarterly Assessment Schedule",
-    category: "Academic",
-    date: "2026-07-20",
-    audience: "Grades 1 to 6",
-    content:
-      "Quarterly assessments will run from July 20 to July 23. Class advisers will share the subject schedule.",
-    pinned: false,
     icon: GraduationCap,
     gradient: "from-violet-500 to-indigo-600",
     accent: "bg-violet-500",
@@ -219,105 +163,129 @@ const announcements = [
   },
 ];
 
-const events = [
-  {
-    id: "E-001",
-    title: "Nutrition Month Launch",
-    date: "2026-07-03",
-    month: "Jul",
-    day: "03",
-    time: "9:00 AM",
-    type: "Student Activity",
-    location: "School Quadrangle",
-    description: "A morning of health, food, and wellness activities.",
-  },
-  {
-    id: "E-002",
-    title: "Reading Buddy Day",
-    date: "2026-07-10",
-    month: "Jul",
-    day: "10",
-    time: "10:00 AM",
-    type: "Academic",
-    location: "Library and Classrooms",
-    description: "Older pupils read with younger learning partners.",
-  },
-  {
-    id: "E-003",
-    title: "Quarterly Assessments",
-    date: "2026-07-20",
-    month: "Jul",
-    day: "20",
-    time: "7:30 AM",
-    type: "Academic",
-    location: "Classrooms",
-    description: "Quarterly assessments for Grades 1 to 6.",
-  },
-  {
-    id: "E-004",
-    title: "Clean and Green Day",
-    date: "2026-07-31",
-    month: "Jul",
-    day: "31",
-    time: "7:00 AM",
-    type: "Community",
-    location: "School Grounds",
-    description: "Campus care day with families and local partners.",
-  },
-];
+function formatPublishedDate(date: string | null) {
+  if (!date) return "Published";
 
-const calendarDays = [
-  "",
-  "",
-  "",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "10",
-  "11",
-  "12",
-  "13",
-  "14",
-  "15",
-  "16",
-  "17",
-  "18",
-  "19",
-  "20",
-  "21",
-  "22",
-  "23",
-  "24",
-  "25",
-  "26",
-  "27",
-  "28",
-  "29",
-  "30",
-  "31",
-  "",
-];
-
-const eventDays = new Set(["3", "10", "20", "31"]);
-
-function formatDate(date: string) {
   return new Intl.DateTimeFormat("en-PH", {
     month: "short",
     day: "numeric",
     year: "numeric",
-  }).format(new Date(`${date}T00:00:00`));
+    timeZone: "Asia/Manila",
+  }).format(new Date(date));
 }
 
-export default function HomePage() {
-  const lead = announcements[0];
-  const LeadIcon = lead.icon;
-  const tickerItems = [...announcements, ...announcements];
+function formatEventMonth(value: string) {
+  return new Intl.DateTimeFormat("en-PH", {
+    month: "short",
+    timeZone: "Asia/Manila",
+  }).format(new Date(value));
+}
+
+function formatEventDay(value: string) {
+  return new Intl.DateTimeFormat("en-PH", {
+    day: "2-digit",
+    timeZone: "Asia/Manila",
+  }).format(new Date(value));
+}
+
+function formatEventTime(value: string) {
+  return new Intl.DateTimeFormat("en-PH", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "Asia/Manila",
+  }).format(new Date(value));
+}
+
+function formatCalendarMonth(value: Date) {
+  return new Intl.DateTimeFormat("en-PH", {
+    month: "long",
+    year: "numeric",
+    timeZone: "Asia/Manila",
+  }).format(value);
+}
+
+function buildCalendarDays(value: Date) {
+  const year = value.getFullYear();
+  const month = value.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const blanks = Array.from({ length: firstDay.getDay() }, () => "");
+  return [
+    ...blanks,
+    ...Array.from({ length: daysInMonth }, (_, index) => String(index + 1)),
+  ];
+}
+
+function eventDaySet(events: HomeEvent[], base: Date) {
+  const month = base.getMonth();
+  const year = base.getFullYear();
+
+  return new Set(
+    events
+      .map((event) => new Date(event.starts_at))
+      .filter(
+        (date) => date.getMonth() === month && date.getFullYear() === year,
+      )
+      .map((date) => String(date.getDate())),
+  );
+}
+
+function shortNumber(value: number) {
+  return new Intl.NumberFormat("en-PH").format(value);
+}
+
+function attendanceMetric(value: number | null) {
+  if (value === null) return "No data";
+  return `${value.toFixed(1)}%`;
+}
+
+function announcementGradient(index: number) {
+  return announcementStyles[index % announcementStyles.length].gradient;
+}
+
+function announcementAccent(index: number) {
+  return announcementStyles[index % announcementStyles.length].accent;
+}
+
+function announcementInk(index: number) {
+  return announcementStyles[index % announcementStyles.length].ink;
+}
+
+export default async function HomePage() {
+  const { announcements, events, metrics } = await getHomePageData();
+  const lead = announcements[0] ?? null;
+  const LeadIcon = announcementStyles[0].icon;
+  const tickerItems = announcements.length
+    ? [...announcements, ...announcements]
+    : [];
+  const selectedEvent = events[0] ?? null;
+  const calendarBase = selectedEvent
+    ? new Date(selectedEvent.starts_at)
+    : new Date();
+  const calendarDays = buildCalendarDays(calendarBase);
+  const highlightedEventDays = eventDaySet(events, calendarBase);
+  const stats = [
+    {
+      value: shortNumber(metrics.activeLearners),
+      label: "Active learners",
+      icon: UsersRound,
+    },
+    {
+      value: shortNumber(metrics.activeStaff),
+      label: "Active staff",
+      icon: UserRoundCheck,
+    },
+    {
+      value: attendanceMetric(metrics.attendanceRate),
+      label: "Attendance rate",
+      icon: BarChart3,
+    },
+    {
+      value: shortNumber(metrics.activeGradeLevels),
+      label: "Grade levels with enrollment",
+      icon: BookOpen,
+    },
+  ];
 
   return (
     <>
@@ -339,10 +307,13 @@ export default function HomePage() {
               <Sparkles size={14} />
               Welcome to Balili Elementary School
             </span>
-            <h1 className="text-balance mt-7 font-display text-5xl font-extrabold leading-none sm:text-6xl lg:text-[5.35rem]">
+            <p className="mt-7 font-display text-sm font-extrabold uppercase text-skybrand-200 sm:text-base">
               {school.name}
-              <span className="mt-3 block bg-gradient-to-r from-skybrand-300 to-white bg-clip-text text-transparent">
-                Growing minds. Building bright futures.
+            </p>
+            <h1 className="text-balance mt-4 max-w-4xl font-editorial text-5xl font-extrabold leading-[0.96] sm:text-6xl lg:text-[5.8rem]">
+              Growing minds.
+              <span className="block bg-gradient-to-r from-skybrand-300 via-white to-skybrand-100 bg-clip-text text-transparent">
+                Building bright futures.
               </span>
             </h1>
             <p className="mt-7 max-w-xl text-base leading-8 text-slate-200 sm:text-lg">
@@ -607,123 +578,137 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="marquee-mask mt-5 overflow-hidden border-y border-slate-300 bg-white/70 py-3 backdrop-blur">
-            <div className="marquee-track flex w-max gap-8">
-              {tickerItems.map((item, index) => (
-                <span
-                  className="flex items-center gap-3 text-xs font-extrabold uppercase text-navy-950"
-                  key={`${item.id}-${index}`}
-                >
-                  <span className={`size-2.5 rounded-full ${item.accent}`} />
-                  {item.title}
-                  <span className="text-slate-400">
-                    {formatDate(item.date)}
-                  </span>
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1.28fr_.72fr]">
-            <article className="shine-card group relative min-h-[31rem] overflow-hidden rounded-[2rem] bg-navy-950 text-white shadow-editorial">
-              <Image
-                alt="Balili learners enjoying a featured school activity"
-                className="absolute inset-0 h-full w-full object-cover opacity-70 transition duration-1000 group-hover:scale-105"
-                fill
-                src="/assets/news-feature.webp"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/80 to-navy-950/25" />
-              <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-navy-950 via-navy-950/80 to-transparent" />
-              <div className="relative flex min-h-[31rem] flex-col justify-end p-7 sm:p-10">
-                <div className="mb-6 flex flex-wrap items-center gap-2">
-                  <Badge tone="emerald">Lead story</Badge>
-                  {lead.pinned ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-300 px-3 py-1 text-[10px] font-extrabold uppercase text-navy-950">
-                      <Pin size={12} />
-                      Pinned
+          {tickerItems.length ? (
+            <div className="marquee-mask mt-5 overflow-hidden border-y border-slate-300 bg-white/70 py-3 backdrop-blur">
+              <div className="marquee-track flex w-max gap-8">
+                {tickerItems.map((item, index) => (
+                  <span
+                    className="flex items-center gap-3 text-xs font-extrabold uppercase text-navy-950"
+                    key={`${item.id}-${index}`}
+                  >
+                    <span
+                      className={`size-2.5 rounded-full ${announcementAccent(index)}`}
+                    />
+                    {item.title}
+                    <span className="text-slate-400">
+                      {formatPublishedDate(item.published_at)}
                     </span>
-                  ) : null}
-                </div>
-                <div className="grid max-w-3xl gap-6 sm:grid-cols-[auto_1fr] sm:items-start">
-                  <div
-                    className={`grid size-16 place-items-center rounded-3xl bg-gradient-to-br ${lead.gradient} shadow-xl shadow-black/20`}
-                  >
-                    <LeadIcon size={32} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-extrabold uppercase text-skybrand-200">
-                      {lead.category} - {formatDate(lead.date)}
-                    </p>
-                    <h3 className="mt-3 font-editorial text-4xl font-extrabold leading-none sm:text-5xl">
-                      {lead.title}
-                    </h3>
-                    <p className="mt-5 max-w-2xl text-base leading-8 text-slate-200">
-                      {lead.content}
-                    </p>
-                    <Link
-                      className="mt-7 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-extrabold text-navy-950 transition hover:-translate-y-0.5 hover:bg-skybrand-100"
-                      href="/announcements"
-                    >
-                      Read the bulletin
-                      <ArrowRight size={16} />
-                    </Link>
-                  </div>
-                </div>
+                  </span>
+                ))}
               </div>
-            </article>
-
-            <div className="grid gap-4">
-              {announcements.slice(1).map((item) => {
-                const Icon = item.icon;
-                return (
-                  <article
-                    className="group relative overflow-hidden rounded-[1.6rem] border border-slate-200 bg-white p-5 shadow-soft transition duration-500 hover:-translate-y-1 hover:border-skybrand-300 hover:shadow-glow"
-                    key={item.id}
-                  >
-                    <div className="relative flex gap-4">
-                      <div
-                        className={`grid size-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${item.gradient} text-white shadow-md transition duration-500 group-hover:rotate-6 group-hover:scale-110`}
-                      >
-                        <Icon size={24} />
-                      </div>
-                      <div className="min-w-0">
-                        <p
-                          className={`text-[10px] font-extrabold uppercase ${item.ink}`}
-                        >
-                          {item.category} - {formatDate(item.date)}
-                        </p>
-                        <h3 className="mt-2 font-display text-lg font-extrabold leading-tight text-navy-950">
-                          {item.title}
-                        </h3>
-                        <p className="mt-2 text-xs leading-6 text-slate-500">
-                          {item.content}
-                        </p>
-                      </div>
-                    </div>
-                  </article>
-                );
-              })}
-              <article className="relative overflow-hidden rounded-[1.6rem] bg-gradient-to-br from-navy-950 to-navy-800 p-6 text-white shadow-editorial">
-                <p className="text-xs font-extrabold uppercase text-skybrand-300">
-                  Quick notice
-                </p>
-                <h3 className="mt-3 font-display text-2xl font-extrabold">
-                  Save important dates early.
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-slate-300">
-                  The Events page now has a clean monthly calendar for families
-                  and advisers.
-                </p>
-                <Link
-                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-skybrand-200"
-                  href="/events"
-                >
-                  Open events
-                  <ArrowRight size={15} />
-                </Link>
-              </article>
             </div>
-          </div>
+          ) : null}
+
+          {lead ? (
+            <div className="mt-10 grid gap-6 lg:grid-cols-[1.28fr_.72fr]">
+              <article className="shine-card group relative min-h-[31rem] overflow-hidden rounded-[2rem] bg-navy-950 text-white shadow-editorial">
+                <Image
+                  alt="Balili learners enjoying a featured school activity"
+                  className="absolute inset-0 h-full w-full object-cover opacity-70 transition duration-1000 group-hover:scale-105"
+                  fill
+                  src="/assets/news-feature.webp"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/80 to-navy-950/25" />
+                <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-navy-950 via-navy-950/80 to-transparent" />
+                <div className="relative flex min-h-[31rem] flex-col justify-end p-7 sm:p-10">
+                  <div className="mb-6 flex flex-wrap items-center gap-2">
+                    <Badge tone="emerald">Latest published story</Badge>
+                  </div>
+                  <div className="grid max-w-3xl gap-6 sm:grid-cols-[auto_1fr] sm:items-start">
+                    <div
+                      className={`grid size-16 place-items-center rounded-3xl bg-gradient-to-br ${announcementGradient(0)} shadow-xl shadow-black/20`}
+                    >
+                      <LeadIcon size={32} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-extrabold uppercase text-skybrand-200">
+                        School update - {formatPublishedDate(lead.published_at)}
+                      </p>
+                      <h3 className="mt-3 font-editorial text-4xl font-extrabold leading-none sm:text-5xl">
+                        {lead.title}
+                      </h3>
+                      <p className="mt-5 max-w-2xl text-base leading-8 text-slate-200">
+                        {lead.body}
+                      </p>
+                      <Link
+                        className="mt-7 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-extrabold text-navy-950 transition hover:-translate-y-0.5 hover:bg-skybrand-100"
+                        href="/announcements"
+                      >
+                        Read the bulletin
+                        <ArrowRight size={16} />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <div className="grid gap-4">
+                {announcements.slice(1).map((item, index) => {
+                  const Icon =
+                    announcementStyles[(index + 1) % announcementStyles.length]
+                      .icon;
+                  return (
+                    <article
+                      className="group relative overflow-hidden rounded-[1.6rem] border border-slate-200 bg-white p-5 shadow-soft transition duration-500 hover:-translate-y-1 hover:border-skybrand-300 hover:shadow-glow"
+                      key={item.id}
+                    >
+                      <div className="relative flex gap-4">
+                        <div
+                          className={`grid size-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${announcementGradient(index + 1)} text-white shadow-md transition duration-500 group-hover:rotate-6 group-hover:scale-110`}
+                        >
+                          <Icon size={24} />
+                        </div>
+                        <div className="min-w-0">
+                          <p
+                            className={`text-[10px] font-extrabold uppercase ${announcementInk(index + 1)}`}
+                          >
+                            School update -{" "}
+                            {formatPublishedDate(item.published_at)}
+                          </p>
+                          <h3 className="mt-2 font-display text-lg font-extrabold leading-tight text-navy-950">
+                            {item.title}
+                          </h3>
+                          <p className="mt-2 text-xs leading-6 text-slate-500">
+                            {item.body}
+                          </p>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+                <article className="relative overflow-hidden rounded-[1.6rem] bg-gradient-to-br from-navy-950 to-navy-800 p-6 text-white shadow-editorial">
+                  <p className="text-xs font-extrabold uppercase text-skybrand-300">
+                    Calendar source
+                  </p>
+                  <h3 className="mt-3 font-display text-2xl font-extrabold">
+                    Approved events publish automatically.
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-slate-300">
+                    Staff can submit calendar items from their dashboard, and
+                    approved events appear here and on the Events page.
+                  </p>
+                  <Link
+                    className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-skybrand-200"
+                    href="/events"
+                  >
+                    Open events
+                    <ArrowRight size={15} />
+                  </Link>
+                </article>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-10 rounded-[2rem] border border-dashed border-slate-300 bg-white/80 p-8 text-center shadow-soft">
+              <BellRing className="mx-auto text-skybrand-600" size={34} />
+              <h3 className="mt-4 font-display text-2xl font-extrabold text-navy-950">
+                No published announcements yet
+              </h3>
+              <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-slate-600">
+                Once an announcement is published in the database, it will feed
+                this home page bulletin without hardcoded demo content.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -742,9 +727,18 @@ export default function HomePage() {
               glance, with the full events page ready for deeper planning.
             </p>
             <div className="mt-7 grid gap-3">
-              {events.map((event, index) => (
-                <EventCard event={event} index={index} key={event.id} />
-              ))}
+              {events.length ? (
+                events
+                  .slice(0, 4)
+                  .map((event, index) => (
+                    <EventCard event={event} index={index} key={event.id} />
+                  ))
+              ) : (
+                <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-5 text-sm leading-7 text-slate-600">
+                  No approved events are scheduled yet. Admin-approved calendar
+                  items will appear here automatically.
+                </div>
+              )}
             </div>
             <Link
               className="shine-card relative mt-7 inline-flex items-center gap-2 overflow-hidden rounded-xl bg-navy-900 px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-skybrand-600"
@@ -763,7 +757,7 @@ export default function HomePage() {
                     At a glance
                   </p>
                   <h3 className="mt-2 font-display text-2xl font-extrabold text-navy-950">
-                    July 2026
+                    {formatCalendarMonth(calendarBase)}
                   </h3>
                 </div>
                 <Badge tone="emerald">{events.length} events</Badge>
@@ -782,7 +776,7 @@ export default function HomePage() {
                   <span
                     className={`relative grid aspect-square place-items-center rounded-xl text-sm font-bold ${
                       day
-                        ? eventDays.has(day)
+                        ? highlightedEventDays.has(day)
                           ? "bg-navy-900 text-white shadow-[0_8px_20px_rgba(11,36,71,.18)]"
                           : "text-slate-600 hover:bg-skybrand-50"
                         : "text-transparent"
@@ -790,7 +784,7 @@ export default function HomePage() {
                     key={`${day || "blank"}-${index}`}
                   >
                     {day || "."}
-                    {day && eventDays.has(day) ? (
+                    {day && highlightedEventDays.has(day) ? (
                       <span className="absolute bottom-1.5 size-1.5 rounded-full bg-skybrand-300" />
                     ) : null}
                   </span>
@@ -803,31 +797,37 @@ export default function HomePage() {
                 Selected date
               </p>
               <h3 className="mt-2 font-display text-2xl font-extrabold">
-                July 3, 2026
+                {selectedEvent
+                  ? formatPublishedDate(selectedEvent.starts_at)
+                  : "No event selected"}
               </h3>
               <div className="mt-6 space-y-3">
-                <article className="rounded-2xl border border-white/10 bg-white/[.08] p-4 backdrop-blur-md">
-                  <Badge tone="emerald">Student Activity</Badge>
-                  <h4 className="mt-3 font-display text-lg font-extrabold">
-                    Nutrition Month Launch
-                  </h4>
-                  <p className="mt-2 text-sm leading-6 text-slate-300">
-                    A morning of health, food, and wellness activities.
-                  </p>
-                  <div className="mt-4 grid gap-2 text-xs font-semibold text-slate-300">
-                    <span className="flex items-center gap-2">
-                      <Clock3 size={14} className="text-skybrand-300" />
-                      9:00 AM
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <MapPin size={14} className="text-skybrand-300" />
-                      School Quadrangle
-                    </span>
-                  </div>
-                </article>
+                {selectedEvent ? (
+                  <article className="rounded-2xl border border-white/10 bg-white/[.08] p-4 backdrop-blur-md">
+                    <Badge tone="emerald">Approved event</Badge>
+                    <h4 className="mt-3 font-display text-lg font-extrabold">
+                      {selectedEvent.title}
+                    </h4>
+                    {selectedEvent.body ? (
+                      <p className="mt-2 text-sm leading-6 text-slate-300">
+                        {selectedEvent.body}
+                      </p>
+                    ) : null}
+                    <div className="mt-4 grid gap-2 text-xs font-semibold text-slate-300">
+                      <span className="flex items-center gap-2">
+                        <Clock3 size={14} className="text-skybrand-300" />
+                        {formatEventTime(selectedEvent.starts_at)}
+                      </span>
+                      <span className="flex items-center gap-2">
+                        <MapPin size={14} className="text-skybrand-300" />
+                        Balili Elementary School
+                      </span>
+                    </div>
+                  </article>
+                ) : null}
                 <div className="rounded-2xl border border-dashed border-white/20 p-5 text-sm leading-7 text-slate-300">
-                  Pick highlighted dates in the full events page for more
-                  schedule details.
+                  Highlighted dates come from approved database events. Pending
+                  staff submissions do not appear here until admin approval.
                 </div>
               </div>
             </div>
@@ -874,13 +874,7 @@ export default function HomePage() {
   );
 }
 
-function EventCard({
-  event,
-  index,
-}: {
-  event: (typeof events)[number];
-  index: number;
-}) {
+function EventCard({ event, index }: { event: HomeEvent; index: number }) {
   const colors = [
     "bg-skybrand-500",
     "bg-violet-500",
@@ -895,20 +889,22 @@ function EventCard({
           colors[index % colors.length]
         }`}
       >
-        <span className="text-[10px] font-bold uppercase">{event.month}</span>
+        <span className="text-[10px] font-bold uppercase">
+          {formatEventMonth(event.starts_at)}
+        </span>
         <span className="font-display text-2xl font-extrabold">
-          {event.day}
+          {formatEventDay(event.starts_at)}
         </span>
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-[10px] font-bold uppercase text-skybrand-600">
-          {event.type}
+          Approved event
         </p>
         <h3 className="mt-1 truncate font-display font-bold text-navy-950">
           {event.title}
         </h3>
         <p className="mt-1 text-xs text-slate-500">
-          {event.time} - {event.location}
+          {formatEventTime(event.starts_at)} - Balili Elementary School
         </p>
       </div>
       <ChevronRight

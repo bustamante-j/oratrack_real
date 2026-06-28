@@ -15,6 +15,7 @@ export const adminNavItems: NavItem[] = [
   { href: "/admin/users", label: "Teachers" },
   { href: "/admin/sections", label: "Sections" },
   { href: "/admin/learners", label: "Learners" },
+  { href: "/admin/events", label: "Events" },
   { href: "/admin/promotion", label: "Promotion" },
   { href: "/admin/analytics", label: "Analytics" },
   { href: "/admin/reports", label: "Reports" },
@@ -27,6 +28,7 @@ export const adminNavItems: NavItem[] = [
 export const teacherNavItems: NavItem[] = [
   { href: "/teacher", label: "Overview" },
   { href: "/teacher/learners", label: "Learners" },
+  { href: "/teacher/events", label: "Events" },
   { href: "/teacher/attendance", label: "Attendance" },
   { href: "/teacher/grades", label: "Grades" },
   { href: "/teacher/literacy-numeracy", label: "Literacy/Numeracy" },

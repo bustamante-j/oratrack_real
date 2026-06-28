@@ -150,6 +150,13 @@ export const learnerGuardianFormSchema = z.object({
   address: z.string().max(500).trim().optional(),
 });
 
+export const learnerImportRowSchema = learnerCreateFormSchema.extend({
+  schoolYear: z.string().min(1).max(80).trim(),
+  gradeLevel: z.string().min(1).max(40).trim(),
+  section: z.string().max(80).trim().optional(),
+  enrolledOn: z.iso.date().optional(),
+});
+
 export const promotionBatchFormSchema = z
   .object({
     sourceSchoolYearId: z.uuid(),
@@ -315,4 +322,26 @@ export const aiDraftRequestSchema = z.object({
 
 export const aiAssistantFormSchema = aiDraftRequestSchema.extend({
   scopeKind: z.enum(["school", "section", "learner"]),
+});
+
+export const publicEventFormSchema = z
+  .object({
+    title: z.string().min(2).max(160).trim(),
+    body: z.string().max(2000).trim().optional(),
+    startsAt: z.string().min(1).max(40).trim(),
+    endsAt: z.string().max(40).trim().optional(),
+  })
+  .refine(
+    (value) => {
+      if (!value.endsAt) return true;
+      return value.startsAt < value.endsAt;
+    },
+    {
+      message: "Event end time must be after the start time.",
+      path: ["endsAt"],
+    },
+  );
+
+export const publicEventModerationSchema = z.object({
+  id: z.uuid(),
 });
