@@ -3,7 +3,9 @@ import { z } from "zod";
 import {
   appRoles,
   attendanceStatuses,
+  certificateTypes,
   interventionStatuses,
+  lessonPlanStatuses,
   ratingLevels,
 } from "@/types/domain";
 
@@ -11,6 +13,8 @@ export const appRoleSchema = z.enum(appRoles);
 export const attendanceStatusSchema = z.enum(attendanceStatuses);
 export const ratingLevelSchema = z.enum(ratingLevels);
 export const interventionStatusSchema = z.enum(interventionStatuses);
+export const certificateTypeSchema = z.enum(certificateTypes);
+export const lessonPlanStatusSchema = z.enum(lessonPlanStatuses);
 export const accountStatusSchema = z.enum(["active", "inactive"]);
 export const learnerStatusSchema = z.enum([
   "active",
@@ -245,8 +249,50 @@ export const interventionUpdateFormSchema = z.object({
 
 export const certificateRequestSchema = z.object({
   learnerEnrollmentIds: z.array(z.uuid()).min(1),
-  certificateType: z.enum(["recognition", "completion"]),
+  certificateType: certificateTypeSchema,
   templateId: z.uuid().optional(),
+});
+
+export const certificateTemplateFormSchema = z.object({
+  name: z.string().min(2).max(120).trim(),
+  certificateType: certificateTypeSchema,
+});
+
+export const certificateGenerateFormSchema = z.object({
+  enrollmentId: z.uuid(),
+  certificateType: certificateTypeSchema,
+  templateId: z.uuid().optional(),
+});
+
+export const lessonPlanUploadFormSchema = z.object({
+  schoolYearId: z.uuid(),
+  gradeLevelId: z.coerce.number().int().positive().optional(),
+  subjectId: z.uuid().optional(),
+  title: z.string().min(2).max(180).trim(),
+});
+
+export const lessonPlanReviewFormSchema = z.object({
+  lessonPlanId: z.uuid(),
+  status: lessonPlanStatusSchema,
+});
+
+export const lessonPlanReplaceFormSchema = z.object({
+  lessonPlanId: z.uuid(),
+});
+
+export const reportExportFormSchema = z.object({
+  reportType: z.enum([
+    "attendance",
+    "grades",
+    "literacy_numeracy",
+    "interventions",
+    "promotion",
+    "learner_profile",
+    "school_summary",
+  ]),
+  schoolYearId: z.uuid().optional(),
+  sectionId: z.uuid().optional(),
+  learnerId: z.uuid().optional(),
 });
 
 export const aiDraftRequestSchema = z.object({
@@ -265,4 +311,8 @@ export const aiDraftRequestSchema = z.object({
     schoolYearId: z.uuid().optional(),
   }),
   prompt: z.string().min(1).max(2000).trim(),
+});
+
+export const aiAssistantFormSchema = aiDraftRequestSchema.extend({
+  scopeKind: z.enum(["school", "section", "learner"]),
 });

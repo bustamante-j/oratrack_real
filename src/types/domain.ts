@@ -34,6 +34,19 @@ export const interventionStatuses = [
 
 export type InterventionStatus = (typeof interventionStatuses)[number];
 
+export const certificateTypes = ["recognition", "completion"] as const;
+
+export type CertificateType = (typeof certificateTypes)[number];
+
+export const lessonPlanStatuses = [
+  "uploaded",
+  "replaced",
+  "reviewed",
+  "archived",
+] as const;
+
+export type LessonPlanStatus = (typeof lessonPlanStatuses)[number];
+
 export type NavItem = {
   href: string;
   label: string;

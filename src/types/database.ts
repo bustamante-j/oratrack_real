@@ -1,6 +1,11 @@
 import type { AppRole } from "@/types/domain";
 import type { AttendanceStatus } from "@/types/domain";
-import type { InterventionStatus, RatingLevel } from "@/types/domain";
+import type {
+  CertificateType,
+  InterventionStatus,
+  LessonPlanStatus,
+  RatingLevel,
+} from "@/types/domain";
 
 export type Json =
   | string
@@ -34,6 +39,8 @@ export type Database = {
       intervention_status: InterventionStatus;
       risk_type: "attendance" | "academic" | "literacy" | "numeracy" | "manual";
       risk_severity: "low" | "moderate" | "high" | "critical";
+      certificate_type: CertificateType;
+      lesson_plan_status: LessonPlanStatus;
     };
     Tables: {
       profiles: Table<
@@ -467,6 +474,128 @@ export type Database = {
           notes: string;
           follow_up_on?: string | null;
           created_by: string;
+        }
+      >;
+      certificate_templates: Table<
+        Timestamped & {
+          id: string;
+          name: string;
+          certificate_type: CertificateType;
+          template_payload: Json;
+          is_active: boolean;
+          created_by: string | null;
+        },
+        {
+          id?: string;
+          name: string;
+          certificate_type: CertificateType;
+          template_payload?: Json;
+          is_active?: boolean;
+          created_by?: string | null;
+        }
+      >;
+      generated_certificates: Table<
+        {
+          id: string;
+          certificate_template_id: string | null;
+          enrollment_id: string;
+          certificate_type: CertificateType;
+          file_path: string | null;
+          generated_by: string;
+          generated_at: string;
+        },
+        {
+          id?: string;
+          certificate_template_id?: string | null;
+          enrollment_id: string;
+          certificate_type: CertificateType;
+          file_path?: string | null;
+          generated_by: string;
+        }
+      >;
+      uploaded_files: Table<
+        {
+          id: string;
+          bucket_id: string;
+          object_path: string;
+          original_filename: string;
+          mime_type: string;
+          byte_size: number;
+          uploaded_by: string;
+          created_at: string;
+        },
+        {
+          id?: string;
+          bucket_id: string;
+          object_path: string;
+          original_filename: string;
+          mime_type: string;
+          byte_size: number;
+          uploaded_by: string;
+        }
+      >;
+      lesson_plans: Table<
+        Timestamped & {
+          id: string;
+          school_year_id: string;
+          grade_level_id: number | null;
+          subject_id: string | null;
+          teacher_id: string;
+          title: string;
+          file_id: string | null;
+          status: LessonPlanStatus;
+          reviewed_by: string | null;
+          reviewed_at: string | null;
+        },
+        {
+          id?: string;
+          school_year_id: string;
+          grade_level_id?: number | null;
+          subject_id?: string | null;
+          teacher_id: string;
+          title: string;
+          file_id?: string | null;
+          status?: LessonPlanStatus;
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+        }
+      >;
+      report_exports: Table<
+        {
+          id: string;
+          report_type: string;
+          scope: Json;
+          file_path: string | null;
+          exported_by: string;
+          exported_at: string;
+        },
+        {
+          id?: string;
+          report_type: string;
+          scope?: Json;
+          file_path?: string | null;
+          exported_by: string;
+        }
+      >;
+      ai_activity_logs: Table<
+        {
+          id: string;
+          actor_id: string;
+          intent: string;
+          scope: Json;
+          prompt_excerpt: string | null;
+          output_excerpt: string | null;
+          proposed_action: Json;
+          created_at: string;
+        },
+        {
+          id?: string;
+          actor_id: string;
+          intent: string;
+          scope?: Json;
+          prompt_excerpt?: string | null;
+          output_excerpt?: string | null;
+          proposed_action?: Json;
         }
       >;
       audit_logs: Table<
