@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Mail } from "lucide-react";
+import { ArrowLeft, LoaderCircle, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -35,7 +35,12 @@ export function ResetPasswordForm() {
             className="pointer-events-none absolute left-4 top-1/2 z-10 -translate-y-1/2 text-slate-400"
             size={18}
           />
-          <input className="input py-3 pl-12 pr-4" name="email" type="email" />
+          <input
+            autoComplete="email"
+            className="input input-icon-left py-3 pr-4"
+            name="email"
+            type="email"
+          />
         </span>
         {state.errors?.email ? (
           <span className="text-xs text-rose-700">
@@ -49,7 +54,14 @@ export function ResetPasswordForm() {
         </p>
       ) : null}
       <Button className="mt-6 w-full" disabled={pending} type="submit">
-        {pending ? "Sending..." : "Send reset link"}
+        {pending ? (
+          <>
+            <LoaderCircle className="animate-spin" size={17} />
+            Sending...
+          </>
+        ) : (
+          "Send reset link"
+        )}
       </Button>
     </form>
   );

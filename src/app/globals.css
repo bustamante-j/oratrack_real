@@ -44,6 +44,10 @@ body {
   overflow-x: hidden;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 ::selection {
   background: #8edcff;
   color: #071b33;
@@ -55,6 +59,16 @@ input,
 select,
 textarea {
   outline-color: #2563eb;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 3px solid #8edcff;
+  outline-offset: 3px;
 }
 
 button,
@@ -73,6 +87,7 @@ a {
   background: #ffffff;
   padding: 0.625rem 0.875rem;
   font-size: 0.875rem;
+  min-height: 2.75rem;
   color: #1e293b;
   transition:
     border-color 0.2s ease,
@@ -91,6 +106,11 @@ a {
 
 .input-icon-left {
   padding-left: 3.25rem;
+}
+
+textarea.input {
+  min-height: 7rem;
+  resize: vertical;
 }
 
 .label {
@@ -167,4 +187,66 @@ a {
     linear-gradient(rgba(44, 167, 237, 0.045) 1px, transparent 1px),
     linear-gradient(90deg, rgba(44, 167, 237, 0.045) 1px, transparent 1px);
   background-size: 40px 40px;
+}
+
+.portal-shell h1 {
+  text-wrap: balance;
+}
+
+.portal-shell section,
+.portal-shell article,
+.portal-shell form,
+.portal-shell label,
+.portal-shell details {
+  min-width: 0;
+}
+
+.portal-shell pre {
+  overflow-x: auto;
+}
+
+.scroll-soft {
+  scrollbar-width: thin;
+  scrollbar-color: #bceaff transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-soft::-webkit-scrollbar {
+  height: 0.45rem;
+  width: 0.45rem;
+}
+
+.scroll-soft::-webkit-scrollbar-thumb {
+  background: #bceaff;
+  border-radius: 999px;
+}
+
+.scroll-soft::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (max-width: 640px) {
+  .portal-shell {
+    background-size: 28px 28px;
+  }
+
+  .portal-shell h1 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .portal-shell h2 {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

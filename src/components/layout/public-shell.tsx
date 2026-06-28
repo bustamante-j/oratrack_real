@@ -40,8 +40,8 @@ export function PublicShell({ children }: { children: ReactNode }) {
       </div>
 
       <header className="sticky top-0 z-20 border-b border-slate-200/80 bg-white/95 shadow-[0_10px_35px_rgba(7,27,51,.08)] backdrop-blur-xl">
-        <div className="mx-auto flex h-[78px] max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
-          <Link aria-label="ORATRACK home" className="group" href="/">
+        <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:min-h-[78px] sm:px-6 lg:px-8">
+          <Link aria-label="ORATRACK home" className="group min-w-0" href="/">
             <BrandLogo className="transition duration-300 group-hover:-translate-y-0.5" />
           </Link>
 
@@ -61,13 +61,28 @@ export function PublicShell({ children }: { children: ReactNode }) {
           </nav>
 
           <Link
-            className="shine-card hidden items-center gap-2 rounded-xl bg-navy-900 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-navy-900/15 transition hover:-translate-y-0.5 hover:bg-skybrand-600 hover:shadow-skybrand-500/25 sm:inline-flex"
+            className="shine-card inline-flex shrink-0 items-center gap-2 rounded-xl bg-navy-900 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-navy-900/15 transition hover:-translate-y-0.5 hover:bg-skybrand-600 hover:shadow-skybrand-500/25 sm:px-5 sm:py-3"
             href="/login"
           >
-            Teacher Portal
+            <span className="hidden sm:inline">Teacher Portal</span>
+            <span className="sm:hidden">Portal</span>
             <ArrowUpRight size={16} />
           </Link>
         </div>
+        <nav
+          aria-label="Public mobile"
+          className="scroll-soft flex gap-2 overflow-x-auto border-t border-slate-100 px-4 py-2.5 sm:px-6 lg:hidden"
+        >
+          {publicNavItems.map((item) => (
+            <Link
+              className="shrink-0 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-600 transition hover:border-skybrand-300 hover:bg-skybrand-50 hover:text-navy-900"
+              href={item.href}
+              key={item.href}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
       </header>
 
       <main>{children}</main>
@@ -171,7 +186,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
           </div>
 
           <div className="mt-14 flex flex-col justify-between gap-3 border-t border-white/10 pt-6 text-xs text-slate-400 sm:flex-row">
-            <p>© 2026 Balili Elementary School.</p>
+            <p>&copy; 2026 Balili Elementary School.</p>
             <p>Powered by ORATRACK.</p>
           </div>
         </div>
