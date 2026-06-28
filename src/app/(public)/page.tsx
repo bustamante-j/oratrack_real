@@ -17,7 +17,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { MetricCard } from "@/components/ui/metric-card";
-import { school } from "@/lib/constants";
+import { externalSchoolLinks, school } from "@/lib/constants";
 
 const quickLinks = [
   {
@@ -249,6 +249,52 @@ export default function HomePage() {
                   {item}
                 </p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-slate-50 py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-extrabold uppercase text-skybrand-600">
+                Procurement and official links
+              </p>
+              <h2 className="text-balance mt-3 font-display text-3xl font-extrabold text-navy-950">
+                Quick access to official DepEd and school channels.
+              </h2>
+            </div>
+            <Link
+              className="inline-flex w-fit items-center gap-2 text-sm font-bold text-skybrand-600 hover:text-navy-900"
+              href="/contact"
+            >
+              Contact the school
+              <ArrowUpRight size={16} />
+            </Link>
+          </div>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {externalSchoolLinks.map((link) => (
+              <a
+                className="group rounded-[1.35rem] border border-slate-200 bg-white p-5 shadow-soft transition hover:-translate-y-1 hover:border-skybrand-300 hover:shadow-glow"
+                href={link.href}
+                key={link.label}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <span className="grid size-11 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+                  <ArrowUpRight
+                    className="transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    size={20}
+                  />
+                </span>
+                <span className="mt-4 block font-display font-extrabold text-navy-950">
+                  {link.label}
+                </span>
+                <span className="mt-2 block text-sm leading-6 text-slate-600">
+                  Opens the official external channel in a new tab.
+                </span>
+              </a>
             ))}
           </div>
         </div>

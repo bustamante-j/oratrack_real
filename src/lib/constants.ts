@@ -13,7 +13,7 @@ export const externalSchoolLinks = [
   { label: "DepEd National", href: "https://www.deped.gov.ph/" },
   { label: "DepEd CAR", href: "https://car.deped.gov.ph/" },
   { label: "DepEd Benguet", href: "https://depedbenguet.com/" },
-  { label: "FB Balili ES", href: "https://www.facebook.com/" },
+  { label: "FB Balili ES", href: "https://www.facebook.com/balilielem135617/" },
 ];
 
 export const roleLabels: Record<AppRole, string> = {
