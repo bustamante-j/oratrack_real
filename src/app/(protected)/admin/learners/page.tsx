@@ -232,7 +232,7 @@ export default async function LearnersPage({
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Maintain one stable learner record, then track every yearly grade,
           section, guardian, and archive state through linked records.
@@ -334,10 +334,6 @@ export default async function LearnersPage({
               <h2 className="font-display text-xl font-extrabold text-navy-950">
                 Bulk import learners
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                Download the Excel template, fill learner details, then upload
-                the workbook to register and enroll many learners at once.
-              </p>
             </div>
           </div>
 
@@ -399,11 +395,6 @@ export default async function LearnersPage({
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               Enrolled learners
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Manage section assignment separately from learner registration.
-              This keeps identity records and school-year enrollment workflows
-              distinct.
-            </p>
           </div>
         </div>
 
@@ -569,9 +560,6 @@ export default async function LearnersPage({
               <h2 className="font-display text-xl font-extrabold text-navy-950">
                 Learner profiles
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                Search identity records and review enrollment history.
-              </p>
             </div>
           </div>
 

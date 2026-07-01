@@ -341,7 +341,7 @@ export default async function PromotionPage() {
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Move active enrolled learners into the next school year, assign their
           grade and section, and keep every source enrollment linked for review.
@@ -471,9 +471,6 @@ export default async function PromotionPage() {
                 <h2 className="font-display text-xl font-extrabold text-navy-950">
                   Cohort readiness
                 </h2>
-                <p className="mt-1 text-sm text-slate-500">
-                  Active learners with enrolled source records.
-                </p>
               </div>
             </div>
 
@@ -551,9 +548,6 @@ export default async function PromotionPage() {
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               Class assignment load
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Current enrolled counts by school year, grade, and section.
-            </p>
           </div>
         </div>
 
@@ -623,9 +617,6 @@ export default async function PromotionPage() {
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               Recent promotion history
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Target enrollments linked to their source records.
-            </p>
           </div>
         </div>
 

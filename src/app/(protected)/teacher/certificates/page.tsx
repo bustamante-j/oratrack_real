@@ -197,7 +197,7 @@ export default async function TeacherCertificatesPage() {
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Generate recognition and completion certificates for learners visible
           to your adviser or subject-teacher account.
@@ -281,9 +281,6 @@ export default async function TeacherCertificatesPage() {
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               Certificate history
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Re-download certificates you have permission to view.
-            </p>
           </div>
         </div>
 

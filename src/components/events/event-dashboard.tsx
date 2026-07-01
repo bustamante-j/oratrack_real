@@ -81,11 +81,6 @@ export function EventDashboard({
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           School events
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
-          Add school activities to the shared calendar. Teacher and adviser
-          submissions stay pending until an admin approves them for the public
-          site and home page.
-        </p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
@@ -119,11 +114,6 @@ export function EventDashboard({
               <h2 className="font-display text-xl font-extrabold text-navy-950">
                 {isAdmin ? "Publish event" : "Submit event for approval"}
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                {isAdmin
-                  ? "Admin-created events are published immediately."
-                  : "Submitted events appear publicly only after admin approval."}
-              </p>
             </div>
           </div>
 
@@ -171,9 +161,6 @@ export function EventDashboard({
               <h2 className="font-display text-xl font-extrabold text-navy-950">
                 Approved calendar
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                These are the events that can appear on the public home page.
-              </p>
             </div>
           </div>
 
@@ -206,11 +193,6 @@ export function EventDashboard({
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               Pending review
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              {isAdmin
-                ? "Approve events once details are ready for publishing."
-                : "Your submitted events wait here until an admin approves them."}
-            </p>
           </div>
         </div>
 

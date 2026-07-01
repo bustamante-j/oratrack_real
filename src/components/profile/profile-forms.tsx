@@ -46,9 +46,6 @@ export function ProfileForms({ profile }: { profile: ProfileFormData }) {
             <h2 className="font-display text-lg font-extrabold text-navy-950">
               Profile details
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Keep your contact details current.
-            </p>
           </div>
         </div>
 
@@ -97,9 +94,6 @@ export function ProfileForms({ profile }: { profile: ProfileFormData }) {
             <h2 className="font-display text-lg font-extrabold text-navy-950">
               Password
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Change the password for your ORATRACK sign-in.
-            </p>
           </div>
         </div>
 

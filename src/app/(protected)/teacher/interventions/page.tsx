@@ -264,7 +264,7 @@ export default async function InterventionsPage({
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Record learner support actions, follow-up dates, and progress updates
           for the learners visible to your account.
@@ -376,9 +376,6 @@ export default async function InterventionsPage({
                 <h2 className="font-display text-xl font-extrabold text-navy-950">
                   Intervention records
                 </h2>
-                <p className="mt-1 text-sm text-slate-500">
-                  Review active and completed support actions.
-                </p>
               </div>
             </div>
 
@@ -463,7 +460,7 @@ export default async function InterventionsPage({
                           {learner ? learnerName(learner) : "Learner"}
                         </h3>
                         <p className="mt-1 text-sm text-slate-500">
-                          {learner?.lrn ? `LRN ${learner.lrn}` : "No LRN"} ·{" "}
+                          {learner?.lrn ? `LRN ${learner.lrn}` : "No LRN"} -{" "}
                           {section
                             ? `${yearById.get(section.school_year_id)?.name ?? "School year"} - ${gradeLabel(gradeById, section.grade_level_id)} ${section.name}`
                             : "No section"}

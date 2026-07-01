@@ -197,7 +197,7 @@ export default async function UsersPage() {
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Create staff sign-ins, maintain roles and active status, reset
           passwords, and review the assignments that scope teacher access.

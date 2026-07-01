@@ -78,7 +78,7 @@ export default async function SchoolYearsPage() {
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Create the school-year containers used by learner enrollments,
           sections, attendance, grades, reports, and promotion history.
@@ -246,10 +246,6 @@ export default async function SchoolYearsPage() {
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               Grade periods
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Create the standard quarterly periods used by teacher grade
-              encoding and Excel imports.
-            </p>
           </div>
         </div>
 

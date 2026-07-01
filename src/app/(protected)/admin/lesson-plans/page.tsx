@@ -160,7 +160,7 @@ export default async function AdminLessonPlansPage() {
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Review teacher lesson-plan uploads, download private files by signed
           URL, and archive old submissions.
@@ -185,9 +185,6 @@ export default async function AdminLessonPlansPage() {
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               Submitted lesson plans
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Mark submissions as reviewed or archive them after download.
-            </p>
           </div>
         </div>
 

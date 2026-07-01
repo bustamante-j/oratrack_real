@@ -19,9 +19,14 @@ export function ModulePage({
         <h1 className="mt-4 font-display text-3xl font-extrabold text-navy-950">
           {module.title}
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
-          {module.summary}
-        </p>
+        <details className="mt-3 max-w-3xl">
+          <summary className="cursor-pointer text-xs font-bold uppercase text-slate-400 transition hover:text-navy-900">
+            More
+          </summary>
+          <p className="mt-2 text-sm leading-7 text-slate-600">
+            {module.summary}
+          </p>
+        </details>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_0.8fr]">
@@ -52,10 +57,15 @@ export function ModulePage({
               </Badge>
             ))}
           </div>
-          <p className="mt-5 text-sm leading-6 text-slate-600">
-            Sensitive actions in this module should insert rows into
-            `audit_logs` after authorization succeeds.
-          </p>
+          <details className="mt-5">
+            <summary className="cursor-pointer text-xs font-bold uppercase text-slate-400 transition hover:text-navy-900">
+              More
+            </summary>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              Sensitive actions in this module should insert rows into
+              `audit_logs` after authorization succeeds.
+            </p>
+          </details>
         </section>
       </div>
 

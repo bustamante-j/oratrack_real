@@ -152,7 +152,7 @@ export default async function TeacherReportsPage() {
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Export PDF reports for attendance, grades, literacy, interventions,
           learner profiles, and class summaries within your visible records.
@@ -239,9 +239,6 @@ export default async function TeacherReportsPage() {
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               Export history
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Recent exports from your account are listed here.
-            </p>
           </div>
         </div>
 

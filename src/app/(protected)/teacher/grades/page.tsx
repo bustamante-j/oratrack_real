@@ -333,7 +333,7 @@ export default async function GradesPage({
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Encode subject grades manually or import the ORATRACK Excel template
           for the sections assigned to your teacher account.
@@ -535,10 +535,6 @@ export default async function GradesPage({
                   <h2 className="font-display text-xl font-extrabold text-navy-950">
                     Excel import
                   </h2>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Template columns: LRN, Subject Code, Period Code, Grade,
-                    Remarks.
-                  </p>
                 </div>
               </div>
 
@@ -631,9 +627,6 @@ export default async function GradesPage({
                   <h2 className="font-display text-xl font-extrabold text-navy-950">
                     Period averages
                   </h2>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Encoded class averages for the selected subject.
-                  </p>
                 </div>
               </div>
 
@@ -683,9 +676,6 @@ export default async function GradesPage({
                   <h2 className="font-display text-xl font-extrabold text-navy-950">
                     Import history
                   </h2>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Recent successful imports for this assignment.
-                  </p>
                 </div>
               </div>
 

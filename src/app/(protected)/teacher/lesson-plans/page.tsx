@@ -138,7 +138,7 @@ export default async function TeacherLessonPlansPage() {
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Upload private lesson-plan files, replace drafts, and download your
           submitted files through short-lived signed links.
@@ -235,9 +235,6 @@ export default async function TeacherLessonPlansPage() {
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               My lesson plans
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Replace a file when you need to resubmit after review.
-            </p>
           </div>
         </div>
 

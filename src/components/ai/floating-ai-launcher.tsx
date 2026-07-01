@@ -74,14 +74,6 @@ export function FloatingAiLauncher({ role }: { role: AppRole }) {
                   </p>
                 </div>
               </div>
-              <div className="relative mt-4 flex items-center gap-2 rounded-xl border border-white/10 bg-white/[.08] px-3 py-2 text-[11px] text-slate-200">
-                <ShieldCheck
-                  className="text-emerald-300"
-                  size={16}
-                  weight="duotone"
-                />
-                Drafts are read-only until reviewed in the full assistant.
-              </div>
             </div>
 
             <div className="scroll-soft flex-1 overflow-y-auto bg-slate-50/70 p-4">
@@ -90,19 +82,16 @@ export function FloatingAiLauncher({ role }: { role: AppRole }) {
                   {
                     icon: Brain,
                     title: "Summarize visible records",
-                    text: "Ask for learner, class, or school summaries based on permitted data.",
                   },
                   {
                     icon: Lightning,
                     title: "Draft safe narratives",
-                    text: "Prepare parent messages, intervention notes, and report language.",
                   },
                   {
                     icon: ShieldCheck,
                     title: "Review first",
-                    text: "AI output is logged and kept as a suggestion until a user confirms it.",
                   },
-                ].map(({ icon: Icon, title, text }) => (
+                ].map(({ icon: Icon, title }) => (
                   <article
                     className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
                     key={title}
@@ -115,9 +104,6 @@ export function FloatingAiLauncher({ role }: { role: AppRole }) {
                         <h2 className="font-display text-sm font-extrabold text-navy-950">
                           {title}
                         </h2>
-                        <p className="mt-1 text-sm leading-6 text-slate-600">
-                          {text}
-                        </p>
                       </div>
                     </div>
                   </article>

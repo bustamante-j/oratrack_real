@@ -40,7 +40,6 @@ function formatDateTime(value: string) {
 
 export function AiAssistantPanel({
   title,
-  description,
   learners,
   sections,
   schoolYears,
@@ -67,9 +66,6 @@ export function AiAssistantPanel({
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           {title}
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
-          {description}
-        </p>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
@@ -85,9 +81,6 @@ export function AiAssistantPanel({
               <h2 className="font-display text-xl font-extrabold text-navy-950">
                 Draft assistant
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                Drafts are read-only suggestions and are logged for review.
-              </p>
             </div>
           </div>
 
@@ -181,16 +174,17 @@ export function AiAssistantPanel({
               <h2 className="font-display text-xl font-extrabold text-navy-950">
                 Draft output
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                {state.notice ??
-                  "Generated text appears here after you submit a prompt."}
-              </p>
             </div>
           </div>
 
           <pre className="mt-6 min-h-72 whitespace-pre-wrap rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm leading-7 text-slate-700">
-            {state.draft ?? "No draft generated yet."}
+            {state.draft ?? ""}
           </pre>
+          {state.notice ? (
+            <p className="mt-3 text-xs font-bold uppercase text-slate-500">
+              {state.notice}
+            </p>
+          ) : null}
           {state.mode ? (
             <p className="mt-3 text-xs font-bold uppercase text-slate-500">
               Mode: {state.mode}

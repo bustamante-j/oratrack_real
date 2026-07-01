@@ -41,11 +41,9 @@ const tooltipStyle = {
 
 function ChartCard({
   title,
-  description,
   children,
 }: {
   title: string;
-  description: string;
   children: ReactNode;
 }) {
   return (
@@ -55,12 +53,6 @@ function ChartCard({
           <h2 className="font-display text-base font-bold text-navy-950">
             {title}
           </h2>
-          <details className="mt-1 text-sm leading-6 text-slate-500">
-            <summary className="cursor-pointer text-xs font-bold uppercase tracking-wide text-slate-500">
-              Details
-            </summary>
-            <p className="mt-2">{description}</p>
-          </details>
         </div>
       </div>
       <div className="h-56 w-full">{children}</div>
@@ -72,9 +64,6 @@ function EmptyGraph() {
   return (
     <div className="flex h-full flex-col items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50 text-center">
       <ChartLineUp size={28} weight="duotone" className="text-slate-300" />
-      <p className="mt-3 text-sm font-semibold text-slate-500">
-        No graph data yet
-      </p>
     </div>
   );
 }
@@ -153,9 +142,6 @@ export function DashboardGraphs({ data }: { data: DashboardGraphData }) {
           <p className="font-display text-sm font-extrabold text-navy-950">
             Analytics
           </p>
-          <p className="text-xs text-slate-500">
-            Coverage, operations, and support signals.
-          </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {visible ? (
@@ -199,10 +185,7 @@ export function DashboardGraphs({ data }: { data: DashboardGraphData }) {
 
       {visible ? (
         <div className="grid gap-4 xl:grid-cols-[1.25fr_.75fr] 2xl:grid-cols-3">
-          <ChartCard
-            description="Cumulative module availability by build phase."
-            title="Phase coverage"
-          >
+          <ChartCard title="Phase coverage">
             {mode === "table" ? (
               <TableGraph data={data.phaseTrend} />
             ) : mode === "bar" ? (
@@ -259,10 +242,7 @@ export function DashboardGraphs({ data }: { data: DashboardGraphData }) {
             )}
           </ChartCard>
 
-          <ChartCard
-            description="Current volume from visible operational records."
-            title="Operational focus"
-          >
+          <ChartCard title="Operational focus">
             {mode === "table" ? (
               <TableGraph data={data.operationalFocus} />
             ) : (
@@ -270,10 +250,7 @@ export function DashboardGraphs({ data }: { data: DashboardGraphData }) {
             )}
           </ChartCard>
 
-          <ChartCard
-            description="Support, risk, and follow-up load by visible category."
-            title="Support mix"
-          >
+          <ChartCard title="Support mix">
             {mode === "table" ? (
               <TableGraph data={data.supportMix} />
             ) : mode === "bar" ? (

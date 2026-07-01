@@ -207,7 +207,7 @@ export default async function AdminCertificatesPage() {
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Manage certificate templates and generate printable recognition or
           completion PDFs for enrolled learners.
@@ -364,9 +364,6 @@ export default async function AdminCertificatesPage() {
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               Generated certificates
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Download previously generated certificate PDFs.
-            </p>
           </div>
         </div>
 

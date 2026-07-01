@@ -241,7 +241,7 @@ export default async function LiteracyNumeracyPage({
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Encode class literacy and numeracy levels, then surface learners who
           may need focused follow-up.
@@ -420,9 +420,6 @@ export default async function LiteracyNumeracyPage({
                   <h2 className="font-display text-xl font-extrabold text-navy-950">
                     Class distribution
                   </h2>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Current encoded levels for the selected section.
-                  </p>
                 </div>
               </div>
 
@@ -469,9 +466,6 @@ export default async function LiteracyNumeracyPage({
                   <h2 className="font-display text-xl font-extrabold text-navy-950">
                     Focus list
                   </h2>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Beginning and developing ratings appear here for follow-up.
-                  </p>
                 </div>
               </div>
 

@@ -34,9 +34,14 @@ export function MetricCard({
           <p className="mt-1 break-words font-display text-xl font-extrabold leading-tight text-navy-950">
             {value}
           </p>
-          <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">
-            {detail}
-          </p>
+          {detail ? (
+            <details className="mt-1">
+              <summary className="w-fit cursor-pointer text-[10px] font-bold uppercase text-slate-400 transition hover:text-navy-900">
+                More
+              </summary>
+              <p className="mt-1 text-xs leading-5 text-slate-500">{detail}</p>
+            </details>
+          ) : null}
         </div>
         {icon ? (
           <div

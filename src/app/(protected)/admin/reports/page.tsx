@@ -124,7 +124,7 @@ export default async function AdminReportsPage() {
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Export school-wide and scoped PDF reports for attendance, grades,
           literacy, interventions, promotion readiness, and learner profiles.
@@ -211,9 +211,6 @@ export default async function AdminReportsPage() {
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               Export history
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Recent generated reports are recorded for audit review.
-            </p>
           </div>
         </div>
 

@@ -101,9 +101,14 @@ export function LearnerPerformanceProfile({
               LRN {data.learner.lrn} - {data.learner.sex} - Born{" "}
               {data.learner.birth_date}
             </p>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
-              {data.learner.address || "No address recorded."}
-            </p>
+            <details className="mt-3 max-w-3xl">
+              <summary className="cursor-pointer text-xs font-bold uppercase text-slate-400 transition hover:text-navy-900">
+                More
+              </summary>
+              <p className="mt-2 text-sm leading-7 text-slate-600">
+                {data.learner.address || "No address recorded."}
+              </p>
+            </details>
           </div>
           <div className="rounded-2xl bg-skybrand-50 p-5">
             <p className="text-xs font-bold uppercase text-skybrand-700">

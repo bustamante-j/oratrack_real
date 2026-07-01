@@ -164,7 +164,7 @@ export default async function SectionsPage() {
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
           <summary className="cursor-pointer text-sm font-bold text-navy-950">
-            Page details
+            More
           </summary>
           Build the active school setup that controls adviser access, subject
           teacher access, learner enrollments, attendance, grades, and reports.
@@ -210,9 +210,6 @@ export default async function SectionsPage() {
               <h2 className="font-display text-xl font-extrabold text-navy-950">
                 Grade levels
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                Seeded from Kindergarten through Grade 6.
-              </p>
             </div>
           </div>
 
@@ -399,10 +396,6 @@ export default async function SectionsPage() {
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               Section list
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Adviser and subject assignments are the access boundary for
-              teacher accounts.
-            </p>
           </div>
           <span className="rounded-full bg-skybrand-50 px-3 py-1 text-xs font-bold text-skybrand-600">
             {sections.length} total
@@ -497,9 +490,6 @@ export default async function SectionsPage() {
             <h2 className="font-display text-xl font-extrabold text-navy-950">
               Subject list
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Subjects can apply globally or to one grade level.
-            </p>
           </div>
           <span className="rounded-full bg-skybrand-50 px-3 py-1 text-xs font-bold text-skybrand-600">
             {subjects.length} total

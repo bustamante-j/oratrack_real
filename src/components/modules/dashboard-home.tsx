@@ -39,12 +39,11 @@ const iconMap = {
 export function DashboardHome({
   modules,
   title,
-  description,
   summary,
 }: {
   modules: ModuleDefinition[];
   title: string;
-  description: string;
+  description?: string;
   summary?: DashboardSummary;
 }) {
   const reportModule = modules.find((module) => module.id === "reports");
@@ -83,19 +82,9 @@ export function DashboardHome({
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-skybrand-600">
-            <span className="h-px w-6 bg-skybrand-400" />
-            School overview
-          </p>
           <h1 className="text-balance font-display text-2xl font-extrabold tracking-tight text-navy-950 sm:text-3xl">
             {title}
           </h1>
-          <details className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-            <summary className="cursor-pointer text-xs font-bold uppercase tracking-wide text-slate-500">
-              Dashboard details
-            </summary>
-            <p className="mt-2">{description}</p>
-          </details>
         </div>
         {reportModule ? (
           <Link

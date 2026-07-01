@@ -13,7 +13,6 @@ export function ActionDisclosure({
   children,
   className = "",
   icon,
-  meta,
   title,
 }: ActionDisclosureProps) {
   return (
@@ -26,11 +25,6 @@ export function ActionDisclosure({
           {title}
         </span>
         <span className="ml-auto inline-flex items-center gap-3">
-          {meta ? (
-            <span className="text-xs font-bold uppercase text-slate-500">
-              {meta}
-            </span>
-          ) : null}
           <ChevronDown
             className="text-slate-400 transition group-open:rotate-180 group-open:text-navy-900"
             size={18}
