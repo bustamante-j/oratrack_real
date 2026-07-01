@@ -52,14 +52,14 @@ export function AppShell({
     .toUpperCase();
 
   return (
-    <div className="min-h-screen min-w-0 overflow-x-hidden bg-[#f7fafc]">
-      <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 overflow-hidden bg-navy-950 text-white lg:flex lg:flex-col">
+    <div className="min-h-screen min-w-0 overflow-x-hidden bg-[#f3f7fb]">
+      <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 overflow-hidden border-r border-white/10 bg-navy-950 text-white shadow-[18px_0_55px_rgba(7,27,51,.18)] lg:flex lg:flex-col">
         <div className="flex h-16 items-center border-b border-white/10 px-5">
           <Link className="flex items-center gap-3" href="/">
             <BrandLogo compact inverse />
           </Link>
         </div>
-        <div className="border-b border-white/10 px-5 py-3">
+        <div className="border-b border-white/10 bg-white/[.025] px-5 py-3">
           <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-skybrand-300">
             {school.platform}
           </p>
@@ -70,9 +70,9 @@ export function AppShell({
         <div className="scroll-soft flex-1 overflow-y-auto px-3 py-4">
           <PortalNavLinks navItems={navItems} />
         </div>
-        <div className="border-t border-white/10 p-3">
-          <div className="flex items-center gap-3 border-b border-white/10 pb-3">
-            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white text-xs font-extrabold text-navy-950">
+        <div className="border-t border-white/10 bg-white/[.025] p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[.04] p-3">
+            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white text-xs font-extrabold text-navy-950 shadow-sm">
               {initials || <UserCircle size={20} weight="duotone" />}
             </span>
             <div className="min-w-0">
@@ -99,7 +99,7 @@ export function AppShell({
         </div>
       </aside>
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-20 flex h-16 items-center border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+        <header className="sticky top-0 z-20 flex h-16 items-center border-b border-slate-200/80 bg-white/95 px-4 shadow-[0_10px_30px_rgba(15,55,95,.05)] backdrop-blur-xl sm:px-6 lg:px-8">
           <div className="flex w-full items-center justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3">
               <Link className="shrink-0 lg:hidden" href="/">
@@ -117,7 +117,7 @@ export function AppShell({
             <div className="flex shrink-0 items-center gap-2 sm:gap-3">
               <button
                 aria-label="Notifications"
-                className="relative grid size-9 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100"
+                className="relative grid size-9 place-items-center rounded-lg border border-transparent text-slate-500 transition hover:border-slate-200 hover:bg-slate-50 hover:text-navy-900"
                 type="button"
               >
                 <Bell size={20} weight="duotone" />
@@ -153,7 +153,7 @@ export function AppShell({
             credentials in `.env.local`.
           </div>
         ) : null}
-        <main className="portal-shell min-h-[calc(100vh-4rem)] px-4 py-6 sm:px-6 lg:px-8">
+        <main className="portal-shell min-h-[calc(100vh-4rem)] px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
           <div className="mx-auto w-full max-w-[96rem] min-w-0">{children}</div>
         </main>
         {session.kind === "authenticated" ? (

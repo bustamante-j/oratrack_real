@@ -40,13 +40,13 @@ export function MetricStrip({ columns = "four", items }: MetricStripProps) {
       >
         {items.map((item, index) => (
           <div
-            className="flex min-h-12 items-center justify-between gap-3 px-3 py-2"
+            className="flex min-h-12 items-center justify-between gap-3 px-2.5 py-2 sm:px-3"
             key={index}
           >
-            <dt className="text-xs font-bold uppercase text-slate-500">
+            <dt className="text-[11px] font-bold uppercase text-slate-500">
               {item.label}
             </dt>
-            <dd className="text-xl font-extrabold text-navy-950">
+            <dd className="shrink-0 text-xl font-extrabold leading-none text-navy-950">
               {item.value}
             </dd>
           </div>
@@ -54,7 +54,7 @@ export function MetricStrip({ columns = "four", items }: MetricStripProps) {
       </dl>
       {numericItems.length ? (
         <details className="border-t border-slate-100 px-3 py-2">
-          <summary className="cursor-pointer text-xs font-bold uppercase text-slate-500">
+          <summary className="inline-flex cursor-pointer items-center rounded-md px-1 text-xs font-bold uppercase text-slate-500 transition hover:text-navy-900">
             Show analytics
           </summary>
           <div className="mt-3 grid gap-2">

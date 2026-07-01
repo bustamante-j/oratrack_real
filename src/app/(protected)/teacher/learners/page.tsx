@@ -360,7 +360,7 @@ export default async function TeacherLearnersPage({
 
                     return (
                       <article
-                        className="rounded-lg border border-slate-200 bg-slate-50 p-4"
+                        className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft transition hover:border-skybrand-200"
                         key={learner.id}
                       >
                         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -387,7 +387,7 @@ export default async function TeacherLearnersPage({
                         </h3>
 
                         <div className="mt-5 grid gap-3">
-                          <section className="rounded-lg bg-white p-4">
+                          <section className="rounded-lg bg-slate-50 p-4">
                             <div className="flex gap-2">
                               <GraduationCap
                                 className="mt-0.5 shrink-0 text-skybrand-600"
@@ -414,7 +414,7 @@ export default async function TeacherLearnersPage({
                           </section>
                         </div>
 
-                        <details className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
+                        <details className="mt-4 rounded-lg border border-slate-200 bg-white p-4 transition open:border-skybrand-200">
                           <summary className="flex cursor-pointer items-center gap-2 text-sm font-bold text-navy-950">
                             <BookUser size={17} />
                             More details

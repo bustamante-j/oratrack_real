@@ -707,7 +707,7 @@ export default async function LearnersPage({
 
                     return (
                       <article
-                        className="rounded-lg border border-slate-200 bg-slate-50 p-4"
+                        className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft transition hover:border-skybrand-200"
                         key={learner.id}
                       >
                         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -733,7 +733,7 @@ export default async function LearnersPage({
                           {learnerName(learner)}
                         </h3>
 
-                        <section className="mt-5 rounded-lg border border-slate-200 bg-white p-4">
+                        <section className="mt-5 rounded-lg bg-slate-50 p-4">
                           <div className="flex items-start gap-2">
                             <BookUser
                               className="mt-0.5 text-skybrand-600"
@@ -759,7 +759,7 @@ export default async function LearnersPage({
                           </div>
                         </section>
 
-                        <details className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
+                        <details className="mt-4 rounded-lg border border-slate-200 bg-white p-4 transition open:border-skybrand-200">
                           <summary className="cursor-pointer text-sm font-bold text-navy-950">
                             More details and actions
                           </summary>

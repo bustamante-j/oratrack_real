@@ -151,10 +151,10 @@ export function DashboardGraphs({ data }: { data: DashboardGraphData }) {
       <div className="flex flex-col justify-between gap-3 border-b border-slate-200 pb-3 sm:flex-row sm:items-center">
         <div>
           <p className="font-display text-sm font-extrabold text-navy-950">
-            Visuals
+            Analytics
           </p>
           <p className="text-xs text-slate-500">
-            Switch chart style or hide visuals for a cleaner view.
+            Coverage, operations, and support signals.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">

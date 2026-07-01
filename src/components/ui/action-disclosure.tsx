@@ -18,10 +18,10 @@ export function ActionDisclosure({
 }: ActionDisclosureProps) {
   return (
     <details
-      className={`group rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-soft ${className}`}
+      className={`group rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-soft transition open:border-skybrand-200 ${className}`}
     >
       <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
-        <span className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition group-open:border-navy-900 group-open:bg-navy-900 group-open:text-white">
+        <span className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-bold text-navy-950 transition group-open:border-navy-900 group-open:bg-navy-900 group-open:text-white">
           {icon}
           {title}
         </span>
@@ -32,7 +32,7 @@ export function ActionDisclosure({
             </span>
           ) : null}
           <ChevronDown
-            className="text-slate-400 transition group-open:rotate-180"
+            className="text-slate-400 transition group-open:rotate-180 group-open:text-navy-900"
             size={18}
           />
         </span>

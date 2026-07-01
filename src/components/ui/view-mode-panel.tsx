@@ -32,11 +32,15 @@ export function ViewModePanel({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3">
-        <p className="text-xs font-bold uppercase text-slate-500">
+        <p className="text-[11px] font-bold uppercase text-slate-500">
           {modes[modeIndex]?.label ?? label}
         </p>
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex rounded-lg border border-slate-200 bg-white p-0.5">
+        <div className="scroll-soft flex max-w-full flex-wrap items-center gap-2 overflow-x-auto">
+          <div
+            aria-label={`${label} display mode`}
+            className="inline-flex rounded-lg border border-slate-200 bg-white p-0.5 shadow-soft"
+            role="group"
+          >
             {modes.map(({ icon: Icon, id, label: modeLabel }) => (
               <button
                 aria-pressed={mode === id}
@@ -55,7 +59,8 @@ export function ViewModePanel({
             ))}
           </div>
           <button
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 hover:text-navy-900"
+            aria-label="Cycle display mode"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700 shadow-soft transition hover:border-slate-300 hover:bg-slate-50 hover:text-navy-900"
             onClick={() => setMode(modes[(modeIndex + 1) % modes.length].id)}
             type="button"
           >
@@ -67,8 +72,8 @@ export function ViewModePanel({
               aria-pressed={analyticsOpen}
               className={`inline-flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition ${
                 analyticsOpen
-                  ? "border-navy-900 bg-navy-900 text-white"
-                  : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 hover:text-navy-900"
+                  ? "border-navy-900 bg-navy-900 text-white shadow-sm"
+                  : "border-slate-200 bg-white text-slate-700 shadow-soft hover:border-slate-300 hover:bg-slate-50 hover:text-navy-900"
               }`}
               onClick={() => setAnalyticsOpen((current) => !current)}
               type="button"
@@ -80,7 +85,7 @@ export function ViewModePanel({
         </div>
       </div>
       {analyticsOpen && analytics ? (
-        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
           {analytics}
         </div>
       ) : null}

@@ -162,7 +162,6 @@ export async function getHomePageData(): Promise<HomePageData> {
       attendanceRecordResult.error;
 
     if (firstError) {
-      console.error(firstError.message);
       return emptyHomeData();
     }
 
@@ -201,8 +200,7 @@ export async function getHomePageData(): Promise<HomePageData> {
         activeGradeLevels: activeGradeLevels.size,
       },
     };
-  } catch (error) {
-    console.error(error);
+  } catch {
     return emptyHomeData();
   }
 }

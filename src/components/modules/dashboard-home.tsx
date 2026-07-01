@@ -134,9 +134,6 @@ export function DashboardHome({
             <h2 className="font-display text-lg font-bold text-navy-950">
               Insights
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Expand only when you need narrative context.
-            </p>
           </div>
           <Sparkle
             className="shrink-0 text-skybrand-500"

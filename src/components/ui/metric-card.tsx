@@ -25,19 +25,25 @@ export function MetricCard({
   tone?: MetricTone;
 }) {
   return (
-    <div className="min-w-0 border-b border-slate-200 py-3">
+    <div className="min-w-0 py-3">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase text-slate-500">
+          <p className="text-[11px] font-bold uppercase text-slate-500">
             {label}
           </p>
-          <p className="mt-1 break-words font-display text-xl font-extrabold text-navy-950">
+          <p className="mt-1 break-words font-display text-xl font-extrabold leading-tight text-navy-950">
             {value}
           </p>
-          <p className="mt-1 text-xs text-slate-500">{detail}</p>
+          <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">
+            {detail}
+          </p>
         </div>
         {icon ? (
-          <div className={`relative shrink-0 p-1 ${tones[tone]}`}>{icon}</div>
+          <div
+            className={`relative grid size-8 shrink-0 place-items-center rounded-lg bg-slate-50 ${tones[tone]}`}
+          >
+            {icon}
+          </div>
         ) : null}
       </div>
     </div>
