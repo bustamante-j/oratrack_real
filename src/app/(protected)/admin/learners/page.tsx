@@ -13,9 +13,13 @@ import {
   UsersRound,
 } from "lucide-react";
 
+import { ActionDisclosure } from "@/components/ui/action-disclosure";
+import { AnalyticsSummary } from "@/components/ui/analytics-summary";
 import { ButtonLink } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { MetricStrip } from "@/components/ui/metric-strip";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { ViewModePanel } from "@/components/ui/view-mode-panel";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 import {
@@ -220,57 +224,39 @@ export default async function LearnersPage({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">Phase 6</p>
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           Learner repository
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+        <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+            Page details
+          </summary>
           Maintain one stable learner record, then track every yearly grade,
           section, guardian, and archive state through linked records.
-        </p>
+        </details>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {[
-          ["Learners", learners.length],
-          ["Active", activeLearners],
-          ["Active-year enrollments", activeYearEnrollments],
-          ["Archived", archivedLearners],
-        ].map(([label, value]) => (
-          <section
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft"
-            key={label}
-          >
-            <p className="text-3xl font-extrabold text-navy-950">{value}</p>
-            <p className="mt-1 text-xs font-bold uppercase text-slate-500">
-              {label}
-            </p>
-          </section>
-        ))}
-      </div>
+      <MetricStrip
+        items={[
+          { label: "Learners", value: learners.length },
+          { label: "Active", value: activeLearners },
+          { label: "Active-year enrollments", value: activeYearEnrollments },
+          { label: "Archived", value: archivedLearners },
+        ]}
+      />
 
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
-          <div className="flex items-start gap-3">
-            <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-              <UserPlus size={23} />
-            </span>
-            <div>
-              <h2 className="font-display text-xl font-extrabold text-navy-950">
-                Register learner
-              </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                Add identity details once. Enrollments handle school-year
-                movement.
-              </p>
-            </div>
-          </div>
-
+        <ActionDisclosure
+          icon={<UserPlus size={17} />}
+          meta="Identity and guardian"
+          title="Register learner"
+        >
           <form
             action={createLearnerAction}
-            className="mt-6 grid gap-4 md:grid-cols-2"
+            className="grid gap-4 md:grid-cols-2"
           >
             <label>
               <span className="label">LRN</span>
@@ -337,11 +323,11 @@ export default async function LearnersPage({
               <SubmitButton>Register learner</SubmitButton>
             </div>
           </form>
-        </section>
+        </ActionDisclosure>
 
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+        <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
           <div className="flex items-start gap-3">
-            <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+            <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
               <FileSpreadsheet size={24} />
             </span>
             <div>
@@ -365,37 +351,48 @@ export default async function LearnersPage({
             </ButtonLink>
           </div>
 
-          <form
-            action={importLearnersWorkbookAction}
-            className="mt-5 grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5"
+          <ActionDisclosure
+            className="mt-5 bg-slate-50 shadow-none"
+            icon={<Upload size={17} />}
+            meta="XLSX"
+            title="Import learners"
           >
-            <label>
-              <span className="label">Filled workbook</span>
-              <input
-                accept=".xlsx"
-                className="input bg-white"
-                name="learnerFile"
-                required
-                type="file"
-              />
-            </label>
-            <SubmitButton pendingLabel="Importing learners...">
-              <Upload size={17} />
-              Import learners
-            </SubmitButton>
-          </form>
+            <form action={importLearnersWorkbookAction} className="grid gap-4">
+              <label>
+                <span className="label">Filled workbook</span>
+                <input
+                  accept=".xlsx"
+                  className="input bg-white"
+                  name="learnerFile"
+                  required
+                  type="file"
+                />
+              </label>
+              <div>
+                <SubmitButton pendingLabel="Importing learners...">
+                  <Upload size={17} />
+                  Import learners
+                </SubmitButton>
+              </div>
+            </form>
+          </ActionDisclosure>
 
-          <div className="mt-5 rounded-2xl bg-skybrand-50 p-4 text-sm leading-7 text-slate-700">
-            The workbook uses existing school year, grade level, and section
-            names. Rows are upserted by LRN, so corrected uploads update the
-            same learner record instead of duplicating it.
-          </div>
+          <details className="mt-5 rounded-lg bg-skybrand-50 p-4">
+            <summary className="cursor-pointer text-sm font-bold text-navy-950">
+              Import note
+            </summary>
+            <p className="mt-3 text-sm leading-7 text-slate-700">
+              The workbook uses existing school year, grade level, and section
+              names. Rows are upserted by LRN, so corrected uploads update the
+              same learner record instead of duplicating it.
+            </p>
+          </details>
         </section>
       </div>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex items-start gap-3">
-          <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+          <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
             <GraduationCap size={24} />
           </span>
           <div>
@@ -411,11 +408,16 @@ export default async function LearnersPage({
         </div>
 
         <div className="mt-6 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
-          <div>
+          <ActionDisclosure
+            className="bg-slate-50 shadow-none"
+            icon={<GraduationCap size={17} />}
+            meta="Year and section"
+            title="Save enrollment"
+          >
             {learners.length && schoolYears.length && gradeLevels.length ? (
               <form
                 action={upsertLearnerEnrollmentAction}
-                className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5"
+                className="grid gap-4"
               >
                 <label>
                   <span className="label">Learner</span>
@@ -494,9 +496,9 @@ export default async function LearnersPage({
                 title="Enrollment setup incomplete"
               />
             )}
-          </div>
+          </ActionDisclosure>
 
-          <div className="overflow-x-auto rounded-2xl border border-slate-200">
+          <div className="overflow-x-auto rounded-lg border border-slate-200">
             <table className="min-w-[760px] text-left text-sm">
               <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
                 <tr>
@@ -557,10 +559,10 @@ export default async function LearnersPage({
         </div>
       </section>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="flex items-start gap-3">
-            <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+            <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
               <UsersRound size={24} />
             </span>
             <div>
@@ -605,7 +607,7 @@ export default async function LearnersPage({
             </label>
             <div className="flex items-end">
               <button
-                className="inline-flex min-h-10 items-center justify-center rounded-xl bg-navy-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-skybrand-600"
+                className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
                 type="submit"
               >
                 Filter
@@ -615,358 +617,588 @@ export default async function LearnersPage({
         </div>
 
         {filteredLearners.length ? (
-          <div className="mt-6 grid gap-4">
-            {filteredLearners.map((learner) => {
-              const learnerEnrollments =
-                enrollmentsByLearner.get(learner.id) ?? [];
-              const currentEnrollment = activeYear
-                ? learnerEnrollments.find(
-                    (enrollment) => enrollment.school_year_id === activeYear.id,
-                  )
-                : learnerEnrollments[0];
-              const guardian = primaryGuardianByLearner.get(learner.id);
+          <div className="mt-6">
+            <ViewModePanel
+              analytics={
+                <div className="grid gap-5 lg:grid-cols-2">
+                  <AnalyticsSummary
+                    items={[
+                      {
+                        label: "Active",
+                        value: filteredLearners.filter(
+                          (learner) => learner.status === "active",
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                      {
+                        label: "Inactive",
+                        value: filteredLearners.filter(
+                          (learner) => learner.status === "inactive",
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                      {
+                        label: "Transferred",
+                        value: filteredLearners.filter(
+                          (learner) => learner.status === "transferred",
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                      {
+                        label: "Archived",
+                        value: filteredLearners.filter(
+                          (learner) => learner.status === "archived",
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                    ]}
+                    title="Status mix"
+                  />
+                  <AnalyticsSummary
+                    items={[
+                      {
+                        label: "With guardian",
+                        value: filteredLearners.filter((learner) =>
+                          primaryGuardianByLearner.has(learner.id),
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                      {
+                        label: "With enrollment",
+                        value: filteredLearners.filter(
+                          (learner) =>
+                            (enrollmentsByLearner.get(learner.id) ?? [])
+                              .length > 0,
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                      {
+                        label: "Female",
+                        value: filteredLearners.filter(
+                          (learner) => learner.sex === "female",
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                      {
+                        label: "Male",
+                        value: filteredLearners.filter(
+                          (learner) => learner.sex === "male",
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                    ]}
+                    title="Record completeness"
+                  />
+                </div>
+              }
+              label="Learner view"
+              cards={
+                <div className="grid gap-4 xl:grid-cols-2">
+                  {filteredLearners.map((learner) => {
+                    const learnerEnrollments =
+                      enrollmentsByLearner.get(learner.id) ?? [];
+                    const currentEnrollment = activeYear
+                      ? learnerEnrollments.find(
+                          (enrollment) =>
+                            enrollment.school_year_id === activeYear.id,
+                        )
+                      : learnerEnrollments[0];
+                    const guardian = primaryGuardianByLearner.get(learner.id);
 
-              return (
-                <article
-                  className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-5"
-                  key={learner.id}
-                >
-                  <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span
-                          className={`rounded-full px-3 py-1 text-xs font-bold ${statusTone(learner.status)}`}
-                        >
-                          {learner.status}
-                        </span>
-                        <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-600">
-                          LRN {learner.lrn}
-                        </span>
-                      </div>
-                      <h3 className="mt-4 font-display text-xl font-extrabold text-navy-950">
-                        {learnerName(learner)}
-                      </h3>
-                      <Link
-                        className="mt-3 inline-flex items-center gap-2 rounded-xl bg-navy-900 px-3 py-2 text-xs font-bold text-white transition hover:bg-skybrand-600"
-                        href={`/admin/learners/${learner.id}`}
+                    return (
+                      <article
+                        className="rounded-lg border border-slate-200 bg-slate-50 p-4"
+                        key={learner.id}
                       >
-                        View performance
-                      </Link>
-                      <div className="mt-4 grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
-                        <p>
-                          <span className="font-bold text-slate-700">Sex:</span>{" "}
-                          {learner.sex}
-                        </p>
-                        <p>
-                          <span className="font-bold text-slate-700">
-                            Birth date:
-                          </span>{" "}
-                          {learner.birth_date}
-                        </p>
-                        <p className="sm:col-span-2">
-                          <span className="font-bold text-slate-700">
-                            Address:
-                          </span>{" "}
-                          {learner.address || "Unassigned"}
-                        </p>
-                      </div>
-
-                      <div className="mt-5 rounded-2xl bg-white p-4">
-                        <div className="flex items-start gap-2">
-                          <Shield
-                            className="mt-0.5 text-skybrand-600"
-                            size={17}
-                          />
-                          <div>
-                            <p className="text-xs font-bold uppercase text-slate-500">
-                              Primary guardian
-                            </p>
-                            <p className="mt-1 text-sm font-semibold text-navy-950">
-                              {guardian
-                                ? `${guardian.full_name} (${guardian.relationship})`
-                                : "Unassigned"}
-                            </p>
-                            <p className="mt-1 text-sm text-slate-600">
-                              {guardian?.phone || guardian?.email || ""}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {(["active", "inactive", "transferred"] as const).map(
-                          (status) => (
-                            <form action={setLearnerStatusAction} key={status}>
-                              <input
-                                name="id"
-                                type="hidden"
-                                value={learner.id}
-                              />
-                              <input
-                                name="status"
-                                type="hidden"
-                                value={status}
-                              />
-                              <button
-                                className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 transition hover:border-skybrand-300 hover:bg-skybrand-50 hover:text-navy-900 disabled:cursor-not-allowed disabled:opacity-45"
-                                disabled={learner.status === status}
-                                type="submit"
-                              >
-                                Mark {status}
-                              </button>
-                            </form>
-                          ),
-                        )}
-                        {learner.status === "archived" ? (
-                          <form action={setLearnerStatusAction}>
-                            <input name="id" type="hidden" value={learner.id} />
-                            <input name="status" type="hidden" value="active" />
-                            <button
-                              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 transition hover:border-skybrand-300 hover:bg-skybrand-50 hover:text-navy-900"
-                              type="submit"
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span
+                              className={`rounded-full px-3 py-1 text-xs font-bold ${statusTone(learner.status)}`}
                             >
-                              <Undo2 size={14} />
-                              Restore
-                            </button>
-                          </form>
-                        ) : (
-                          <form action={setLearnerStatusAction}>
-                            <input name="id" type="hidden" value={learner.id} />
-                            <input
-                              name="status"
-                              type="hidden"
-                              value="archived"
+                              {learner.status}
+                            </span>
+                            <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-600">
+                              LRN {learner.lrn}
+                            </span>
+                          </div>
+                          <Link
+                            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
+                            href={`/admin/learners/${learner.id}`}
+                          >
+                            Open
+                          </Link>
+                        </div>
+
+                        <h3 className="mt-4 font-display text-xl font-extrabold text-navy-950">
+                          {learnerName(learner)}
+                        </h3>
+
+                        <section className="mt-5 rounded-lg border border-slate-200 bg-white p-4">
+                          <div className="flex items-start gap-2">
+                            <BookUser
+                              className="mt-0.5 text-skybrand-600"
+                              size={18}
                             />
-                            <button
-                              className="inline-flex items-center gap-2 rounded-xl border border-rose-200 bg-white px-3 py-2 text-xs font-bold text-rose-700 transition hover:bg-rose-50"
-                              type="submit"
-                            >
-                              <Archive size={14} />
-                              Archive
-                            </button>
-                          </form>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="grid gap-4">
-                      <section className="rounded-2xl border border-slate-200 bg-white p-4">
-                        <div className="flex items-start gap-2">
-                          <BookUser
-                            className="mt-0.5 text-skybrand-600"
-                            size={18}
-                          />
-                          <div>
-                            <p className="text-sm font-bold text-navy-950">
-                              Current enrollment
-                            </p>
-                            <p className="mt-1 text-sm text-slate-600">
-                              {currentEnrollment
-                                ? `${yearById.get(currentEnrollment.school_year_id)?.name ?? "School year"} - ${gradeById.get(currentEnrollment.grade_level_id)?.label ?? "Grade"}`
-                                : "No enrollment recorded"}
-                            </p>
-                            <p className="mt-1 text-sm text-slate-600">
-                              {currentEnrollment?.section_id
-                                ? sectionById.get(currentEnrollment.section_id)
-                                    ?.name
-                                : "No section assigned"}
-                            </p>
+                            <div>
+                              <p className="text-sm font-bold text-navy-950">
+                                Current enrollment
+                              </p>
+                              <p className="mt-1 text-sm text-slate-600">
+                                {currentEnrollment
+                                  ? `${yearById.get(currentEnrollment.school_year_id)?.name ?? "School year"} - ${gradeById.get(currentEnrollment.grade_level_id)?.label ?? "Grade"}`
+                                  : "No enrollment recorded"}
+                              </p>
+                              <p className="mt-1 text-sm text-slate-600">
+                                {currentEnrollment?.section_id
+                                  ? sectionById.get(
+                                      currentEnrollment.section_id,
+                                    )?.name
+                                  : "No section assigned"}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </section>
+                        </section>
 
-                      <details className="rounded-2xl border border-slate-200 bg-white p-4">
-                        <summary className="cursor-pointer text-sm font-bold text-navy-950">
-                          Enrollment history
-                        </summary>
-                        {learnerEnrollments.length ? (
-                          <div className="mt-4 grid gap-2">
-                            {learnerEnrollments.map((enrollment) => (
-                              <div
-                                className="rounded-xl bg-slate-50 p-3 text-sm text-slate-600"
-                                key={enrollment.id}
-                              >
-                                <p className="font-bold text-navy-950">
-                                  {yearById.get(enrollment.school_year_id)
-                                    ?.name ?? "School year"}{" "}
-                                  -{" "}
-                                  {gradeById.get(enrollment.grade_level_id)
-                                    ?.label ?? "Grade"}
-                                </p>
-                                <p className="mt-1">
-                                  Section:{" "}
-                                  {enrollment.section_id
-                                    ? sectionById.get(enrollment.section_id)
-                                        ?.name
-                                    : "Unassigned"}
-                                </p>
-                                <p className="mt-1">
-                                  Status: {enrollment.enrollment_status}
-                                </p>
+                        <details className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
+                          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+                            More details and actions
+                          </summary>
+
+                          <div className="mt-4 grid gap-4">
+                            <div className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+                              <p>
+                                <span className="font-bold text-slate-700">
+                                  Sex:
+                                </span>{" "}
+                                {learner.sex}
+                              </p>
+                              <p>
+                                <span className="font-bold text-slate-700">
+                                  Birth date:
+                                </span>{" "}
+                                {learner.birth_date}
+                              </p>
+                              <p className="sm:col-span-2">
+                                <span className="font-bold text-slate-700">
+                                  Address:
+                                </span>{" "}
+                                {learner.address || "Unassigned"}
+                              </p>
+                            </div>
+
+                            <div className="rounded-lg bg-slate-50 p-4">
+                              <div className="flex items-start gap-2">
+                                <Shield
+                                  className="mt-0.5 text-skybrand-600"
+                                  size={17}
+                                />
+                                <div>
+                                  <p className="text-xs font-bold uppercase text-slate-500">
+                                    Guardian
+                                  </p>
+                                  <p className="mt-1 text-sm font-semibold text-navy-950">
+                                    {guardian
+                                      ? `${guardian.full_name} (${guardian.relationship})`
+                                      : "Unassigned"}
+                                  </p>
+                                  <p className="mt-1 text-sm text-slate-600">
+                                    {guardian?.phone || guardian?.email || ""}
+                                  </p>
+                                </div>
                               </div>
-                            ))}
+                            </div>
+
+                            <details className="rounded-lg border border-slate-200 bg-white p-4">
+                              <summary className="cursor-pointer text-sm font-bold text-navy-950">
+                                Enrollment history
+                              </summary>
+                              {learnerEnrollments.length ? (
+                                <div className="mt-4 grid gap-2">
+                                  {learnerEnrollments.map((enrollment) => (
+                                    <div
+                                      className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600"
+                                      key={enrollment.id}
+                                    >
+                                      <p className="font-bold text-navy-950">
+                                        {yearById.get(enrollment.school_year_id)
+                                          ?.name ?? "School year"}{" "}
+                                        -{" "}
+                                        {gradeById.get(
+                                          enrollment.grade_level_id,
+                                        )?.label ?? "Grade"}
+                                      </p>
+                                      <p className="mt-1">
+                                        Section:{" "}
+                                        {enrollment.section_id
+                                          ? sectionById.get(
+                                              enrollment.section_id,
+                                            )?.name
+                                          : "Unassigned"}
+                                      </p>
+                                      <p className="mt-1">
+                                        Status: {enrollment.enrollment_status}
+                                      </p>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <p className="mt-4 text-sm text-slate-500">
+                                  No enrollment history yet.
+                                </p>
+                              )}
+                            </details>
+
+                            <details className="rounded-lg border border-slate-200 bg-white p-4">
+                              <summary className="cursor-pointer text-sm font-bold text-navy-950">
+                                Status actions
+                              </summary>
+                              <div className="mt-4 flex flex-wrap gap-2">
+                                {(
+                                  ["active", "inactive", "transferred"] as const
+                                ).map((status) => (
+                                  <form
+                                    action={setLearnerStatusAction}
+                                    key={status}
+                                  >
+                                    <input
+                                      name="id"
+                                      type="hidden"
+                                      value={learner.id}
+                                    />
+                                    <input
+                                      name="status"
+                                      type="hidden"
+                                      value={status}
+                                    />
+                                    <button
+                                      className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 transition hover:border-skybrand-300 hover:bg-skybrand-50 hover:text-navy-900 disabled:cursor-not-allowed disabled:opacity-45"
+                                      disabled={learner.status === status}
+                                      type="submit"
+                                    >
+                                      Mark {status}
+                                    </button>
+                                  </form>
+                                ))}
+                                {learner.status === "archived" ? (
+                                  <form action={setLearnerStatusAction}>
+                                    <input
+                                      name="id"
+                                      type="hidden"
+                                      value={learner.id}
+                                    />
+                                    <input
+                                      name="status"
+                                      type="hidden"
+                                      value="active"
+                                    />
+                                    <button
+                                      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 transition hover:border-skybrand-300 hover:bg-skybrand-50 hover:text-navy-900"
+                                      type="submit"
+                                    >
+                                      <Undo2 size={14} />
+                                      Restore
+                                    </button>
+                                  </form>
+                                ) : (
+                                  <form action={setLearnerStatusAction}>
+                                    <input
+                                      name="id"
+                                      type="hidden"
+                                      value={learner.id}
+                                    />
+                                    <input
+                                      name="status"
+                                      type="hidden"
+                                      value="archived"
+                                    />
+                                    <button
+                                      className="inline-flex items-center gap-2 rounded-lg border border-rose-200 bg-white px-3 py-2 text-xs font-bold text-rose-700 transition hover:bg-rose-50"
+                                      type="submit"
+                                    >
+                                      <Archive size={14} />
+                                      Archive
+                                    </button>
+                                  </form>
+                                )}
+                              </div>
+                            </details>
+
+                            <details className="rounded-lg border border-slate-200 bg-white p-4">
+                              <summary className="cursor-pointer text-sm font-bold text-navy-950">
+                                Edit learner
+                              </summary>
+                              <form
+                                action={updateLearnerAction}
+                                className="mt-4 grid gap-4 sm:grid-cols-2"
+                              >
+                                <input
+                                  name="id"
+                                  type="hidden"
+                                  value={learner.id}
+                                />
+                                <label>
+                                  <span className="label">LRN</span>
+                                  <input
+                                    className="input"
+                                    defaultValue={learner.lrn}
+                                    name="lrn"
+                                    required
+                                  />
+                                </label>
+                                <label>
+                                  <span className="label">Birth date</span>
+                                  <input
+                                    className="input"
+                                    defaultValue={learner.birth_date}
+                                    name="birthDate"
+                                    required
+                                    type="date"
+                                  />
+                                </label>
+                                <label>
+                                  <span className="label">First name</span>
+                                  <input
+                                    className="input"
+                                    defaultValue={learner.first_name}
+                                    name="firstName"
+                                    required
+                                  />
+                                </label>
+                                <label>
+                                  <span className="label">Middle name</span>
+                                  <input
+                                    className="input"
+                                    defaultValue={learner.middle_name ?? ""}
+                                    name="middleName"
+                                  />
+                                </label>
+                                <label>
+                                  <span className="label">Last name</span>
+                                  <input
+                                    className="input"
+                                    defaultValue={learner.last_name}
+                                    name="lastName"
+                                    required
+                                  />
+                                </label>
+                                <label>
+                                  <span className="label">Extension</span>
+                                  <input
+                                    className="input"
+                                    defaultValue={learner.extension_name ?? ""}
+                                    name="extensionName"
+                                  />
+                                </label>
+                                <label>
+                                  <span className="label">Sex</span>
+                                  <select
+                                    className="input"
+                                    defaultValue={learner.sex}
+                                    name="sex"
+                                    required
+                                  >
+                                    <option value="female">Female</option>
+                                    <option value="male">Male</option>
+                                  </select>
+                                </label>
+                                <label>
+                                  <span className="label">Address</span>
+                                  <input
+                                    className="input"
+                                    defaultValue={learner.address ?? ""}
+                                    name="address"
+                                  />
+                                </label>
+                                <div className="sm:col-span-2">
+                                  <SubmitButton>Save learner</SubmitButton>
+                                </div>
+                              </form>
+                            </details>
+
+                            <details className="rounded-lg border border-slate-200 bg-white p-4">
+                              <summary className="cursor-pointer text-sm font-bold text-navy-950">
+                                Update guardian
+                              </summary>
+                              <form
+                                action={upsertPrimaryGuardianAction}
+                                className="mt-4 grid gap-4 sm:grid-cols-2"
+                              >
+                                <input
+                                  name="learnerId"
+                                  type="hidden"
+                                  value={learner.id}
+                                />
+                                <label>
+                                  <span className="label">Guardian name</span>
+                                  <input
+                                    className="input"
+                                    defaultValue={guardian?.full_name ?? ""}
+                                    name="fullName"
+                                    required
+                                  />
+                                </label>
+                                <label>
+                                  <span className="label">Relationship</span>
+                                  <input
+                                    className="input"
+                                    defaultValue={guardian?.relationship ?? ""}
+                                    name="relationship"
+                                    required
+                                  />
+                                </label>
+                                <label>
+                                  <span className="label">Phone</span>
+                                  <input
+                                    className="input"
+                                    defaultValue={guardian?.phone ?? ""}
+                                    name="phone"
+                                  />
+                                </label>
+                                <label>
+                                  <span className="label">Email</span>
+                                  <input
+                                    className="input"
+                                    defaultValue={guardian?.email ?? ""}
+                                    name="email"
+                                    type="email"
+                                  />
+                                </label>
+                                <label className="sm:col-span-2">
+                                  <span className="label">Address</span>
+                                  <input
+                                    className="input"
+                                    defaultValue={guardian?.address ?? ""}
+                                    name="address"
+                                  />
+                                </label>
+                                <div className="sm:col-span-2">
+                                  <SubmitButton>Save guardian</SubmitButton>
+                                </div>
+                              </form>
+                            </details>
                           </div>
-                        ) : (
-                          <p className="mt-4 text-sm text-slate-500">
-                            No enrollment history yet.
+                        </details>
+                      </article>
+                    );
+                  })}
+                </div>
+              }
+              table={
+                <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+                  <table className="min-w-[900px] text-left text-sm">
+                    <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
+                      <tr>
+                        <th className="px-4 py-3">Learner</th>
+                        <th className="px-4 py-3">LRN</th>
+                        <th className="px-4 py-3">Status</th>
+                        <th className="px-4 py-3">Enrollment</th>
+                        <th className="px-4 py-3">Guardian</th>
+                        <th className="px-4 py-3">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {filteredLearners.map((learner) => {
+                        const learnerEnrollments =
+                          enrollmentsByLearner.get(learner.id) ?? [];
+                        const currentEnrollment = activeYear
+                          ? learnerEnrollments.find(
+                              (enrollment) =>
+                                enrollment.school_year_id === activeYear.id,
+                            )
+                          : learnerEnrollments[0];
+                        const guardian = primaryGuardianByLearner.get(
+                          learner.id,
+                        );
+
+                        return (
+                          <tr key={learner.id}>
+                            <td className="px-4 py-4 font-semibold text-navy-950">
+                              {learnerName(learner)}
+                            </td>
+                            <td className="px-4 py-4 text-slate-600">
+                              {learner.lrn}
+                            </td>
+                            <td className="px-4 py-4">
+                              <span
+                                className={`rounded-full px-3 py-1 text-xs font-bold ${statusTone(learner.status)}`}
+                              >
+                                {learner.status}
+                              </span>
+                            </td>
+                            <td className="px-4 py-4 text-slate-600">
+                              {currentEnrollment
+                                ? `${gradeById.get(currentEnrollment.grade_level_id)?.label ?? "Grade"} - ${
+                                    currentEnrollment.section_id
+                                      ? sectionById.get(
+                                          currentEnrollment.section_id,
+                                        )?.name
+                                      : "Unassigned"
+                                  }`
+                                : "No enrollment"}
+                            </td>
+                            <td className="px-4 py-4 text-slate-600">
+                              {guardian?.full_name ?? "Unassigned"}
+                            </td>
+                            <td className="px-4 py-4">
+                              <Link
+                                className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
+                                href={`/admin/learners/${learner.id}`}
+                              >
+                                Open
+                              </Link>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              }
+              compact={
+                <div className="grid gap-2">
+                  {filteredLearners.map((learner) => {
+                    const learnerEnrollments =
+                      enrollmentsByLearner.get(learner.id) ?? [];
+                    const currentEnrollment = activeYear
+                      ? learnerEnrollments.find(
+                          (enrollment) =>
+                            enrollment.school_year_id === activeYear.id,
+                        )
+                      : learnerEnrollments[0];
+
+                    return (
+                      <Link
+                        className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white p-4 transition hover:border-skybrand-300 hover:bg-skybrand-50"
+                        href={`/admin/learners/${learner.id}`}
+                        key={learner.id}
+                      >
+                        <div>
+                          <p className="font-semibold text-navy-950">
+                            {learnerName(learner)}
                           </p>
-                        )}
-                      </details>
-
-                      <details className="rounded-2xl border border-slate-200 bg-white p-4">
-                        <summary className="cursor-pointer text-sm font-bold text-navy-950">
-                          Edit learner
-                        </summary>
-                        <form
-                          action={updateLearnerAction}
-                          className="mt-4 grid gap-4 sm:grid-cols-2"
-                        >
-                          <input name="id" type="hidden" value={learner.id} />
-                          <label>
-                            <span className="label">LRN</span>
-                            <input
-                              className="input"
-                              defaultValue={learner.lrn}
-                              name="lrn"
-                              required
-                            />
-                          </label>
-                          <label>
-                            <span className="label">Birth date</span>
-                            <input
-                              className="input"
-                              defaultValue={learner.birth_date}
-                              name="birthDate"
-                              required
-                              type="date"
-                            />
-                          </label>
-                          <label>
-                            <span className="label">First name</span>
-                            <input
-                              className="input"
-                              defaultValue={learner.first_name}
-                              name="firstName"
-                              required
-                            />
-                          </label>
-                          <label>
-                            <span className="label">Middle name</span>
-                            <input
-                              className="input"
-                              defaultValue={learner.middle_name ?? ""}
-                              name="middleName"
-                            />
-                          </label>
-                          <label>
-                            <span className="label">Last name</span>
-                            <input
-                              className="input"
-                              defaultValue={learner.last_name}
-                              name="lastName"
-                              required
-                            />
-                          </label>
-                          <label>
-                            <span className="label">Extension</span>
-                            <input
-                              className="input"
-                              defaultValue={learner.extension_name ?? ""}
-                              name="extensionName"
-                            />
-                          </label>
-                          <label>
-                            <span className="label">Sex</span>
-                            <select
-                              className="input"
-                              defaultValue={learner.sex}
-                              name="sex"
-                              required
-                            >
-                              <option value="female">Female</option>
-                              <option value="male">Male</option>
-                            </select>
-                          </label>
-                          <label>
-                            <span className="label">Address</span>
-                            <input
-                              className="input"
-                              defaultValue={learner.address ?? ""}
-                              name="address"
-                            />
-                          </label>
-                          <div className="sm:col-span-2">
-                            <SubmitButton>Save learner</SubmitButton>
-                          </div>
-                        </form>
-                      </details>
-
-                      <details className="rounded-2xl border border-slate-200 bg-white p-4">
-                        <summary className="cursor-pointer text-sm font-bold text-navy-950">
-                          Update guardian
-                        </summary>
-                        <form
-                          action={upsertPrimaryGuardianAction}
-                          className="mt-4 grid gap-4 sm:grid-cols-2"
-                        >
-                          <input
-                            name="learnerId"
-                            type="hidden"
-                            value={learner.id}
-                          />
-                          <label>
-                            <span className="label">Guardian name</span>
-                            <input
-                              className="input"
-                              defaultValue={guardian?.full_name ?? ""}
-                              name="fullName"
-                              required
-                            />
-                          </label>
-                          <label>
-                            <span className="label">Relationship</span>
-                            <input
-                              className="input"
-                              defaultValue={guardian?.relationship ?? ""}
-                              name="relationship"
-                              required
-                            />
-                          </label>
-                          <label>
-                            <span className="label">Phone</span>
-                            <input
-                              className="input"
-                              defaultValue={guardian?.phone ?? ""}
-                              name="phone"
-                            />
-                          </label>
-                          <label>
-                            <span className="label">Email</span>
-                            <input
-                              className="input"
-                              defaultValue={guardian?.email ?? ""}
-                              name="email"
-                              type="email"
-                            />
-                          </label>
-                          <label className="sm:col-span-2">
-                            <span className="label">Address</span>
-                            <input
-                              className="input"
-                              defaultValue={guardian?.address ?? ""}
-                              name="address"
-                            />
-                          </label>
-                          <div className="sm:col-span-2">
-                            <SubmitButton>Save guardian</SubmitButton>
-                          </div>
-                        </form>
-                      </details>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
+                          <p className="text-xs font-bold uppercase text-slate-500">
+                            LRN {learner.lrn}
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span
+                            className={`rounded-full px-3 py-1 text-xs font-bold ${statusTone(learner.status)}`}
+                          >
+                            {learner.status}
+                          </span>
+                          <span className="text-sm font-semibold text-slate-600">
+                            {currentEnrollment
+                              ? gradeById.get(currentEnrollment.grade_level_id)
+                                  ?.label
+                              : "No enrollment"}
+                          </span>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              }
+            />
           </div>
         ) : (
           <div className="mt-6">

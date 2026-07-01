@@ -1,13 +1,7 @@
-import {
-  Activity,
-  BarChart3,
-  BookOpenCheck,
-  GraduationCap,
-  ShieldAlert,
-  TrendingUp,
-} from "lucide-react";
+import { BarChart3, ShieldAlert } from "lucide-react";
 
 import { EmptyState } from "@/components/ui/empty-state";
+import { MetricStrip } from "@/components/ui/metric-strip";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   AttendanceStatus,
@@ -385,7 +379,7 @@ export default async function AdminAnalyticsPage() {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">
           Phase 15
@@ -393,62 +387,32 @@ export default async function AdminAnalyticsPage() {
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           Analytics dashboard
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+        <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+            Page details
+          </summary>
           School-wide operational metrics for{" "}
           {activeYear?.name ?? "all school years"}, using the data already
           encoded in attendance, grades, literacy, interventions, certificates,
           and lesson plans.
-        </p>
+        </details>
       </div>
 
       {activeEnrollments.length ? (
         <>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {[
-              {
-                label: "Active learners",
-                value: activeEnrollments.length,
-                icon: GraduationCap,
-              },
-              {
-                label: "Attendance rate",
-                value: percent(attendanceRate),
-                icon: Activity,
-              },
-              {
-                label: "Grade average",
-                value: numberValue(gradeAverage),
-                icon: TrendingUp,
-              },
-              {
-                label: "Open interventions",
-                value: openInterventions.length,
-                icon: ShieldAlert,
-              },
-            ].map(({ label, value, icon: Icon }) => (
-              <section
-                className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft"
-                key={label}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-3xl font-extrabold text-navy-950">
-                    {value}
-                  </p>
-                  <span className="grid size-10 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-                    <Icon size={21} />
-                  </span>
-                </div>
-                <p className="mt-1 text-xs font-bold uppercase text-slate-500">
-                  {label}
-                </p>
-              </section>
-            ))}
-          </div>
+          <MetricStrip
+            items={[
+              { label: "Active learners", value: activeEnrollments.length },
+              { label: "Attendance rate", value: percent(attendanceRate) },
+              { label: "Grade average", value: numberValue(gradeAverage) },
+              { label: "Open interventions", value: openInterventions.length },
+            ]}
+          />
 
           <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
-                <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+                <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
                   <BarChart3 size={24} />
                 </span>
                 <div>
@@ -467,7 +431,7 @@ export default async function AdminAnalyticsPage() {
                   .filter((card) => card.enrollmentCount > 0)
                   .map((card) => (
                     <article
-                      className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                      className="rounded-lg border border-slate-200 bg-slate-50 p-4"
                       key={card.gradeLevel.id}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -514,9 +478,9 @@ export default async function AdminAnalyticsPage() {
               </div>
             </section>
 
-            <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
-                <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+                <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
                   <ShieldAlert size={24} />
                 </span>
                 <div>
@@ -534,7 +498,7 @@ export default async function AdminAnalyticsPage() {
                 <div className="mt-6 grid gap-3">
                   {watchlist.map(({ learner, reasons }) => (
                     <article
-                      className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                      className="rounded-lg border border-slate-200 bg-slate-50 p-4"
                       key={learner.id}
                     >
                       <p className="font-semibold text-navy-950">
@@ -557,54 +521,24 @@ export default async function AdminAnalyticsPage() {
                   ))}
                 </div>
               ) : (
-                <p className="mt-6 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+                <p className="mt-6 rounded-lg bg-slate-50 p-4 text-sm text-slate-600">
                   No learner risk signals are visible from the current data.
                 </p>
               )}
             </section>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {[
-              {
-                label: "Literacy/numeracy watch",
-                value: literacyWatchCount,
-                icon: BookOpenCheck,
-              },
-              {
-                label: "Due follow-ups",
-                value: dueInterventions.length,
-                icon: ShieldAlert,
-              },
+          <MetricStrip
+            items={[
+              { label: "Literacy/numeracy watch", value: literacyWatchCount },
+              { label: "Due follow-ups", value: dueInterventions.length },
               {
                 label: "Certificates generated",
                 value: activeCertificateCount,
-                icon: GraduationCap,
               },
-              {
-                label: "Lesson plans submitted",
-                value: lessonPlans.length,
-                icon: FileTextIcon,
-              },
-            ].map(({ label, value, icon: Icon }) => (
-              <section
-                className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft"
-                key={label}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-3xl font-extrabold text-navy-950">
-                    {value}
-                  </p>
-                  <span className="grid size-10 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-                    <Icon size={21} />
-                  </span>
-                </div>
-                <p className="mt-1 text-xs font-bold uppercase text-slate-500">
-                  {label}
-                </p>
-              </section>
-            ))}
-          </div>
+              { label: "Lesson plans submitted", value: lessonPlans.length },
+            ]}
+          />
         </>
       ) : (
         <EmptyState
@@ -614,8 +548,4 @@ export default async function AdminAnalyticsPage() {
       )}
     </div>
   );
-}
-
-function FileTextIcon({ size }: { size: number }) {
-  return <BookOpenCheck size={size} />;
 }

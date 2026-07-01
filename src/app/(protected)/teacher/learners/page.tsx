@@ -8,6 +8,9 @@ import {
 } from "lucide-react";
 
 import { EmptyState } from "@/components/ui/empty-state";
+import { AnalyticsSummary } from "@/components/ui/analytics-summary";
+import { MetricStrip } from "@/components/ui/metric-strip";
+import { ViewModePanel } from "@/components/ui/view-mode-panel";
 import { requireRole } from "@/lib/auth/session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -193,40 +196,34 @@ export default async function TeacherLearnersPage({
     : 0;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">Phase 6</p>
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           Assigned learners
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+        <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+            Page details
+          </summary>
           View learner identity, guardian contact, and enrollment history for
           the classes currently visible to your account.
-        </p>
+        </details>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        {[
-          ["Visible learners", learners.length],
-          ["Active", activeLearners],
-          ["Active year", activeYearLearners],
-        ].map(([label, value]) => (
-          <section
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft"
-            key={label}
-          >
-            <p className="text-3xl font-extrabold text-navy-950">{value}</p>
-            <p className="mt-1 text-xs font-bold uppercase text-slate-500">
-              {label}
-            </p>
-          </section>
-        ))}
-      </div>
+      <MetricStrip
+        columns="three"
+        items={[
+          { label: "Visible learners", value: learners.length },
+          { label: "Active", value: activeLearners },
+          { label: "Active year", value: activeYearLearners },
+        ]}
+      />
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="flex items-start gap-3">
-            <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+            <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
               <UsersRound size={24} />
             </span>
             <div>
@@ -257,7 +254,7 @@ export default async function TeacherLearnersPage({
             </label>
             <div className="flex items-end">
               <button
-                className="inline-flex min-h-10 items-center justify-center rounded-xl bg-navy-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-skybrand-600"
+                className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
                 type="submit"
               >
                 Filter
@@ -267,149 +264,311 @@ export default async function TeacherLearnersPage({
         </div>
 
         {filteredLearners.length ? (
-          <div className="mt-6 grid gap-4 xl:grid-cols-2">
-            {filteredLearners.map((learner) => {
-              const learnerEnrollments =
-                enrollmentsByLearner.get(learner.id) ?? [];
-              const currentEnrollment = activeYear
-                ? learnerEnrollments.find(
-                    (enrollment) => enrollment.school_year_id === activeYear.id,
-                  )
-                : learnerEnrollments[0];
-              const guardian = primaryGuardianByLearner.get(learner.id);
+          <div className="mt-6">
+            <ViewModePanel
+              analytics={
+                <div className="grid gap-5 lg:grid-cols-2">
+                  <AnalyticsSummary
+                    items={[
+                      {
+                        label: "Active",
+                        value: filteredLearners.filter(
+                          (learner) => learner.status === "active",
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                      {
+                        label: "Inactive",
+                        value: filteredLearners.filter(
+                          (learner) => learner.status === "inactive",
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                      {
+                        label: "Transferred",
+                        value: filteredLearners.filter(
+                          (learner) => learner.status === "transferred",
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                      {
+                        label: "Archived",
+                        value: filteredLearners.filter(
+                          (learner) => learner.status === "archived",
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                    ]}
+                    title="Status mix"
+                  />
+                  <AnalyticsSummary
+                    items={[
+                      {
+                        label: "With guardian",
+                        value: filteredLearners.filter((learner) =>
+                          primaryGuardianByLearner.has(learner.id),
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                      {
+                        label: "Active-year enrollment",
+                        value: filteredLearners.filter((learner) => {
+                          const learnerEnrollments =
+                            enrollmentsByLearner.get(learner.id) ?? [];
 
-              return (
-                <article
-                  className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-5"
-                  key={learner.id}
-                >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span
-                      className={`rounded-full px-3 py-1 text-xs font-bold ${statusTone(learner.status)}`}
-                    >
-                      {learner.status}
-                    </span>
-                    <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-600">
-                      LRN {learner.lrn}
-                    </span>
-                  </div>
+                          return activeYear
+                            ? learnerEnrollments.some(
+                                (enrollment) =>
+                                  enrollment.school_year_id === activeYear.id,
+                              )
+                            : learnerEnrollments.length > 0;
+                        }).length,
+                        total: filteredLearners.length,
+                      },
+                      {
+                        label: "Female",
+                        value: filteredLearners.filter(
+                          (learner) => learner.sex === "female",
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                      {
+                        label: "Male",
+                        value: filteredLearners.filter(
+                          (learner) => learner.sex === "male",
+                        ).length,
+                        total: filteredLearners.length,
+                      },
+                    ]}
+                    title="Class profile"
+                  />
+                </div>
+              }
+              label="Learner view"
+              cards={
+                <div className="grid gap-4 xl:grid-cols-2">
+                  {filteredLearners.map((learner) => {
+                    const learnerEnrollments =
+                      enrollmentsByLearner.get(learner.id) ?? [];
+                    const currentEnrollment = activeYear
+                      ? learnerEnrollments.find(
+                          (enrollment) =>
+                            enrollment.school_year_id === activeYear.id,
+                        )
+                      : learnerEnrollments[0];
+                    const guardian = primaryGuardianByLearner.get(learner.id);
 
-                  <h3 className="mt-4 font-display text-xl font-extrabold text-navy-950">
-                    {learnerName(learner)}
-                  </h3>
-                  <Link
-                    className="mt-3 inline-flex items-center gap-2 rounded-xl bg-navy-900 px-3 py-2 text-xs font-bold text-white transition hover:bg-skybrand-600"
-                    href={`/teacher/learners/${learner.id}`}
-                  >
-                    View performance
-                  </Link>
-
-                  <div className="mt-4 grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
-                    <p>
-                      <span className="font-bold text-slate-700">Sex:</span>{" "}
-                      {learner.sex}
-                    </p>
-                    <p>
-                      <span className="font-bold text-slate-700">
-                        Birth date:
-                      </span>{" "}
-                      {learner.birth_date}
-                    </p>
-                    <p className="sm:col-span-2">
-                      <span className="font-bold text-slate-700">Address:</span>{" "}
-                      {learner.address || "Unassigned"}
-                    </p>
-                  </div>
-
-                  <div className="mt-5 grid gap-3">
-                    <section className="rounded-2xl bg-white p-4">
-                      <div className="flex gap-2">
-                        <GraduationCap
-                          className="mt-0.5 shrink-0 text-skybrand-600"
-                          size={18}
-                        />
-                        <div>
-                          <p className="text-xs font-bold uppercase text-slate-500">
-                            Current enrollment
-                          </p>
-                          <p className="mt-1 text-sm font-semibold text-navy-950">
-                            {currentEnrollment
-                              ? `${yearById.get(currentEnrollment.school_year_id)?.name ?? "School year"} - ${gradeById.get(currentEnrollment.grade_level_id)?.label ?? "Grade"}`
-                              : "No active enrollment"}
-                          </p>
-                          <p className="mt-1 text-sm text-slate-600">
-                            {currentEnrollment?.section_id
-                              ? sectionById.get(currentEnrollment.section_id)
-                                  ?.name
-                              : "No section assigned"}
-                          </p>
-                        </div>
-                      </div>
-                    </section>
-
-                    <section className="rounded-2xl bg-white p-4">
-                      <div className="flex gap-2">
-                        <Shield
-                          className="mt-0.5 shrink-0 text-skybrand-600"
-                          size={18}
-                        />
-                        <div>
-                          <p className="text-xs font-bold uppercase text-slate-500">
-                            Primary guardian
-                          </p>
-                          <p className="mt-1 text-sm font-semibold text-navy-950">
-                            {guardian
-                              ? `${guardian.full_name} (${guardian.relationship})`
-                              : "Unassigned"}
-                          </p>
-                          <p className="mt-1 text-sm text-slate-600">
-                            {guardian?.phone || guardian?.email || ""}
-                          </p>
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-
-                  <details className="mt-4 rounded-2xl border border-slate-200 bg-white p-4">
-                    <summary className="flex cursor-pointer items-center gap-2 text-sm font-bold text-navy-950">
-                      <BookUser size={17} />
-                      Enrollment history
-                    </summary>
-                    {learnerEnrollments.length ? (
-                      <div className="mt-4 grid gap-2">
-                        {learnerEnrollments.map((enrollment) => (
-                          <div
-                            className="rounded-xl bg-slate-50 p-3 text-sm text-slate-600"
-                            key={enrollment.id}
-                          >
-                            <p className="font-bold text-navy-950">
-                              {yearById.get(enrollment.school_year_id)?.name ??
-                                "School year"}{" "}
-                              -{" "}
-                              {gradeById.get(enrollment.grade_level_id)
-                                ?.label ?? "Grade"}
-                            </p>
-                            <p className="mt-1">
-                              Section:{" "}
-                              {enrollment.section_id
-                                ? sectionById.get(enrollment.section_id)?.name
-                                : "Unassigned"}
-                            </p>
-                            <p className="mt-1">
-                              Status: {enrollment.enrollment_status}
-                            </p>
+                    return (
+                      <article
+                        className="rounded-lg border border-slate-200 bg-slate-50 p-4"
+                        key={learner.id}
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span
+                              className={`rounded-full px-3 py-1 text-xs font-bold ${statusTone(learner.status)}`}
+                            >
+                              {learner.status}
+                            </span>
+                            <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-600">
+                              LRN {learner.lrn}
+                            </span>
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="mt-4 text-sm text-slate-500">
-                        No enrollment history yet.
-                      </p>
-                    )}
-                  </details>
-                </article>
-              );
-            })}
+                          <Link
+                            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
+                            href={`/teacher/learners/${learner.id}`}
+                          >
+                            Open
+                          </Link>
+                        </div>
+
+                        <h3 className="mt-4 font-display text-xl font-extrabold text-navy-950">
+                          {learnerName(learner)}
+                        </h3>
+
+                        <div className="mt-5 grid gap-3">
+                          <section className="rounded-lg bg-white p-4">
+                            <div className="flex gap-2">
+                              <GraduationCap
+                                className="mt-0.5 shrink-0 text-skybrand-600"
+                                size={18}
+                              />
+                              <div>
+                                <p className="text-xs font-bold uppercase text-slate-500">
+                                  Current enrollment
+                                </p>
+                                <p className="mt-1 text-sm font-semibold text-navy-950">
+                                  {currentEnrollment
+                                    ? `${yearById.get(currentEnrollment.school_year_id)?.name ?? "School year"} - ${gradeById.get(currentEnrollment.grade_level_id)?.label ?? "Grade"}`
+                                    : "No active enrollment"}
+                                </p>
+                                <p className="mt-1 text-sm text-slate-600">
+                                  {currentEnrollment?.section_id
+                                    ? sectionById.get(
+                                        currentEnrollment.section_id,
+                                      )?.name
+                                    : "No section assigned"}
+                                </p>
+                              </div>
+                            </div>
+                          </section>
+                        </div>
+
+                        <details className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
+                          <summary className="flex cursor-pointer items-center gap-2 text-sm font-bold text-navy-950">
+                            <BookUser size={17} />
+                            More details
+                          </summary>
+                          <div className="mt-4 grid gap-3">
+                            <div className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+                              <p>
+                                <span className="font-bold text-slate-700">
+                                  Sex:
+                                </span>{" "}
+                                {learner.sex}
+                              </p>
+                              <p>
+                                <span className="font-bold text-slate-700">
+                                  Birth date:
+                                </span>{" "}
+                                {learner.birth_date}
+                              </p>
+                              <p className="sm:col-span-2">
+                                <span className="font-bold text-slate-700">
+                                  Address:
+                                </span>{" "}
+                                {learner.address || "Unassigned"}
+                              </p>
+                            </div>
+                            <section className="rounded-lg bg-slate-50 p-4">
+                              <div className="flex gap-2">
+                                <Shield
+                                  className="mt-0.5 shrink-0 text-skybrand-600"
+                                  size={18}
+                                />
+                                <div>
+                                  <p className="text-xs font-bold uppercase text-slate-500">
+                                    Guardian
+                                  </p>
+                                  <p className="mt-1 text-sm font-semibold text-navy-950">
+                                    {guardian
+                                      ? `${guardian.full_name} (${guardian.relationship})`
+                                      : "Unassigned"}
+                                  </p>
+                                  <p className="mt-1 text-sm text-slate-600">
+                                    {guardian?.phone || guardian?.email || ""}
+                                  </p>
+                                </div>
+                              </div>
+                            </section>
+                          </div>
+                        </details>
+                      </article>
+                    );
+                  })}
+                </div>
+              }
+              table={
+                <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+                  <table className="min-w-[820px] text-left text-sm">
+                    <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
+                      <tr>
+                        <th className="px-4 py-3">Learner</th>
+                        <th className="px-4 py-3">LRN</th>
+                        <th className="px-4 py-3">Enrollment</th>
+                        <th className="px-4 py-3">Guardian</th>
+                        <th className="px-4 py-3">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {filteredLearners.map((learner) => {
+                        const learnerEnrollments =
+                          enrollmentsByLearner.get(learner.id) ?? [];
+                        const currentEnrollment = activeYear
+                          ? learnerEnrollments.find(
+                              (enrollment) =>
+                                enrollment.school_year_id === activeYear.id,
+                            )
+                          : learnerEnrollments[0];
+                        const guardian = primaryGuardianByLearner.get(
+                          learner.id,
+                        );
+
+                        return (
+                          <tr key={learner.id}>
+                            <td className="px-4 py-4 font-semibold text-navy-950">
+                              {learnerName(learner)}
+                            </td>
+                            <td className="px-4 py-4 text-slate-600">
+                              {learner.lrn}
+                            </td>
+                            <td className="px-4 py-4 text-slate-600">
+                              {currentEnrollment
+                                ? `${gradeById.get(currentEnrollment.grade_level_id)?.label ?? "Grade"} - ${
+                                    currentEnrollment.section_id
+                                      ? sectionById.get(
+                                          currentEnrollment.section_id,
+                                        )?.name
+                                      : "Unassigned"
+                                  }`
+                                : "No active enrollment"}
+                            </td>
+                            <td className="px-4 py-4 text-slate-600">
+                              {guardian?.full_name ?? "Unassigned"}
+                            </td>
+                            <td className="px-4 py-4">
+                              <Link
+                                className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
+                                href={`/teacher/learners/${learner.id}`}
+                              >
+                                Open
+                              </Link>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              }
+              compact={
+                <div className="grid gap-2">
+                  {filteredLearners.map((learner) => {
+                    const learnerEnrollments =
+                      enrollmentsByLearner.get(learner.id) ?? [];
+                    const currentEnrollment = activeYear
+                      ? learnerEnrollments.find(
+                          (enrollment) =>
+                            enrollment.school_year_id === activeYear.id,
+                        )
+                      : learnerEnrollments[0];
+
+                    return (
+                      <Link
+                        className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white p-4 transition hover:border-skybrand-300 hover:bg-skybrand-50"
+                        href={`/teacher/learners/${learner.id}`}
+                        key={learner.id}
+                      >
+                        <div>
+                          <p className="font-semibold text-navy-950">
+                            {learnerName(learner)}
+                          </p>
+                          <p className="text-xs font-bold uppercase text-slate-500">
+                            LRN {learner.lrn}
+                          </p>
+                        </div>
+                        <span className="text-sm font-semibold text-slate-600">
+                          {currentEnrollment
+                            ? gradeById.get(currentEnrollment.grade_level_id)
+                                ?.label
+                            : "No enrollment"}
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              }
+            />
           </div>
         ) : (
           <div className="mt-6">

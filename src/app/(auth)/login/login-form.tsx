@@ -1,8 +1,15 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, LoaderCircle, LockKeyhole, Mail } from "lucide-react";
+import {
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  LoaderCircle,
+  LockKeyhole,
+  Mail,
+} from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
@@ -11,6 +18,7 @@ import { loginAction } from "./actions";
 
 export function LoginForm() {
   const [state, action, pending] = useActionState(loginAction, {});
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <form action={action} className="w-full max-w-xl">
@@ -62,11 +70,19 @@ export function LoginForm() {
             />
             <input
               autoComplete="current-password"
-              className="input input-icon-left py-3 pr-4"
+              className="input input-icon-left input-icon-right py-3"
               name="password"
               placeholder="Enter password"
-              type="password"
+              type={showPassword ? "text" : "password"}
             />
+            <button
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              className="absolute right-2 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-navy-900"
+              onClick={() => setShowPassword((current) => !current)}
+              type="button"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
           </span>
           {state.errors?.password ? (
             <span className="text-xs text-rose-700">

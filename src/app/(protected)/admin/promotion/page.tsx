@@ -9,8 +9,10 @@ import {
   UsersRound,
 } from "lucide-react";
 
+import { ActionDisclosure } from "@/components/ui/action-disclosure";
 import { ButtonLink } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { MetricStrip } from "@/components/ui/metric-strip";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { AppRole } from "@/types/domain";
@@ -331,58 +333,38 @@ export default async function PromotionPage() {
   const recentPromotionRows = promotedEnrollments.slice(0, 8);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">Phase 7</p>
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           Promotion and class assignment
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+        <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+            Page details
+          </summary>
           Move active enrolled learners into the next school year, assign their
           grade and section, and keep every source enrollment linked for review.
-        </p>
+        </details>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {[
-          ["Ready records", readyForPromotion],
-          ["Promotion links", promotedEnrollments.length],
-          ["Section assigned", assignedEnrollments],
-          ["School years", schoolYears.length],
-        ].map(([label, value]) => (
-          <section
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft"
-            key={label}
-          >
-            <p className="text-3xl font-extrabold text-navy-950">{value}</p>
-            <p className="mt-1 text-xs font-bold uppercase text-slate-500">
-              {label}
-            </p>
-          </section>
-        ))}
-      </div>
+      <MetricStrip
+        items={[
+          { label: "Ready records", value: readyForPromotion },
+          { label: "Promotion links", value: promotedEnrollments.length },
+          { label: "Section assigned", value: assignedEnrollments },
+          { label: "School years", value: schoolYears.length },
+        ]}
+      />
 
       {setupReady ? (
         <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-          <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
-            <div className="flex items-start gap-3">
-              <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-                <GraduationCap size={24} />
-              </span>
-              <div>
-                <h2 className="font-display text-xl font-extrabold text-navy-950">
-                  Batch promotion
-                </h2>
-                <p className="mt-1 text-sm text-slate-500">
-                  Promote the selected enrolled cohort into one target class.
-                </p>
-              </div>
-            </div>
-
-            <form
-              action={promoteLearnerBatchAction}
-              className="mt-6 grid gap-4"
-            >
+          <ActionDisclosure
+            icon={<GraduationCap size={17} />}
+            meta="Cohort action"
+            title="Batch promotion"
+          >
+            <form action={promoteLearnerBatchAction} className="grid gap-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <label>
                   <span className="label">Source school year</span>
@@ -478,11 +460,11 @@ export default async function PromotionPage() {
                 Promote cohort
               </SubmitButton>
             </form>
-          </section>
+          </ActionDisclosure>
 
-          <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+          <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
             <div className="flex items-start gap-3">
-              <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+              <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
                 <Route size={24} />
               </span>
               <div>
@@ -496,7 +478,7 @@ export default async function PromotionPage() {
             </div>
 
             {cohortRows.length ? (
-              <div className="mt-6 overflow-x-auto rounded-2xl border border-slate-200">
+              <div className="mt-6 overflow-x-auto rounded-lg border border-slate-200">
                 <table className="min-w-[720px] text-left text-sm">
                   <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
                     <tr>
@@ -560,9 +542,9 @@ export default async function PromotionPage() {
         />
       )}
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex items-start gap-3">
-          <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+          <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
             <Layers3 size={24} />
           </span>
           <div>
@@ -587,7 +569,7 @@ export default async function PromotionPage() {
 
               return (
                 <article
-                  className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-5"
+                  className="rounded-lg border border-slate-200 bg-slate-50 p-4"
                   key={row.key}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -632,9 +614,9 @@ export default async function PromotionPage() {
         )}
       </section>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex items-start gap-3">
-          <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+          <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
             <ArrowRight size={24} />
           </span>
           <div>
@@ -648,7 +630,7 @@ export default async function PromotionPage() {
         </div>
 
         {recentPromotionRows.length ? (
-          <div className="mt-6 overflow-x-auto rounded-2xl border border-slate-200">
+          <div className="mt-6 overflow-x-auto rounded-lg border border-slate-200">
             <table className="min-w-[920px] text-left text-sm">
               <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
                 <tr>

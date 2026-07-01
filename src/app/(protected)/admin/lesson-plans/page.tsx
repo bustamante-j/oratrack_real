@@ -1,6 +1,7 @@
 import { Archive, CheckCircle2, Download, FileText } from "lucide-react";
 
 import { EmptyState } from "@/components/ui/empty-state";
+import { MetricStrip } from "@/components/ui/metric-strip";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { LessonPlanStatus } from "@/types/domain";
@@ -149,7 +150,7 @@ export default async function AdminLessonPlansPage() {
   ).length;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">
           Phase 14
@@ -157,34 +158,27 @@ export default async function AdminLessonPlansPage() {
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           Lesson plan review
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+        <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+            Page details
+          </summary>
           Review teacher lesson-plan uploads, download private files by signed
           URL, and archive old submissions.
-        </p>
+        </details>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {[
-          ["Submissions", lessonPlans.length],
-          ["Pending", pendingCount],
-          ["Reviewed", reviewedCount],
-          ["Archived", archivedCount],
-        ].map(([label, value]) => (
-          <section
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft"
-            key={label}
-          >
-            <p className="text-3xl font-extrabold text-navy-950">{value}</p>
-            <p className="mt-1 text-xs font-bold uppercase text-slate-500">
-              {label}
-            </p>
-          </section>
-        ))}
-      </div>
+      <MetricStrip
+        items={[
+          { label: "Submissions", value: lessonPlans.length },
+          { label: "Pending", value: pendingCount },
+          { label: "Reviewed", value: reviewedCount },
+          { label: "Archived", value: archivedCount },
+        ]}
+      />
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex items-start gap-3">
-          <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+          <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
             <FileText size={24} />
           </span>
           <div>
@@ -207,7 +201,7 @@ export default async function AdminLessonPlansPage() {
 
               return (
                 <article
-                  className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-5"
+                  className="rounded-lg border border-slate-200 bg-slate-50 p-4"
                   key={plan.id}
                 >
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -240,7 +234,7 @@ export default async function AdminLessonPlansPage() {
                     </div>
                     {file ? (
                       <a
-                        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-navy-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-skybrand-600"
+                        className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
                         href={`/api/lesson-plans/download?id=${plan.id}`}
                       >
                         <Download size={17} />
@@ -249,7 +243,7 @@ export default async function AdminLessonPlansPage() {
                     ) : null}
                   </div>
 
-                  <div className="mt-4 rounded-2xl bg-white p-4 text-sm text-slate-600">
+                  <div className="mt-4 rounded-lg bg-white p-4 text-sm text-slate-600">
                     <p>
                       {file?.original_filename ?? "No file"}{" "}
                       {file ? `- ${formatBytes(file.byte_size)}` : ""}
@@ -260,34 +254,44 @@ export default async function AdminLessonPlansPage() {
                     </p>
                   </div>
 
-                  <form
-                    action={reviewLessonPlanAction}
-                    className="mt-4 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:grid-cols-[1fr_auto]"
-                  >
-                    <input name="lessonPlanId" type="hidden" value={plan.id} />
-                    <label>
-                      <span className="label">Review status</span>
-                      <select
-                        className="input"
-                        defaultValue={plan.status}
-                        name="status"
-                      >
-                        <option value="uploaded">Needs review</option>
-                        <option value="reviewed">Reviewed</option>
-                        <option value="archived">Archived</option>
-                      </select>
-                    </label>
-                    <div className="flex items-end">
-                      <SubmitButton pendingLabel="Saving review...">
-                        {plan.status === "archived" ? (
-                          <Archive size={17} />
-                        ) : (
-                          <CheckCircle2 size={17} />
-                        )}
-                        Save review
-                      </SubmitButton>
-                    </div>
-                  </form>
+                  <details className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
+                    <summary className="inline-flex cursor-pointer items-center gap-2 text-sm font-bold text-navy-950">
+                      <CheckCircle2 size={17} />
+                      Review
+                    </summary>
+                    <form
+                      action={reviewLessonPlanAction}
+                      className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]"
+                    >
+                      <input
+                        name="lessonPlanId"
+                        type="hidden"
+                        value={plan.id}
+                      />
+                      <label>
+                        <span className="label">Review status</span>
+                        <select
+                          className="input"
+                          defaultValue={plan.status}
+                          name="status"
+                        >
+                          <option value="uploaded">Needs review</option>
+                          <option value="reviewed">Reviewed</option>
+                          <option value="archived">Archived</option>
+                        </select>
+                      </label>
+                      <div className="flex items-end">
+                        <SubmitButton pendingLabel="Saving review...">
+                          {plan.status === "archived" ? (
+                            <Archive size={17} />
+                          ) : (
+                            <CheckCircle2 size={17} />
+                          )}
+                          Save review
+                        </SubmitButton>
+                      </div>
+                    </form>
+                  </details>
                 </article>
               );
             })}

@@ -80,10 +80,10 @@ export function PortalNavLinks({
             <Link
               aria-current={active ? "page" : undefined}
               className={cn(
-                "inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold transition",
+                "inline-flex shrink-0 items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-bold transition",
                 active
-                  ? "border-navy-900 bg-navy-900 text-white shadow-sm"
-                  : "border-slate-200 bg-white text-slate-600 hover:border-skybrand-300 hover:bg-skybrand-50 hover:text-navy-900",
+                  ? "border-navy-900 bg-navy-900 text-white"
+                  : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-navy-900",
               )}
               href={item.href}
               key={item.href}
@@ -107,10 +107,10 @@ export function PortalNavLinks({
           <Link
             aria-current={active ? "page" : undefined}
             className={cn(
-              "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition",
+              "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold transition",
               active
-                ? "bg-gradient-to-r from-skybrand-500 to-blue-500 text-white shadow-lg shadow-skybrand-500/20"
-                : "text-slate-300 hover:translate-x-0.5 hover:bg-white/10 hover:text-white",
+                ? "bg-white/10 text-white"
+                : "text-slate-300 hover:bg-white/10 hover:text-white",
             )}
             href={item.href}
             key={item.href}

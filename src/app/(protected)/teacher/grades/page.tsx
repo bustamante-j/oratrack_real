@@ -7,8 +7,10 @@ import {
   Upload,
 } from "lucide-react";
 
+import { ActionDisclosure } from "@/components/ui/action-disclosure";
 import { ButtonLink } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { MetricStrip } from "@/components/ui/metric-strip";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { requireAuthenticatedProfile } from "@/lib/auth/session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -323,46 +325,39 @@ export default async function GradesPage({
       : "No subject assignment";
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">Phase 9</p>
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           Grades
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+        <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+            Page details
+          </summary>
           Encode subject grades manually or import the ORATRACK Excel template
           for the sections assigned to your teacher account.
-        </p>
+        </details>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {[
-          ["Assignments", assignments.length],
-          ["Learners", selectedEnrollments.length],
-          ["Encoded", encodedValues.length],
-          [
-            "Class average",
-            classAverage === null ? "N/A" : classAverage.toFixed(2),
-          ],
-        ].map(([label, value]) => (
-          <section
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft"
-            key={label}
-          >
-            <p className="text-3xl font-extrabold text-navy-950">{value}</p>
-            <p className="mt-1 text-xs font-bold uppercase text-slate-500">
-              {label}
-            </p>
-          </section>
-        ))}
-      </div>
+      <MetricStrip
+        items={[
+          { label: "Assignments", value: assignments.length },
+          { label: "Learners", value: selectedEnrollments.length },
+          { label: "Encoded", value: encodedValues.length },
+          {
+            label: "Class average",
+            value: classAverage === null ? "N/A" : classAverage.toFixed(2),
+          },
+        ]}
+      />
 
       {assignments.length ? (
         <>
           <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
-                <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+                <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
                   <BookOpenCheck size={24} />
                 </span>
                 <div>
@@ -419,7 +414,7 @@ export default async function GradesPage({
                 </label>
                 <div className="flex items-end">
                   <button
-                    className="inline-flex min-h-10 items-center justify-center rounded-xl bg-navy-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-skybrand-600"
+                    className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
                     type="submit"
                   >
                     Filter
@@ -432,7 +427,7 @@ export default async function GradesPage({
               selectedEnrollments.length ? (
                 <form
                   action={saveGradeRecordsAction}
-                  className="mt-6 overflow-x-auto rounded-2xl border border-slate-200"
+                  className="mt-6 overflow-x-auto rounded-lg border border-slate-200"
                 >
                   <input
                     name="assignmentId"
@@ -531,9 +526,9 @@ export default async function GradesPage({
               )}
             </section>
 
-            <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
-                <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+                <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
                   <FileSpreadsheet size={24} />
                 </span>
                 <div>
@@ -558,30 +553,39 @@ export default async function GradesPage({
               </div>
 
               {selectedAssignment ? (
-                <form
-                  action={importGradeWorkbookAction}
-                  className="mt-5 grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5"
+                <ActionDisclosure
+                  className="mt-5 bg-slate-50 shadow-none"
+                  icon={<Upload size={17} />}
+                  meta="XLSX"
+                  title="Import grades"
                 >
-                  <input
-                    name="assignmentId"
-                    type="hidden"
-                    value={selectedAssignment.id}
-                  />
-                  <label>
-                    <span className="label">Workbook</span>
+                  <form
+                    action={importGradeWorkbookAction}
+                    className="grid gap-4"
+                  >
                     <input
-                      accept=".xlsx"
-                      className="input bg-white"
-                      name="gradeFile"
-                      required
-                      type="file"
+                      name="assignmentId"
+                      type="hidden"
+                      value={selectedAssignment.id}
                     />
-                  </label>
-                  <SubmitButton pendingLabel="Importing workbook...">
-                    <Upload size={17} />
-                    Import grades
-                  </SubmitButton>
-                </form>
+                    <label>
+                      <span className="label">Workbook</span>
+                      <input
+                        accept=".xlsx"
+                        className="input bg-white"
+                        name="gradeFile"
+                        required
+                        type="file"
+                      />
+                    </label>
+                    <div>
+                      <SubmitButton pendingLabel="Importing workbook...">
+                        <Upload size={17} />
+                        Import grades
+                      </SubmitButton>
+                    </div>
+                  </form>
+                </ActionDisclosure>
               ) : null}
 
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -602,7 +606,7 @@ export default async function GradesPage({
                   ["Imports", recentBatches.length],
                 ].map(([label, value]) => (
                   <div
-                    className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                    className="rounded-lg border border-slate-200 bg-slate-50 p-4"
                     key={label}
                   >
                     <p className="text-2xl font-extrabold text-navy-950">
@@ -618,9 +622,9 @@ export default async function GradesPage({
           </div>
 
           <div className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
-            <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
-                <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+                <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
                   <TrendingUp size={24} />
                 </span>
                 <div>
@@ -637,7 +641,7 @@ export default async function GradesPage({
                 <div className="mt-6 grid gap-3">
                   {subjectAverages.map((row) => (
                     <div
-                      className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                      className="rounded-lg border border-slate-200 bg-slate-50 p-4"
                       key={row.period.id}
                     >
                       <div className="flex items-center justify-between gap-3">
@@ -670,9 +674,9 @@ export default async function GradesPage({
               )}
             </section>
 
-            <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
-                <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+                <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
                   <Upload size={24} />
                 </span>
                 <div>
@@ -686,7 +690,7 @@ export default async function GradesPage({
               </div>
 
               {recentBatches.length ? (
-                <div className="mt-6 overflow-x-auto rounded-2xl border border-slate-200">
+                <div className="mt-6 overflow-x-auto rounded-lg border border-slate-200">
                   <table className="min-w-[760px] text-left text-sm">
                     <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
                       <tr>

@@ -80,7 +80,7 @@ export function DashboardHome({
     }));
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <p className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-skybrand-600">
@@ -90,13 +90,16 @@ export function DashboardHome({
           <h1 className="text-balance font-display text-2xl font-extrabold tracking-tight text-navy-950 sm:text-3xl">
             {title}
           </h1>
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500">
-            {description}
-          </p>
+          <details className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+            <summary className="cursor-pointer text-xs font-bold uppercase tracking-wide text-slate-500">
+              Dashboard details
+            </summary>
+            <p className="mt-2">{description}</p>
+          </details>
         </div>
         {reportModule ? (
           <Link
-            className="inline-flex w-fit items-center gap-2 rounded-xl bg-navy-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-navy-800"
+            className="inline-flex w-fit items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
             href={reportModule.href}
           >
             View reports
@@ -105,7 +108,7 @@ export function DashboardHome({
         ) : null}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+      <div className="grid gap-x-5 rounded-lg border border-slate-200 bg-white px-4 shadow-soft sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
         {stats.map((stat) => {
           const Icon =
             iconMap[stat.icon as keyof typeof iconMap] ?? SquaresFour;
@@ -125,14 +128,14 @@ export function DashboardHome({
 
       <DashboardGraphs data={graphs} />
 
-      <section className="card min-w-0 p-5">
-        <div className="mb-4 flex items-start justify-between gap-4">
+      <details className="min-w-0 rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
           <div>
             <h2 className="font-display text-lg font-bold text-navy-950">
-              AI school insights
+              Insights
             </h2>
             <p className="mt-1 text-sm text-slate-500">
-              Signals from visible dashboard records.
+              Expand only when you need narrative context.
             </p>
           </div>
           <Sparkle
@@ -140,15 +143,12 @@ export function DashboardHome({
             size={19}
             weight="fill"
           />
-        </div>
-        <div className="space-y-3">
+        </summary>
+        <div className="mt-4 divide-y divide-slate-100 border-t border-slate-100">
           {insights.map((insight) => (
-            <article
-              className="rounded-2xl border border-skybrand-200 bg-gradient-to-br from-skybrand-50 to-white p-4"
-              key={insight.title}
-            >
+            <article className="py-3" key={insight.title}>
               <div className="flex gap-3">
-                <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-navy-900 text-white">
+                <span className="grid size-8 shrink-0 place-items-center text-skybrand-600">
                   <Sparkle size={16} weight="fill" />
                 </span>
                 <div className="min-w-0">
@@ -167,25 +167,41 @@ export function DashboardHome({
             </article>
           ))}
         </div>
-      </section>
+      </details>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-soft">
         {modules.map((module) => (
-          <Link
-            className="shine-card card min-w-0 p-5 transition hover:-translate-y-1 hover:border-skybrand-300 hover:shadow-glow"
-            href={module.href}
+          <article
+            className="grid min-w-0 gap-3 border-t border-slate-100 p-4 first:border-t-0 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-center"
             key={module.href}
           >
             <p className="text-xs font-bold uppercase text-skybrand-600">
               {module.phase}
             </p>
-            <h2 className="mt-3 text-balance font-display font-extrabold text-navy-950">
+            <h2 className="text-balance font-display text-sm font-extrabold text-navy-950">
               {module.title}
             </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
-              {module.summary}
-            </p>
-          </Link>
+            <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+              <Link
+                className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
+                href={module.href}
+              >
+                Open
+                <ArrowUpRight size={13} />
+              </Link>
+              <details className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-600">
+                <summary className="cursor-pointer font-bold text-slate-700">
+                  More
+                </summary>
+                <p className="mt-2 leading-5">{module.summary}</p>
+                <ul className="mt-2 space-y-1">
+                  {module.capabilities.slice(0, 3).map((capability) => (
+                    <li key={capability}>{capability}</li>
+                  ))}
+                </ul>
+              </details>
+            </div>
+          </article>
         ))}
       </div>
     </div>

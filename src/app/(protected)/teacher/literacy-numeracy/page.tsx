@@ -1,6 +1,7 @@
 import { AlertTriangle, BookOpenCheck, Brain, Save } from "lucide-react";
 
 import { EmptyState } from "@/components/ui/empty-state";
+import { MetricStrip } from "@/components/ui/metric-strip";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { requireAuthenticatedProfile } from "@/lib/auth/session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -230,7 +231,7 @@ export default async function LiteracyNumeracyPage({
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">
           Phase 10
@@ -238,37 +239,30 @@ export default async function LiteracyNumeracyPage({
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           Literacy and numeracy
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+        <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+            Page details
+          </summary>
           Encode class literacy and numeracy levels, then surface learners who
           may need focused follow-up.
-        </p>
+        </details>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {[
-          ["Advisory sections", manageableSections.length],
-          ["Learners", selectedEnrollments.length],
-          ["Encoded", encodedCount],
-          ["Watchlist", lowRows.length],
-        ].map(([label, value]) => (
-          <section
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft"
-            key={label}
-          >
-            <p className="text-3xl font-extrabold text-navy-950">{value}</p>
-            <p className="mt-1 text-xs font-bold uppercase text-slate-500">
-              {label}
-            </p>
-          </section>
-        ))}
-      </div>
+      <MetricStrip
+        items={[
+          { label: "Advisory sections", value: manageableSections.length },
+          { label: "Learners", value: selectedEnrollments.length },
+          { label: "Encoded", value: encodedCount },
+          { label: "Watchlist", value: lowRows.length },
+        ]}
+      />
 
       {manageableSections.length ? (
         <>
-          <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+          <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
             <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
               <div className="flex items-start gap-3">
-                <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+                <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
                   <BookOpenCheck size={24} />
                 </span>
                 <div>
@@ -304,7 +298,7 @@ export default async function LiteracyNumeracyPage({
                 </label>
                 <div className="flex items-end">
                   <button
-                    className="inline-flex min-h-10 items-center justify-center rounded-xl bg-navy-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-skybrand-600"
+                    className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
                     type="submit"
                   >
                     Filter
@@ -316,7 +310,7 @@ export default async function LiteracyNumeracyPage({
             {selectedSection && selectedEnrollments.length ? (
               <form
                 action={saveLiteracyNumeracySheetAction}
-                className="mt-6 overflow-x-auto rounded-2xl border border-slate-200"
+                className="mt-6 overflow-x-auto rounded-lg border border-slate-200"
               >
                 <input
                   name="sectionId"
@@ -417,9 +411,9 @@ export default async function LiteracyNumeracyPage({
           </section>
 
           <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-            <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
-                <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+                <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
                   <Brain size={24} />
                 </span>
                 <div>
@@ -438,7 +432,7 @@ export default async function LiteracyNumeracyPage({
                   ["Numeracy", numeracyCounts],
                 ].map(([label, rows]) => (
                   <div
-                    className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                    className="rounded-lg border border-slate-200 bg-slate-50 p-4"
                     key={label as string}
                   >
                     <p className="text-sm font-bold text-navy-950">
@@ -466,9 +460,9 @@ export default async function LiteracyNumeracyPage({
               </div>
             </section>
 
-            <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
-                <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+                <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
                   <AlertTriangle size={24} />
                 </span>
                 <div>
@@ -485,7 +479,7 @@ export default async function LiteracyNumeracyPage({
                 <div className="mt-6 grid gap-3 md:grid-cols-2">
                   {lowRows.slice(0, 8).map((row) => (
                     <article
-                      className="rounded-[1.25rem] border border-amber-200 bg-amber-50 p-5"
+                      className="rounded-lg border border-amber-200 bg-amber-50 p-4"
                       key={row.enrollment.id}
                     >
                       <p className="font-display text-lg font-extrabold text-navy-950">

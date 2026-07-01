@@ -9,14 +9,14 @@ import { cn } from "@/lib/utils";
 
 const variants = {
   primary:
-    "bg-navy-900 text-white shadow-lg shadow-navy-900/15 hover:bg-skybrand-600 hover:shadow-skybrand-500/25",
+    "border border-navy-900 bg-white text-navy-950 hover:bg-navy-900 hover:text-white",
   secondary:
-    "border border-slate-200 bg-white text-navy-950 shadow-sm hover:border-skybrand-300 hover:bg-skybrand-50",
+    "border border-slate-200 bg-white text-navy-950 hover:border-slate-300 hover:bg-slate-50",
   ghost: "text-slate-700 hover:bg-skybrand-50 hover:text-navy-900",
 };
 
 const base =
-  "inline-flex min-h-10 items-center justify-center gap-2 rounded-xl px-4 py-2 text-center text-sm font-bold transition";
+  "inline-flex min-h-9 items-center justify-center gap-2 rounded-lg px-3 py-1.5 text-center text-sm font-bold transition";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: keyof typeof variants;

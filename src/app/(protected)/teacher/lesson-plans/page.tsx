@@ -1,6 +1,8 @@
 import { Download, FileText, RefreshCcw, Upload } from "lucide-react";
 
+import { ActionDisclosure } from "@/components/ui/action-disclosure";
 import { EmptyState } from "@/components/ui/empty-state";
+import { MetricStrip } from "@/components/ui/metric-strip";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { LessonPlanStatus } from "@/types/domain";
@@ -126,7 +128,7 @@ export default async function TeacherLessonPlansPage() {
   ).length;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">
           Phase 14
@@ -134,47 +136,31 @@ export default async function TeacherLessonPlansPage() {
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           Lesson plans
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+        <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+            Page details
+          </summary>
           Upload private lesson-plan files, replace drafts, and download your
           submitted files through short-lived signed links.
-        </p>
+        </details>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        {[
-          ["Uploaded", lessonPlans.length],
-          ["Pending review", pendingCount],
-          ["Reviewed", reviewedCount],
-        ].map(([label, value]) => (
-          <section
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft"
-            key={label}
-          >
-            <p className="text-3xl font-extrabold text-navy-950">{value}</p>
-            <p className="mt-1 text-xs font-bold uppercase text-slate-500">
-              {label}
-            </p>
-          </section>
-        ))}
-      </div>
+      <MetricStrip
+        columns="three"
+        items={[
+          { label: "Uploaded", value: lessonPlans.length },
+          { label: "Pending review", value: pendingCount },
+          { label: "Reviewed", value: reviewedCount },
+        ]}
+      />
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
-        <div className="flex items-start gap-3">
-          <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-            <Upload size={24} />
-          </span>
-          <div>
-            <h2 className="font-display text-xl font-extrabold text-navy-950">
-              Upload lesson plan
-            </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Accepted file types are PDF, DOC, and DOCX up to 10MB.
-            </p>
-          </div>
-        </div>
-
+      <ActionDisclosure
+        icon={<Upload size={17} />}
+        meta="PDF, DOC, DOCX"
+        title="Upload lesson plan"
+      >
         {years.length ? (
-          <form action={uploadLessonPlanAction} className="mt-6 grid gap-4">
+          <form action={uploadLessonPlanAction} className="grid gap-4">
             <div className="grid gap-4 lg:grid-cols-3">
               <label>
                 <span className="label">School year</span>
@@ -233,18 +219,16 @@ export default async function TeacherLessonPlansPage() {
             </SubmitButton>
           </form>
         ) : (
-          <div className="mt-6">
-            <EmptyState
-              message="A school year must be configured before lesson plans can be uploaded."
-              title="No school years yet"
-            />
-          </div>
+          <EmptyState
+            message="A school year must be configured before lesson plans can be uploaded."
+            title="No school years yet"
+          />
         )}
-      </section>
+      </ActionDisclosure>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex items-start gap-3">
-          <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+          <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
             <FileText size={24} />
           </span>
           <div>
@@ -267,7 +251,7 @@ export default async function TeacherLessonPlansPage() {
 
               return (
                 <article
-                  className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-5"
+                  className="rounded-lg border border-slate-200 bg-slate-50 p-4"
                   key={plan.id}
                 >
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -295,7 +279,7 @@ export default async function TeacherLessonPlansPage() {
                     </div>
                     {file ? (
                       <a
-                        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-navy-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-skybrand-600"
+                        className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
                         href={`/api/lesson-plans/download?id=${plan.id}`}
                       >
                         <Download size={17} />
@@ -304,7 +288,7 @@ export default async function TeacherLessonPlansPage() {
                     ) : null}
                   </div>
 
-                  <div className="mt-4 rounded-2xl bg-white p-4 text-sm text-slate-600">
+                  <div className="mt-4 rounded-lg bg-white p-4 text-sm text-slate-600">
                     <p>
                       {file?.original_filename ?? "No file"}{" "}
                       {file ? `- ${formatBytes(file.byte_size)}` : ""}
@@ -315,7 +299,7 @@ export default async function TeacherLessonPlansPage() {
                     </p>
                   </div>
 
-                  <details className="mt-4 rounded-2xl border border-slate-200 bg-white p-4">
+                  <details className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
                     <summary className="inline-flex cursor-pointer items-center gap-2 text-sm font-bold text-navy-950">
                       <RefreshCcw size={17} />
                       Replace file

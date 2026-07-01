@@ -8,7 +8,9 @@ import {
   UsersRound,
 } from "lucide-react";
 
+import { ActionDisclosure } from "@/components/ui/action-disclosure";
 import { EmptyState } from "@/components/ui/empty-state";
+import { MetricStrip } from "@/components/ui/metric-strip";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { calculateAttendanceTotals } from "@/lib/attendance/calculations";
 import { requireAuthenticatedProfile } from "@/lib/auth/session";
@@ -253,43 +255,36 @@ export default async function AttendancePage({
   const attendanceRate = Math.round(selectedTotals.attendancePercentage * 100);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">Phase 8</p>
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           Attendance
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+        <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+            Page details
+          </summary>
           Create daily section attendance dates, encode AM/PM status, and watch
           tardy and absenteeism indicators for your advisory class.
-        </p>
+        </details>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {[
-          ["Advisory sections", manageableSections.length],
-          ["Attendance dates", attendanceDates.length],
-          ["Selected records", selectedDateRecords.length],
-          ["Attendance rate", `${attendanceRate}%`],
-        ].map(([label, value]) => (
-          <section
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft"
-            key={label}
-          >
-            <p className="text-3xl font-extrabold text-navy-950">{value}</p>
-            <p className="mt-1 text-xs font-bold uppercase text-slate-500">
-              {label}
-            </p>
-          </section>
-        ))}
-      </div>
+      <MetricStrip
+        items={[
+          { label: "Advisory sections", value: manageableSections.length },
+          { label: "Attendance dates", value: attendanceDates.length },
+          { label: "Selected records", value: selectedDateRecords.length },
+          { label: "Attendance rate", value: `${attendanceRate}%` },
+        ]}
+      />
 
       {manageableSections.length ? (
         <>
           <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
-                <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+                <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
                   <ListChecks size={24} />
                 </span>
                 <div>
@@ -340,7 +335,7 @@ export default async function AttendancePage({
                 </label>
                 <div className="flex items-end">
                   <button
-                    className="inline-flex min-h-10 items-center justify-center rounded-xl bg-navy-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-skybrand-600"
+                    className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
                     type="submit"
                   >
                     Filter
@@ -351,7 +346,7 @@ export default async function AttendancePage({
               {selectedAttendanceDate && selectedSectionEnrollments.length ? (
                 <form
                   action={saveAttendanceSheetAction}
-                  className="mt-6 overflow-x-auto rounded-2xl border border-slate-200"
+                  className="mt-6 overflow-x-auto rounded-lg border border-slate-200"
                 >
                   <input
                     name="attendanceDateId"
@@ -455,70 +450,65 @@ export default async function AttendancePage({
               )}
             </section>
 
-            <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
-              <div className="flex items-start gap-3">
-                <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-                  <CalendarPlus size={24} />
-                </span>
-                <div>
-                  <h2 className="font-display text-xl font-extrabold text-navy-950">
-                    Create date
-                  </h2>
-                  <p className="mt-1 text-sm text-slate-500">
-                    One attendance sheet is created per section per day.
-                  </p>
-                </div>
-              </div>
-
-              <form
-                action={createAttendanceDateAction}
-                className="mt-6 grid gap-4"
+            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
+              <ActionDisclosure
+                className="shadow-none"
+                icon={<CalendarPlus size={17} />}
+                meta="Section/day"
+                title="Create date"
               >
-                <label>
-                  <span className="label">Section</span>
-                  <select
-                    className="input"
-                    defaultValue={selectedSection?.id}
-                    name="sectionId"
-                    required
-                  >
-                    {manageableSections.map((section) => (
-                      <option key={section.id} value={section.id}>
-                        {yearById.get(section.school_year_id)?.name ??
-                          "School year"}{" "}
-                        - {gradeLabel(gradeById, section.grade_level_id)}{" "}
-                        {section.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  <span className="label">School year</span>
-                  <select
-                    className="input"
-                    defaultValue={selectedSection?.school_year_id}
-                    name="schoolYearId"
-                    required
-                  >
-                    {schoolYears.map((year) => (
-                      <option key={year.id} value={year.id}>
-                        {year.name} ({year.status})
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  <span className="label">Attendance date</span>
-                  <input
-                    className="input"
-                    defaultValue={todayDateValue()}
-                    name="attendanceOn"
-                    required
-                    type="date"
-                  />
-                </label>
-                <SubmitButton>Create attendance date</SubmitButton>
-              </form>
+                <form
+                  action={createAttendanceDateAction}
+                  className="grid gap-4"
+                >
+                  <label>
+                    <span className="label">Section</span>
+                    <select
+                      className="input"
+                      defaultValue={selectedSection?.id}
+                      name="sectionId"
+                      required
+                    >
+                      {manageableSections.map((section) => (
+                        <option key={section.id} value={section.id}>
+                          {yearById.get(section.school_year_id)?.name ??
+                            "School year"}{" "}
+                          - {gradeLabel(gradeById, section.grade_level_id)}{" "}
+                          {section.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    <span className="label">School year</span>
+                    <select
+                      className="input"
+                      defaultValue={selectedSection?.school_year_id}
+                      name="schoolYearId"
+                      required
+                    >
+                      {schoolYears.map((year) => (
+                        <option key={year.id} value={year.id}>
+                          {year.name} ({year.status})
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    <span className="label">Attendance date</span>
+                    <input
+                      className="input"
+                      defaultValue={todayDateValue()}
+                      name="attendanceOn"
+                      required
+                      type="date"
+                    />
+                  </label>
+                  <div>
+                    <SubmitButton>Create attendance date</SubmitButton>
+                  </div>
+                </form>
+              </ActionDisclosure>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {[
@@ -528,7 +518,7 @@ export default async function AttendancePage({
                   ["Excused days", selectedTotals.excusedDays],
                 ].map(([label, value]) => (
                   <div
-                    className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                    className="rounded-lg border border-slate-200 bg-slate-50 p-4"
                     key={label}
                   >
                     <p className="text-2xl font-extrabold text-navy-950">
@@ -543,9 +533,9 @@ export default async function AttendancePage({
             </section>
           </div>
 
-          <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+          <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
             <div className="flex items-start gap-3">
-              <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+              <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
                 <AlertTriangle size={24} />
               </span>
               <div>
@@ -563,7 +553,7 @@ export default async function AttendancePage({
               <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                 {riskRows.map((row) => (
                   <article
-                    className="rounded-[1.25rem] border border-amber-200 bg-amber-50 p-5"
+                    className="rounded-lg border border-amber-200 bg-amber-50 p-4"
                     key={row.enrollment.id}
                   >
                     <p className="font-display text-lg font-extrabold text-navy-950">

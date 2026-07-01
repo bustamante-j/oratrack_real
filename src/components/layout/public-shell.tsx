@@ -51,7 +51,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
           >
             {publicNavItems.map((item) => (
               <Link
-                className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-navy-900"
+                className="rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-navy-900"
                 href={item.href}
                 key={item.href}
               >
@@ -61,7 +61,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
           </nav>
 
           <Link
-            className="shine-card inline-flex shrink-0 items-center gap-2 rounded-xl bg-navy-900 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-navy-900/15 transition hover:-translate-y-0.5 hover:bg-skybrand-600 hover:shadow-skybrand-500/25 sm:px-5 sm:py-3"
+            className="shine-card inline-flex shrink-0 items-center gap-2 rounded-lg bg-navy-900 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-navy-900/15 transition hover:-translate-y-0.5 hover:bg-skybrand-600 hover:shadow-skybrand-500/25 sm:px-5 sm:py-3"
             href="/login"
           >
             <span className="hidden sm:inline">Teacher Portal</span>
@@ -100,7 +100,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
               </h2>
             </div>
             <Link
-              className="shine-card inline-flex w-fit items-center gap-2 rounded-xl bg-skybrand-500 px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-skybrand-400"
+              className="shine-card inline-flex w-fit items-center gap-2 rounded-lg bg-skybrand-500 px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-skybrand-400"
               href="/announcements"
             >
               Read school updates
@@ -119,7 +119,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
                 {[Globe2, Video].map((Icon, index) => (
                   <a
                     aria-label="School social page"
-                    className="grid size-10 place-items-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:-translate-y-0.5 hover:border-skybrand-400 hover:bg-skybrand-500 hover:text-white"
+                    className="grid size-10 place-items-center rounded-lg border border-white/10 bg-white/5 text-slate-300 transition hover:-translate-y-0.5 hover:border-skybrand-400 hover:bg-skybrand-500 hover:text-white"
                     href="#"
                     key={index}
                   >

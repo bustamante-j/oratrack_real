@@ -6,7 +6,9 @@ import {
   UserRoundCheck,
 } from "lucide-react";
 
+import { ActionDisclosure } from "@/components/ui/action-disclosure";
 import { EmptyState } from "@/components/ui/empty-state";
+import { MetricStrip } from "@/components/ui/metric-strip";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { AppRole } from "@/types/domain";
@@ -154,22 +156,25 @@ export default async function SectionsPage() {
   const setupReady = schoolYears.length > 0 && gradeLevels.length > 0;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">Phase 4</p>
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           Sections and subjects
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+        <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+            Page details
+          </summary>
           Build the active school setup that controls adviser access, subject
           teacher access, learner enrollments, attendance, grades, and reports.
-        </p>
+        </details>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+        <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
           <div className="flex items-start gap-3">
-            <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+            <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
               <CheckCircle2 size={22} />
             </span>
             <div>
@@ -184,29 +189,21 @@ export default async function SectionsPage() {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {[
-              ["School years", schoolYears.length],
-              ["Grade levels", gradeLevels.length],
-              ["Sections", sections.length],
-              ["Subjects", subjects.length],
-            ].map(([label, value]) => (
-              <div
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
-                key={label}
-              >
-                <p className="text-2xl font-extrabold text-navy-950">{value}</p>
-                <p className="mt-1 text-xs font-bold uppercase text-slate-500">
-                  {label}
-                </p>
-              </div>
-            ))}
+          <div className="mt-6">
+            <MetricStrip
+              items={[
+                { label: "School years", value: schoolYears.length },
+                { label: "Grade levels", value: gradeLevels.length },
+                { label: "Sections", value: sections.length },
+                { label: "Subjects", value: subjects.length },
+              ]}
+            />
           </div>
         </section>
 
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+        <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
           <div className="flex items-start gap-3">
-            <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+            <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
               <GraduationCap size={24} />
             </span>
             <div>
@@ -234,25 +231,12 @@ export default async function SectionsPage() {
 
       {setupReady ? (
         <div className="grid gap-6 xl:grid-cols-3">
-          <form
-            action={createSubjectAction}
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft"
+          <ActionDisclosure
+            icon={<BookOpen size={17} />}
+            meta="Code and grade"
+            title="Add subject"
           >
-            <div className="flex items-start gap-3">
-              <span className="grid size-11 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-                <BookOpen size={22} />
-              </span>
-              <div>
-                <h2 className="font-display text-lg font-extrabold text-navy-950">
-                  Add subject
-                </h2>
-                <p className="mt-1 text-sm text-slate-500">
-                  Create reusable subject records for grade imports.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-5 grid gap-4">
+            <form action={createSubjectAction} className="grid gap-4">
               <label>
                 <span className="label">Code</span>
                 <input
@@ -282,32 +266,18 @@ export default async function SectionsPage() {
                   ))}
                 </select>
               </label>
-            </div>
-
-            <div className="mt-6">
-              <SubmitButton>Add subject</SubmitButton>
-            </div>
-          </form>
-
-          <form
-            action={createSectionAction}
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft"
-          >
-            <div className="flex items-start gap-3">
-              <span className="grid size-11 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-                <Layers3 size={22} />
-              </span>
               <div>
-                <h2 className="font-display text-lg font-extrabold text-navy-950">
-                  Add section
-                </h2>
-                <p className="mt-1 text-sm text-slate-500">
-                  Assign a school year, grade level, and adviser.
-                </p>
+                <SubmitButton>Add subject</SubmitButton>
               </div>
-            </div>
+            </form>
+          </ActionDisclosure>
 
-            <div className="mt-5 grid gap-4">
+          <ActionDisclosure
+            icon={<Layers3 size={17} />}
+            meta="Year, grade, adviser"
+            title="Add section"
+          >
+            <form action={createSectionAction} className="grid gap-4">
               <label>
                 <span className="label">School year</span>
                 <select
@@ -357,81 +327,64 @@ export default async function SectionsPage() {
                 <span className="label">Room</span>
                 <input className="input" name="room" placeholder="Room 1" />
               </label>
-            </div>
-
-            <div className="mt-6">
-              <SubmitButton>Add section</SubmitButton>
-            </div>
-          </form>
-
-          <form
-            action={assignSectionSubjectAction}
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft"
-          >
-            <div className="flex items-start gap-3">
-              <span className="grid size-11 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-                <UserRoundCheck size={22} />
-              </span>
               <div>
-                <h2 className="font-display text-lg font-extrabold text-navy-950">
-                  Assign subject
-                </h2>
-                <p className="mt-1 text-sm text-slate-500">
-                  Connect a subject and teacher to a section.
-                </p>
+                <SubmitButton>Add section</SubmitButton>
               </div>
-            </div>
+            </form>
+          </ActionDisclosure>
 
+          <ActionDisclosure
+            icon={<UserRoundCheck size={17} />}
+            meta="Subject teacher"
+            title="Assign subject"
+          >
             {sections.length && subjects.length ? (
-              <>
-                <div className="mt-5 grid gap-4">
-                  <label>
-                    <span className="label">Section</span>
-                    <select className="input" name="sectionId" required>
-                      {sections.map((section) => (
-                        <option key={section.id} value={section.id}>
-                          {yearById.get(section.school_year_id)?.name ??
-                            "School year"}{" "}
-                          - {gradeById.get(section.grade_level_id)?.label}{" "}
-                          {section.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    <span className="label">Subject</span>
-                    <select className="input" name="subjectId" required>
-                      {subjects.map((subject) => (
-                        <option key={subject.id} value={subject.id}>
-                          {subject.code} - {subject.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    <span className="label">Teacher</span>
-                    <select className="input" name="teacherId">
-                      <option value="">Unassigned</option>
-                      {subjectTeachers.map((profile) => (
-                        <option key={profile.user_id} value={profile.user_id}>
-                          {staffLabel(profile)} ({roleLabel(profile.role)})
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                </div>
-
-                <div className="mt-6">
+              <form action={assignSectionSubjectAction} className="grid gap-4">
+                <label>
+                  <span className="label">Section</span>
+                  <select className="input" name="sectionId" required>
+                    {sections.map((section) => (
+                      <option key={section.id} value={section.id}>
+                        {yearById.get(section.school_year_id)?.name ??
+                          "School year"}{" "}
+                        - {gradeById.get(section.grade_level_id)?.label}{" "}
+                        {section.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  <span className="label">Subject</span>
+                  <select className="input" name="subjectId" required>
+                    {subjects.map((subject) => (
+                      <option key={subject.id} value={subject.id}>
+                        {subject.code} - {subject.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  <span className="label">Teacher</span>
+                  <select className="input" name="teacherId">
+                    <option value="">Unassigned</option>
+                    {subjectTeachers.map((profile) => (
+                      <option key={profile.user_id} value={profile.user_id}>
+                        {staffLabel(profile)} ({roleLabel(profile.role)})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <div>
                   <SubmitButton>Save assignment</SubmitButton>
                 </div>
-              </>
+              </form>
             ) : (
-              <p className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+              <p className="rounded-lg bg-slate-50 p-4 text-sm leading-6 text-slate-600">
                 Add at least one section and one subject before creating class
                 subject assignments.
               </p>
             )}
-          </form>
+          </ActionDisclosure>
         </div>
       ) : (
         <EmptyState
@@ -440,7 +393,7 @@ export default async function SectionsPage() {
         />
       )}
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="font-display text-xl font-extrabold text-navy-950">
@@ -457,7 +410,7 @@ export default async function SectionsPage() {
         </div>
 
         {sections.length ? (
-          <div className="mt-5 overflow-x-auto rounded-2xl border border-slate-200">
+          <div className="mt-5 overflow-x-auto rounded-lg border border-slate-200">
             <table className="min-w-[900px] text-left text-sm">
               <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
                 <tr>
@@ -538,7 +491,7 @@ export default async function SectionsPage() {
         )}
       </section>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="font-display text-xl font-extrabold text-navy-950">
@@ -557,7 +510,7 @@ export default async function SectionsPage() {
           <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {subjects.map((subject) => (
               <div
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                className="rounded-lg border border-slate-200 bg-slate-50 p-4"
                 key={subject.id}
               >
                 <p className="text-xs font-bold uppercase text-skybrand-600">

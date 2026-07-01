@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 import { EmptyState } from "@/components/ui/empty-state";
+import { ActionDisclosure } from "@/components/ui/action-disclosure";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -69,38 +70,28 @@ export default async function SchoolYearsPage() {
   }, new Map<string, GradePeriod[]>());
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">Phase 4</p>
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           School years
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+        <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+            Page details
+          </summary>
           Create the school-year containers used by learner enrollments,
           sections, attendance, grades, reports, and promotion history.
-        </p>
+        </details>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[0.82fr_1.18fr]">
-        <form
-          action={createSchoolYearAction}
-          className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft"
+        <ActionDisclosure
+          icon={<CalendarDays size={17} />}
+          meta="Name and dates"
+          title="Add school year"
         >
-          <div className="flex items-start gap-3">
-            <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-              <CalendarDays size={23} />
-            </span>
-            <div>
-              <h2 className="font-display text-xl font-extrabold text-navy-950">
-                Add school year
-              </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                New years start as draft. Activate after sections are ready.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 grid gap-4">
+          <form action={createSchoolYearAction} className="grid gap-4">
             <label>
               <span className="label">Name</span>
               <input
@@ -120,19 +111,18 @@ export default async function SchoolYearsPage() {
                 <input className="input" name="endsOn" required type="date" />
               </label>
             </div>
-          </div>
+            <div>
+              <SubmitButton>Create school year</SubmitButton>
+            </div>
+          </form>
+        </ActionDisclosure>
 
-          <div className="mt-6">
-            <SubmitButton>Create school year</SubmitButton>
-          </div>
-        </form>
-
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+        <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
           <h2 className="font-display text-xl font-extrabold text-navy-950">
             Current setup
           </h2>
           {activeYear ? (
-            <div className="mt-5 rounded-2xl border border-skybrand-200 bg-skybrand-50 p-5">
+            <div className="mt-5 rounded-lg border border-skybrand-200 bg-skybrand-50 p-4">
               <p className="text-xs font-bold uppercase text-skybrand-600">
                 Active school year
               </p>
@@ -158,12 +148,12 @@ export default async function SchoolYearsPage() {
         </section>
       </div>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
         <h2 className="font-display text-xl font-extrabold text-navy-950">
           School-year list
         </h2>
         {schoolYears.length ? (
-          <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200">
+          <div className="mt-5 overflow-hidden rounded-lg border border-slate-200">
             <table className="min-w-full text-left text-sm">
               <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
                 <tr>
@@ -198,30 +188,39 @@ export default async function SchoolYearsPage() {
                       </span>
                     </td>
                     <td className="px-4 py-4">
-                      <div className="flex flex-wrap gap-2">
-                        {(["active", "draft", "closed"] as const).map(
-                          (status) => (
-                            <form
-                              action={updateSchoolYearStatusAction}
-                              key={status}
-                            >
-                              <input name="id" type="hidden" value={year.id} />
-                              <input
-                                name="status"
-                                type="hidden"
-                                value={status}
-                              />
-                              <button
-                                className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-600 transition hover:border-skybrand-300 hover:bg-skybrand-50 hover:text-navy-900 disabled:cursor-not-allowed disabled:opacity-45"
-                                disabled={year.status === status}
-                                type="submit"
+                      <details className="group w-fit rounded-lg border border-slate-200 bg-white px-3 py-2">
+                        <summary className="cursor-pointer list-none text-xs font-bold text-slate-600 [&::-webkit-details-marker]:hidden">
+                          Change status
+                        </summary>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {(["active", "draft", "closed"] as const).map(
+                            (status) => (
+                              <form
+                                action={updateSchoolYearStatusAction}
+                                key={status}
                               >
-                                Mark {status}
-                              </button>
-                            </form>
-                          ),
-                        )}
-                      </div>
+                                <input
+                                  name="id"
+                                  type="hidden"
+                                  value={year.id}
+                                />
+                                <input
+                                  name="status"
+                                  type="hidden"
+                                  value={status}
+                                />
+                                <button
+                                  className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-600 transition hover:border-skybrand-300 hover:bg-skybrand-50 hover:text-navy-900 disabled:cursor-not-allowed disabled:opacity-45"
+                                  disabled={year.status === status}
+                                  type="submit"
+                                >
+                                  Mark {status}
+                                </button>
+                              </form>
+                            ),
+                          )}
+                        </div>
+                      </details>
                     </td>
                   </tr>
                 ))}
@@ -238,9 +237,9 @@ export default async function SchoolYearsPage() {
         )}
       </section>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex items-start gap-3">
-          <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+          <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
             <BookOpenCheck size={24} />
           </span>
           <div>
@@ -256,31 +255,38 @@ export default async function SchoolYearsPage() {
 
         {schoolYears.length ? (
           <div className="mt-5 grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
-            <form
-              action={createStandardGradePeriodsAction}
-              className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
+            <ActionDisclosure
+              className="bg-slate-50 shadow-none"
+              icon={<BookOpenCheck size={17} />}
+              meta="Quarter setup"
+              title="Create quarters"
             >
-              <label>
-                <span className="label">School year</span>
-                <select
-                  className="input"
-                  defaultValue={activeYear?.id ?? schoolYears[0]?.id}
-                  name="schoolYearId"
-                  required
-                >
-                  {schoolYears.map((year) => (
-                    <option key={year.id} value={year.id}>
-                      {year.name} ({year.status})
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <div className="mt-4">
-                <SubmitButton>Create standard quarters</SubmitButton>
-              </div>
-            </form>
+              <form
+                action={createStandardGradePeriodsAction}
+                className="grid gap-4"
+              >
+                <label>
+                  <span className="label">School year</span>
+                  <select
+                    className="input"
+                    defaultValue={activeYear?.id ?? schoolYears[0]?.id}
+                    name="schoolYearId"
+                    required
+                  >
+                    {schoolYears.map((year) => (
+                      <option key={year.id} value={year.id}>
+                        {year.name} ({year.status})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <div>
+                  <SubmitButton>Create standard quarters</SubmitButton>
+                </div>
+              </form>
+            </ActionDisclosure>
 
-            <div className="overflow-hidden rounded-2xl border border-slate-200">
+            <div className="overflow-hidden rounded-lg border border-slate-200">
               <table className="min-w-full text-left text-sm">
                 <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
                   <tr>

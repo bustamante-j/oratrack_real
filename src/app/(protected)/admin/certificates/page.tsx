@@ -1,6 +1,8 @@
 import { Award, Download, FileText, PlusCircle, Printer } from "lucide-react";
 
+import { ActionDisclosure } from "@/components/ui/action-disclosure";
 import { EmptyState } from "@/components/ui/empty-state";
+import { MetricStrip } from "@/components/ui/metric-strip";
 import { SubmitButton } from "@/components/ui/submit-button";
 import {
   createCertificateTemplateAction,
@@ -195,7 +197,7 @@ export default async function AdminCertificatesPage() {
   ).length;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">
           Phase 13
@@ -203,79 +205,76 @@ export default async function AdminCertificatesPage() {
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
           Certificates
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+        <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+          <summary className="cursor-pointer text-sm font-bold text-navy-950">
+            Page details
+          </summary>
           Manage certificate templates and generate printable recognition or
           completion PDFs for enrolled learners.
-        </p>
+        </details>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {[
-          ["Active templates", activeTemplates.length],
-          ["Generated PDFs", certificates.length],
-          ["Recognition", recognitionCount],
-          ["Completion", completionCount],
-        ].map(([label, value]) => (
-          <section
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft"
-            key={label}
-          >
-            <p className="text-3xl font-extrabold text-navy-950">{value}</p>
-            <p className="mt-1 text-xs font-bold uppercase text-slate-500">
-              {label}
-            </p>
-          </section>
-        ))}
-      </div>
+      <MetricStrip
+        items={[
+          { label: "Active templates", value: activeTemplates.length },
+          { label: "Generated PDFs", value: certificates.length },
+          { label: "Recognition", value: recognitionCount },
+          { label: "Completion", value: completionCount },
+        ]}
+      />
 
       <div className="grid gap-6 xl:grid-cols-[0.82fr_1.18fr]">
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
-          <div className="flex items-start gap-3">
-            <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-              <PlusCircle size={24} />
+        <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="font-display text-xl font-extrabold text-navy-950">
+              Templates
+            </h2>
+            <span className="rounded-full bg-skybrand-50 px-3 py-1 text-xs font-bold text-skybrand-600">
+              {templates.length} total
             </span>
-            <div>
-              <h2 className="font-display text-xl font-extrabold text-navy-950">
-                Template setup
-              </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                Create clean temporary templates for certificate generation.
-              </p>
-            </div>
           </div>
 
-          <form
-            action={createCertificateTemplateAction}
-            className="mt-6 grid gap-4"
+          <ActionDisclosure
+            className="mt-5 bg-slate-50 shadow-none"
+            icon={<PlusCircle size={17} />}
+            meta="Name and type"
+            title="Create template"
           >
-            <label>
-              <span className="label">Template name</span>
-              <input
-                className="input"
-                name="name"
-                placeholder="Quarter recognition template"
-                required
-              />
-            </label>
-            <label>
-              <span className="label">Certificate type</span>
-              <select className="input" name="certificateType" required>
-                {certificateTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {typeLabel(type)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <SubmitButton pendingLabel="Creating template...">
-              Create template
-            </SubmitButton>
-          </form>
+            <form
+              action={createCertificateTemplateAction}
+              className="grid gap-4"
+            >
+              <label>
+                <span className="label">Template name</span>
+                <input
+                  className="input"
+                  name="name"
+                  placeholder="Quarter recognition template"
+                  required
+                />
+              </label>
+              <label>
+                <span className="label">Certificate type</span>
+                <select className="input" name="certificateType" required>
+                  {certificateTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {typeLabel(type)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div>
+                <SubmitButton pendingLabel="Creating template...">
+                  Create template
+                </SubmitButton>
+              </div>
+            </form>
+          </ActionDisclosure>
 
           <div className="mt-6 grid gap-3">
             {templates.slice(0, 5).map((template) => (
               <article
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                className="rounded-lg border border-slate-200 bg-slate-50 p-4"
                 key={template.id}
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -292,85 +291,73 @@ export default async function AdminCertificatesPage() {
           </div>
         </section>
 
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
-          <div className="flex items-start gap-3">
-            <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
-              <Award size={24} />
-            </span>
-            <div>
-              <h2 className="font-display text-xl font-extrabold text-navy-950">
-                Generate certificate
-              </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                Generate a downloadable PDF and keep the generation event in
-                history.
-              </p>
-            </div>
-          </div>
-
-          {availableEnrollments.length ? (
-            <form
-              action={generateCertificateAction}
-              className="mt-6 grid gap-4"
-            >
-              <label>
-                <span className="label">Learner enrollment</span>
-                <select className="input" name="enrollmentId" required>
-                  {availableEnrollments.map((enrollment) => (
-                    <option key={enrollment.id} value={enrollment.id}>
-                      {enrollmentLabel(
-                        enrollment,
-                        learnerById,
-                        yearById,
-                        gradeById,
-                        sectionById,
-                      )}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <div className="grid gap-4 sm:grid-cols-2">
+        <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
+          <ActionDisclosure
+            className="shadow-none"
+            icon={<Award size={17} />}
+            meta={`${availableEnrollments.length} learners`}
+            title="Generate certificate"
+          >
+            {availableEnrollments.length ? (
+              <form action={generateCertificateAction} className="grid gap-4">
                 <label>
-                  <span className="label">Type</span>
-                  <select className="input" name="certificateType" required>
-                    {certificateTypes.map((type) => (
-                      <option key={type} value={type}>
-                        {typeLabel(type)}
+                  <span className="label">Learner enrollment</span>
+                  <select className="input" name="enrollmentId" required>
+                    {availableEnrollments.map((enrollment) => (
+                      <option key={enrollment.id} value={enrollment.id}>
+                        {enrollmentLabel(
+                          enrollment,
+                          learnerById,
+                          yearById,
+                          gradeById,
+                          sectionById,
+                        )}
                       </option>
                     ))}
                   </select>
                 </label>
-                <label>
-                  <span className="label">Template</span>
-                  <select className="input" name="templateId">
-                    <option value="">Temporary clean template</option>
-                    {activeTemplates.map((template) => (
-                      <option key={template.id} value={template.id}>
-                        {template.name} ({typeLabel(template.certificate_type)})
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-              <SubmitButton pendingLabel="Generating certificate...">
-                <Printer size={17} />
-                Generate certificate
-              </SubmitButton>
-            </form>
-          ) : (
-            <div className="mt-6">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <label>
+                    <span className="label">Type</span>
+                    <select className="input" name="certificateType" required>
+                      {certificateTypes.map((type) => (
+                        <option key={type} value={type}>
+                          {typeLabel(type)}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    <span className="label">Template</span>
+                    <select className="input" name="templateId">
+                      <option value="">Temporary clean template</option>
+                      {activeTemplates.map((template) => (
+                        <option key={template.id} value={template.id}>
+                          {template.name} (
+                          {typeLabel(template.certificate_type)})
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+                <SubmitButton pendingLabel="Generating certificate...">
+                  <Printer size={17} />
+                  Generate certificate
+                </SubmitButton>
+              </form>
+            ) : (
               <EmptyState
                 message="Register and enroll learners before generating certificates."
                 title="No enrolled learners"
               />
-            </div>
-          )}
+            )}
+          </ActionDisclosure>
         </section>
       </div>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex items-start gap-3">
-          <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+          <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
             <FileText size={24} />
           </span>
           <div>
@@ -390,7 +377,7 @@ export default async function AdminCertificatesPage() {
 
               return (
                 <article
-                  className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 lg:flex-row lg:items-center lg:justify-between"
+                  className="flex flex-col gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 lg:flex-row lg:items-center lg:justify-between"
                   key={certificate.id}
                 >
                   <div>
@@ -414,7 +401,7 @@ export default async function AdminCertificatesPage() {
                     </p>
                   </div>
                   <a
-                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-navy-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-skybrand-600"
+                    className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
                     href={`/api/certificates?id=${certificate.id}`}
                   >
                     <Download size={17} />

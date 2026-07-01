@@ -25,7 +25,7 @@ export function ModulePage({
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_0.8fr]">
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+        <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
           <h2 className="font-display font-extrabold text-navy-950">
             Expected workflow
           </h2>
@@ -41,7 +41,7 @@ export function ModulePage({
             ))}
           </div>
         </section>
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+        <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
           <h2 className="font-display font-extrabold text-navy-950">
             Audit coverage
           </h2>
