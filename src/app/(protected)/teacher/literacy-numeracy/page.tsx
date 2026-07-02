@@ -307,7 +307,7 @@ export default async function LiteracyNumeracyPage({
             {selectedSection && selectedEnrollments.length ? (
               <form
                 action={saveLiteracyNumeracySheetAction}
-                className="mt-4 overflow-x-auto rounded-lg border border-slate-200"
+                className="table-scroll scroll-soft mt-4 rounded-lg border border-slate-200"
               >
                 <input
                   name="sectionId"

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  Award,
   BookUser,
   GraduationCap,
   Search,
@@ -73,6 +74,13 @@ type Section = {
   name: string;
 };
 
+type GeneratedCertificate = {
+  id: string;
+  enrollment_id: string;
+  certificate_type: "recognition" | "completion";
+  generated_at: string;
+};
+
 function firstSearchValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
 }
@@ -112,6 +120,7 @@ export default async function TeacherLearnersPage({
     schoolYearResult,
     gradeLevelResult,
     sectionResult,
+    certificateResult,
   ] = await Promise.all([
     supabase
       .from("learners")
@@ -140,6 +149,10 @@ export default async function TeacherLearnersPage({
       .from("sections")
       .select("id,school_year_id,grade_level_id,name")
       .order("name", { ascending: true }),
+    supabase
+      .from("generated_certificates")
+      .select("id,enrollment_id,certificate_type,generated_at")
+      .order("generated_at", { ascending: false }),
   ]);
 
   const firstError =
@@ -148,7 +161,8 @@ export default async function TeacherLearnersPage({
     enrollmentResult.error ??
     schoolYearResult.error ??
     gradeLevelResult.error ??
-    sectionResult.error;
+    sectionResult.error ??
+    certificateResult.error;
 
   if (firstError) {
     throw new Error(firstError.message);
@@ -160,11 +174,15 @@ export default async function TeacherLearnersPage({
   const schoolYears = (schoolYearResult.data ?? []) as SchoolYear[];
   const gradeLevels = (gradeLevelResult.data ?? []) as GradeLevel[];
   const sections = (sectionResult.data ?? []) as Section[];
+  const certificates = (certificateResult.data ?? []) as GeneratedCertificate[];
 
   const activeYear = schoolYears.find((year) => year.status === "active");
   const gradeById = new Map(gradeLevels.map((grade) => [grade.id, grade]));
   const yearById = new Map(schoolYears.map((year) => [year.id, year]));
   const sectionById = new Map(sections.map((section) => [section.id, section]));
+  const enrollmentById = new Map(
+    enrollments.map((enrollment) => [enrollment.id, enrollment]),
+  );
   const primaryGuardianByLearner = new Map(
     guardians
       .filter((guardian) => guardian.is_primary)
@@ -176,6 +194,15 @@ export default async function TeacherLearnersPage({
     map.set(enrollment.learner_id, current);
     return map;
   }, new Map<string, LearnerEnrollment[]>());
+  const awardsByLearner = certificates.reduce((map, certificate) => {
+    const enrollment = enrollmentById.get(certificate.enrollment_id);
+    if (!enrollment) return map;
+
+    const current = map.get(enrollment.learner_id) ?? [];
+    current.push(certificate);
+    map.set(enrollment.learner_id, current);
+    return map;
+  }, new Map<string, GeneratedCertificate[]>());
 
   const filteredLearners = learners.filter((learner) => {
     if (!query) return true;
@@ -241,7 +268,7 @@ export default async function TeacherLearnersPage({
                   size={17}
                 />
                 <input
-                  className="input pl-10"
+                  className="input input-icon-left"
                   defaultValue={firstSearchValue(params.q) ?? ""}
                   name="q"
                   placeholder="LRN or name"
@@ -353,6 +380,7 @@ export default async function TeacherLearnersPage({
                         )
                       : learnerEnrollments[0];
                     const guardian = primaryGuardianByLearner.get(learner.id);
+                    const awards = awardsByLearner.get(learner.id) ?? [];
 
                     return (
                       <article
@@ -454,6 +482,29 @@ export default async function TeacherLearnersPage({
                                   <p className="mt-1 text-sm text-slate-600">
                                     {guardian?.phone || guardian?.email || ""}
                                   </p>
+                                </div>
+                              </div>
+                            </section>
+                            <section className="rounded-lg bg-slate-50 p-4">
+                              <div className="flex gap-2">
+                                <Award
+                                  className="mt-0.5 shrink-0 text-skybrand-600"
+                                  size={18}
+                                />
+                                <div>
+                                  <p className="text-xs font-bold uppercase text-slate-500">
+                                    Awards
+                                  </p>
+                                  <p className="mt-1 text-sm font-semibold text-navy-950">
+                                    {awards.length
+                                      ? `${awards.length} certificate${awards.length === 1 ? "" : "s"}`
+                                      : "None recorded"}
+                                  </p>
+                                  {awards[0] ? (
+                                    <p className="mt-1 text-sm capitalize text-slate-600">
+                                      Latest {awards[0].certificate_type}
+                                    </p>
+                                  ) : null}
                                 </div>
                               </div>
                             </section>

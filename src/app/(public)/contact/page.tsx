@@ -21,7 +21,7 @@ export const metadata = {
 export default function ContactPage() {
   const contactMethods = [
     { icon: MapPin, label: "Visit us", value: school.location },
-    { icon: Phone, label: "Call the office", value: school.phone },
+    { icon: Phone, label: "SDO Benguet line", value: school.phone },
     { icon: Mail, label: "Send an email", value: school.email },
     { icon: Clock, label: "School hours", value: school.hours },
   ];

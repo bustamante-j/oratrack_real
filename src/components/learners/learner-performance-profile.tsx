@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ArrowLeft,
+  Award,
   BookOpenCheck,
   CalendarCheck2,
   GraduationCap,
@@ -62,6 +63,9 @@ export function LearnerPerformanceProfile({
     data.subjects.map((subject) => [subject.id, subject]),
   );
   const periodById = new Map(data.periods.map((period) => [period.id, period]));
+  const templateById = new Map(
+    data.certificateTemplates.map((template) => [template.id, template]),
+  );
   const earnedAttendance = data.attendance.reduce(
     (sum, record) =>
       sum +
@@ -126,7 +130,7 @@ export function LearnerPerformanceProfile({
         </div>
       </section>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {[
           {
             label: "Attendance rate",
@@ -142,6 +146,11 @@ export function LearnerPerformanceProfile({
             label: "Enrollments",
             value: data.enrollments.length,
             icon: GraduationCap,
+          },
+          {
+            label: "Awards",
+            value: data.awards.length,
+            icon: Award,
           },
         ].map(({ label, value, icon: Icon }) => (
           <section
@@ -160,6 +169,41 @@ export function LearnerPerformanceProfile({
           </section>
         ))}
       </div>
+
+      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
+        <h2 className="font-display text-xl font-extrabold text-navy-950">
+          Awards
+        </h2>
+        {data.awards.length ? (
+          <div className="mt-4 grid gap-3">
+            {data.awards.map((award) => (
+              <article
+                className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                key={award.id}
+              >
+                <div>
+                  <p className="font-semibold capitalize text-navy-950">
+                    {award.certificate_type}
+                  </p>
+                  <p className="mt-1 text-sm text-slate-500">
+                    {award.certificate_template_id
+                      ? (templateById.get(award.certificate_template_id)
+                          ?.name ?? "Certificate template")
+                      : "Temporary clean template"}
+                  </p>
+                </div>
+                <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-600">
+                  {formatDate(award.generated_at.slice(0, 10))}
+                </span>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-4 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+            No awards recorded yet.
+          </p>
+        )}
+      </section>
 
       <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
         <h2 className="font-display text-xl font-extrabold text-navy-950">

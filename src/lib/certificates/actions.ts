@@ -21,6 +21,55 @@ function optionalFormValue(value: FormDataEntryValue | null) {
   return trimmed.length ? trimmed : undefined;
 }
 
+function safeStorageName(value: string) {
+  const fallback = "template";
+  const cleaned = value
+    .toLowerCase()
+    .replace(/[^a-z0-9.]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    .slice(0, 80);
+
+  return cleaned || fallback;
+}
+
+async function uploadTemplateImage(
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
+  file: FormDataEntryValue | null,
+  userId: string,
+) {
+  if (!(file instanceof File) || file.size === 0) return null;
+
+  const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
+
+  if (!allowedTypes.has(file.type)) {
+    throw new Error("Template image must be a JPG, PNG, or WebP file.");
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error("Template image must be 5MB or smaller.");
+  }
+
+  const objectPath = `templates/${userId}/${crypto.randomUUID()}-${safeStorageName(
+    file.name,
+  )}`;
+  const { error } = await supabase.storage
+    .from("certificates")
+    .upload(objectPath, file, {
+      contentType: file.type,
+      upsert: false,
+    });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return {
+    imagePath: objectPath,
+    imageMimeType: file.type,
+    imageOriginalName: file.name,
+  };
+}
+
 function revalidateCertificateViews() {
   revalidatePath("/admin/certificates");
   revalidatePath("/teacher/certificates");
@@ -36,6 +85,11 @@ export async function createCertificateTemplateAction(formData: FormData) {
     certificateType: formData.get("certificateType"),
   });
   const supabase = await createSupabaseServerClient();
+  const templateImage = await uploadTemplateImage(
+    supabase,
+    formData.get("templateImage"),
+    admin.userId,
+  );
   const { data, error } = await supabase
     .from("certificate_templates")
     .insert({
@@ -48,6 +102,7 @@ export async function createCertificateTemplateAction(formData: FormData) {
             : "Certificate of Recognition",
         layout: "clean-landscape",
         accentColor: "#0b2447",
+        ...templateImage,
       } satisfies Json,
       is_active: true,
       created_by: admin.userId,
@@ -67,6 +122,7 @@ export async function createCertificateTemplateAction(formData: FormData) {
     metadata: {
       name: parsed.name,
       certificateType: parsed.certificateType,
+      hasImage: Boolean(templateImage),
     },
   });
 

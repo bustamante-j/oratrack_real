@@ -1,165 +1,31 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  BadgeCheck,
-  BarChart3,
-  BellRing,
-  BookOpen,
-  CalendarDays,
-  ChevronRight,
-  Clock3,
-  GraduationCap,
-  HeartHandshake,
-  Leaf,
-  MapPin,
-  Medal,
-  Palette,
-  Play,
-  Quote,
-  Salad,
-  ShieldCheck,
-  Sparkles,
-  Trophy,
-  UserRoundCheck,
-  UsersRound,
-} from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { ButtonLink } from "@/components/ui/button";
 import { school } from "@/lib/constants";
 import { getHomePageData, type HomeEvent } from "@/lib/public/home-data";
 
-const quickLinks = [
-  {
-    href: "/announcements",
-    label: "School News",
-    text: "Read the latest updates",
-    icon: BellRing,
-    color: "from-skybrand-500 to-blue-600",
-  },
-  {
-    href: "/events",
-    label: "Events Calendar",
-    text: "See what is coming up",
-    icon: CalendarDays,
-    color: "from-violet-500 to-indigo-600",
-  },
-  {
-    href: "/programs",
-    label: "Programs",
-    text: "Explore learner support",
-    icon: Sparkles,
-    color: "from-emerald-500 to-teal-600",
-  },
-  {
-    href: "/contact",
-    label: "School Office",
-    text: "Contact our team",
-    icon: HeartHandshake,
-    color: "from-amber-500 to-orange-600",
-  },
-];
-
-const communityFeatures = [
-  {
-    icon: ShieldCheck,
-    title: "Safe and inclusive",
-    text: "A welcoming environment where children can learn with confidence.",
-  },
-  {
-    icon: BarChart3,
-    title: "Thoughtful support",
-    text: "Progress and attendance insights guide timely, caring action.",
-  },
-  {
-    icon: HeartHandshake,
-    title: "Family partnership",
-    text: "Families are valued partners in every child's school journey.",
-  },
-  {
-    icon: Leaf,
-    title: "Local identity",
-    text: "Learning honors community, culture, and the Cordillera environment.",
-  },
+const chapters = [
+  { number: "01", label: "News", href: "/announcements" },
+  { number: "02", label: "Events", href: "/events" },
+  { number: "03", label: "Programs", href: "/programs" },
+  { number: "04", label: "Contact", href: "/contact" },
 ];
 
 const programs = [
   {
-    icon: BookOpen,
+    label: "Reading",
+    title: "Foundational literacy that moves with each learner.",
     image: "/assets/program-reading.webp",
-    title: "Reading and Literacy",
-    text: "Guided reading, buddy sessions, and inviting classroom libraries help every child become a confident reader.",
-    color: "bg-skybrand-500",
-    tint: "from-skybrand-50 to-white",
   },
   {
-    icon: Salad,
+    label: "Wellness",
+    title: "Nutrition, movement, and daily routines that support readiness.",
     image: "/assets/program-nutrition.webp",
-    title: "School Nutrition",
-    text: "Nutrition education and feeding support help learners stay healthy, active, and ready to learn.",
-    color: "bg-emerald-500",
-    tint: "from-emerald-50 to-white",
   },
   {
-    icon: Trophy,
-    image: "/assets/program-sports.webp",
-    title: "Sports and Wellness",
-    text: "Movement, team activities, and wellness lessons build healthy habits and joyful confidence.",
-    color: "bg-violet-500",
-    tint: "from-violet-50 to-white",
-  },
-  {
-    icon: Palette,
+    label: "Culture",
+    title: "Arts, local identity, and community participation.",
     image: "/assets/program-arts.webp",
-    title: "Arts and Culture",
-    text: "Music, visual arts, dance, and local traditions give learners more ways to express themselves.",
-    color: "bg-rose-500",
-    tint: "from-rose-50 to-white",
-  },
-  {
-    icon: ShieldCheck,
-    image: "/assets/section-support.webp",
-    title: "Learner Support",
-    text: "Teachers coordinate remediation, family follow-ups, and practical classroom interventions.",
-    color: "bg-amber-500",
-    tint: "from-amber-50 to-white",
-  },
-  {
-    icon: HeartHandshake,
-    image: "/assets/section-family.webp",
-    title: "Family Partnerships",
-    text: "Regular meetings and volunteer programs make families active partners in school life.",
-    color: "bg-blue-600",
-    tint: "from-blue-50 to-white",
-  },
-];
-
-const announcementStyles = [
-  {
-    icon: BellRing,
-    gradient: "from-skybrand-500 to-blue-600",
-    accent: "bg-skybrand-500",
-    ink: "text-skybrand-600",
-  },
-  {
-    icon: Sparkles,
-    gradient: "from-amber-400 to-orange-500",
-    accent: "bg-amber-500",
-    ink: "text-amber-700",
-  },
-  {
-    icon: HeartHandshake,
-    gradient: "from-emerald-500 to-teal-600",
-    accent: "bg-emerald-500",
-    ink: "text-emerald-700",
-  },
-  {
-    icon: GraduationCap,
-    gradient: "from-violet-500 to-indigo-600",
-    accent: "bg-violet-500",
-    ink: "text-violet-700",
   },
 ];
 
@@ -174,16 +40,11 @@ function formatPublishedDate(date: string | null) {
   }).format(new Date(date));
 }
 
-function formatEventMonth(value: string) {
+function formatEventDate(value: string) {
   return new Intl.DateTimeFormat("en-PH", {
     month: "short",
-    timeZone: "Asia/Manila",
-  }).format(new Date(value));
-}
-
-function formatEventDay(value: string) {
-  return new Intl.DateTimeFormat("en-PH", {
     day: "2-digit",
+    year: "numeric",
     timeZone: "Asia/Manila",
   }).format(new Date(value));
 }
@@ -196,40 +57,6 @@ function formatEventTime(value: string) {
   }).format(new Date(value));
 }
 
-function formatCalendarMonth(value: Date) {
-  return new Intl.DateTimeFormat("en-PH", {
-    month: "long",
-    year: "numeric",
-    timeZone: "Asia/Manila",
-  }).format(value);
-}
-
-function buildCalendarDays(value: Date) {
-  const year = value.getFullYear();
-  const month = value.getMonth();
-  const firstDay = new Date(year, month, 1);
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const blanks = Array.from({ length: firstDay.getDay() }, () => "");
-  return [
-    ...blanks,
-    ...Array.from({ length: daysInMonth }, (_, index) => String(index + 1)),
-  ];
-}
-
-function eventDaySet(events: HomeEvent[], base: Date) {
-  const month = base.getMonth();
-  const year = base.getFullYear();
-
-  return new Set(
-    events
-      .map((event) => new Date(event.starts_at))
-      .filter(
-        (date) => date.getMonth() === month && date.getFullYear() === year,
-      )
-      .map((date) => String(date.getDate())),
-  );
-}
-
 function shortNumber(value: number) {
   return new Intl.NumberFormat("en-PH").format(value);
 }
@@ -239,673 +66,358 @@ function attendanceMetric(value: number | null) {
   return `${value.toFixed(1)}%`;
 }
 
-function announcementGradient(index: number) {
-  return announcementStyles[index % announcementStyles.length].gradient;
+function statRows(
+  metrics: Awaited<ReturnType<typeof getHomePageData>>["metrics"],
+) {
+  return [
+    ["Active learners", shortNumber(metrics.activeLearners)],
+    ["Active staff", shortNumber(metrics.activeStaff)],
+    ["Attendance rate", attendanceMetric(metrics.attendanceRate)],
+    ["Grade levels", shortNumber(metrics.activeGradeLevels)],
+  ] as const;
 }
 
-function announcementAccent(index: number) {
-  return announcementStyles[index % announcementStyles.length].accent;
-}
-
-function announcementInk(index: number) {
-  return announcementStyles[index % announcementStyles.length].ink;
+function EventLine({ event }: { event: HomeEvent }) {
+  return (
+    <article className="grid gap-3 border-t border-white/15 py-5 sm:grid-cols-[9rem_1fr]">
+      <div className="font-display text-3xl font-extrabold leading-none text-white">
+        {formatEventDate(event.starts_at).split(",")[0]}
+      </div>
+      <div>
+        <h3 className="font-display text-xl font-extrabold text-white">
+          {event.title}
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-slate-300">
+          {formatEventTime(event.starts_at)}
+          {event.body ? ` / ${event.body}` : ""}
+        </p>
+      </div>
+    </article>
+  );
 }
 
 export default async function HomePage() {
   const { announcements, events, metrics } = await getHomePageData();
   const lead = announcements[0] ?? null;
-  const LeadIcon = announcementStyles[0].icon;
-  const tickerItems = announcements.length
-    ? [...announcements, ...announcements]
-    : [];
-  const selectedEvent = events[0] ?? null;
-  const calendarBase = selectedEvent
-    ? new Date(selectedEvent.starts_at)
-    : new Date();
-  const calendarDays = buildCalendarDays(calendarBase);
-  const highlightedEventDays = eventDaySet(events, calendarBase);
-  const stats = [
-    {
-      value: shortNumber(metrics.activeLearners),
-      label: "Active learners",
-      icon: UsersRound,
-    },
-    {
-      value: shortNumber(metrics.activeStaff),
-      label: "Active staff",
-      icon: UserRoundCheck,
-    },
-    {
-      value: attendanceMetric(metrics.attendanceRate),
-      label: "Attendance rate",
-      icon: BarChart3,
-    },
-    {
-      value: shortNumber(metrics.activeGradeLevels),
-      label: "Grade levels with enrollment",
-      icon: BookOpen,
-    },
-  ];
+  const secondaryAnnouncements = announcements.slice(1, 4);
+  const nextEvents = events.slice(0, 3);
+  const stats = statRows(metrics);
 
   return (
     <>
-      <section className="hero-noise relative overflow-hidden bg-navy-950 pb-10 text-white lg:min-h-[800px] lg:pb-0">
+      <section className="relative isolate overflow-hidden bg-[#171717] text-white">
         <Image
-          alt="Learners arriving at Balili Elementary School"
-          className="absolute inset-0 h-full w-full object-cover"
+          alt="Balili Elementary School campus"
+          className="absolute inset-0 -z-20 h-full w-full object-cover opacity-42"
           fill
           priority
           src="/assets/balili-campus-hero.webp"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/82 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-950/75 via-transparent to-navy-950/10" />
-        <div className="absolute left-0 right-0 top-0 h-32 bg-gradient-to-b from-navy-950/50 to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_62%_45%,rgba(255,255,255,.13),transparent_24%),linear-gradient(90deg,#171717_0%,rgba(23,23,23,.94)_36%,rgba(23,23,23,.74)_68%,rgba(23,23,23,.96)_100%)]" />
+        <div className="absolute bottom-0 left-0 right-0 -z-10 h-56 bg-gradient-to-t from-[#171717] to-transparent" />
 
-        <div className="relative mx-auto flex min-h-[620px] max-w-7xl items-center px-4 pb-28 pt-20 sm:min-h-[690px] sm:px-6 lg:min-h-[800px] lg:px-8 lg:pb-44">
-          <div className="max-w-3xl">
-            <p className="font-display text-sm font-extrabold uppercase text-skybrand-200 sm:text-base">
-              {school.name}
-            </p>
-            <h1 className="text-balance mt-4 max-w-4xl font-display text-5xl font-extrabold leading-[1.02] sm:text-6xl lg:text-[5.2rem]">
-              Growing minds.
-              <span className="block bg-gradient-to-r from-skybrand-300 via-white to-skybrand-100 bg-clip-text text-transparent">
-                Building bright futures.
-              </span>
-            </h1>
-            <p className="mt-7 max-w-xl text-base leading-8 text-slate-200 sm:text-lg">
-              A caring mountain community where every learner is known,
-              encouraged, and given the tools to thrive.
-            </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <ButtonLink className="px-6 py-3.5" href="/about">
-                Discover our school
-                <ArrowRight size={17} />
-              </ButtonLink>
+        <div className="mx-auto grid min-h-[760px] max-w-7xl grid-cols-1 px-5 py-10 sm:px-6 lg:grid-cols-[4rem_1fr] lg:px-8">
+          <nav
+            aria-label="Landing sections"
+            className="hidden flex-col items-center justify-center gap-5 text-sm font-extrabold text-white/35 lg:flex"
+          >
+            {chapters.map((chapter) => (
               <Link
-                className="inline-flex items-center gap-3 rounded-xl border border-white/25 bg-white/10 px-5 py-3.5 text-sm font-bold text-white backdrop-blur-md transition hover:bg-white/20"
-                href="/programs"
+                className="transition hover:text-[#c8203f]"
+                href={chapter.href}
+                key={chapter.number}
               >
-                <span className="grid size-7 place-items-center rounded-full bg-white text-navy-950">
-                  <Play fill="currentColor" size={12} />
-                </span>
-                Explore programs
+                {chapter.number}
               </Link>
+            ))}
+          </nav>
+
+          <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_.95fr]">
+            <div className="relative z-10 max-w-4xl pt-12 lg:pt-0">
+              <p className="text-xs font-extrabold uppercase tracking-[0.32em] text-[#c8203f]">
+                {school.name}
+              </p>
+              <h1 className="mt-6 max-w-5xl font-display text-[clamp(4rem,12vw,9.5rem)] font-extrabold uppercase leading-[.82] text-white">
+                Fuel
+                <span className="block text-white/70">Learning</span>
+                Victory
+              </h1>
+              <p className="mt-7 max-w-xl text-base font-semibold uppercase leading-7 tracking-wide text-slate-300">
+                A public school portal for real events, learner milestones, and
+                data-informed care in Balili, La Trinidad.
+              </p>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link
+                  className="inline-flex min-h-11 items-center bg-[#c8203f] px-5 text-sm font-extrabold uppercase tracking-wide text-white transition hover:bg-white hover:text-[#171717]"
+                  href="/events"
+                >
+                  View events
+                </Link>
+                <Link
+                  className="inline-flex min-h-11 items-center border border-white/30 px-5 text-sm font-extrabold uppercase tracking-wide text-white transition hover:border-white hover:bg-white hover:text-[#171717]"
+                  href="/login"
+                >
+                  Staff portal
+                </Link>
+              </div>
             </div>
-            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-slate-200">
-              {[
-                "Child-friendly campus",
-                "Community supported",
-                "Data-informed care",
-              ].map((item) => (
-                <span className="flex items-center gap-2" key={item}>
-                  <BadgeCheck size={18} className="text-skybrand-300" />
-                  {item}
-                </span>
+
+            <div className="relative min-h-[34rem] lg:min-h-[44rem]">
+              <Image
+                alt="Balili learners and school community"
+                className="absolute bottom-0 right-0 h-[92%] w-[78%] object-cover opacity-95 shadow-[0_40px_110px_rgba(0,0,0,.45)] grayscale-[20%]"
+                fill
+                sizes="(min-width: 1024px) 42vw, 90vw"
+                src="/assets/section-family.webp"
+              />
+              <div className="absolute inset-y-16 left-0 hidden w-[52%] border border-white/10 bg-white/[.05] backdrop-blur-[2px] lg:block" />
+              <div className="absolute bottom-14 left-0 max-w-sm border-l-4 border-[#c8203f] bg-[#171717]/72 px-5 py-4 backdrop-blur-md">
+                <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-white/45">
+                  School ID {school.schoolId}
+                </p>
+                <p className="mt-3 text-sm font-bold uppercase leading-6 text-white">
+                  Every record, announcement, and approved calendar item points
+                  back to real school activity.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#171717] text-white">
+        <div className="mx-auto grid max-w-7xl border-y border-white/10 px-5 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
+          {stats.map(([label, value]) => (
+            <div
+              className="border-b border-white/10 py-7 sm:border-r lg:border-b-0"
+              key={label}
+            >
+              <p className="font-display text-4xl font-extrabold">{value}</p>
+              <p className="mt-2 text-xs font-bold uppercase tracking-[0.2em] text-white/45">
+                {label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-white py-20">
+        <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-6 lg:grid-cols-[.82fr_1.18fr] lg:px-8">
+          <div>
+            <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#c8203f]">
+              Public record
+            </p>
+            <h2 className="mt-5 max-w-xl font-display text-5xl font-extrabold uppercase leading-[.92] text-[#171717] sm:text-6xl">
+              Built around real school data.
+            </h2>
+          </div>
+          <div className="grid gap-5 text-sm leading-7 text-slate-600 sm:grid-cols-2">
+            <p>
+              Balili Elementary School is listed by DepEd Benguet as School ID{" "}
+              {school.schoolId}, located in {school.location}.
+            </p>
+            <p>
+              ORATRACK connects the public site to approved events,
+              announcements, and live school metrics so the landing page does
+              not rely on decorative placeholder content.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#f5f7fa] py-20">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 border-y border-[#171717]/15 py-7">
+            {chapters.map((chapter) => (
+              <Link
+                className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#171717] transition hover:text-[#c8203f]"
+                href={chapter.href}
+                key={chapter.number}
+              >
+                {chapter.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-20">
+        <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-6 lg:grid-cols-[1.15fr_.85fr] lg:px-8">
+          <div>
+            <div className="border-b border-[#171717] pb-5">
+              <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#c8203f]">
+                Latest bulletin
+              </p>
+              <h2 className="mt-4 font-display text-5xl font-extrabold uppercase leading-none text-[#171717] sm:text-6xl">
+                School news
+              </h2>
+            </div>
+
+            {lead ? (
+              <article className="grid gap-6 py-8 lg:grid-cols-[.92fr_1.08fr]">
+                <div className="relative min-h-[24rem] overflow-hidden bg-[#171717]">
+                  <Image
+                    alt="Balili school update"
+                    className="h-full w-full object-cover opacity-86"
+                    fill
+                    src="/assets/news-feature.webp"
+                  />
+                </div>
+                <div className="flex flex-col justify-end">
+                  <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-[#c8203f]">
+                    {formatPublishedDate(lead.published_at)}
+                  </p>
+                  <h3 className="mt-4 font-display text-4xl font-extrabold leading-[.95] text-[#171717]">
+                    {lead.title}
+                  </h3>
+                  <p className="mt-5 text-sm leading-7 text-slate-600">
+                    {lead.body}
+                  </p>
+                  <Link
+                    className="mt-7 inline-flex w-fit border border-[#171717] px-5 py-3 text-xs font-extrabold uppercase tracking-[0.18em] text-[#171717] transition hover:bg-[#171717] hover:text-white"
+                    href="/announcements"
+                  >
+                    Read bulletin
+                  </Link>
+                </div>
+              </article>
+            ) : (
+              <div className="py-8 text-sm leading-7 text-slate-600">
+                No published announcements yet. Once a record is published, it
+                appears here automatically.
+              </div>
+            )}
+          </div>
+
+          <aside className="border-l border-slate-200 pl-0 lg:pl-8">
+            <h3 className="font-display text-2xl font-extrabold uppercase text-[#171717]">
+              More updates
+            </h3>
+            <div className="mt-5">
+              {secondaryAnnouncements.length ? (
+                secondaryAnnouncements.map((item) => (
+                  <article
+                    className="border-t border-slate-200 py-5"
+                    key={item.id}
+                  >
+                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+                      {formatPublishedDate(item.published_at)}
+                    </p>
+                    <h4 className="mt-3 font-display text-xl font-extrabold leading-tight text-[#171717]">
+                      {item.title}
+                    </h4>
+                  </article>
+                ))
+              ) : (
+                <p className="border-t border-slate-200 py-5 text-sm text-slate-500">
+                  Additional updates will appear after publication.
+                </p>
+              )}
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section className="bg-[#171717] py-20 text-white">
+        <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-6 lg:grid-cols-[.82fr_1.18fr] lg:px-8">
+          <div>
+            <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#c8203f]">
+              Calendar
+            </p>
+            <h2 className="mt-5 font-display text-5xl font-extrabold uppercase leading-[.92] text-white sm:text-6xl">
+              Approved events go public.
+            </h2>
+            <p className="mt-6 max-w-md text-sm leading-7 text-slate-300">
+              Teacher and staff submissions stay private until approved by an
+              admin, then appear on the public calendar and home page.
+            </p>
+            <Link
+              className="mt-8 inline-flex w-fit border border-white/35 px-5 py-3 text-xs font-extrabold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white hover:text-[#171717]"
+              href="/events"
+            >
+              Open calendar
+            </Link>
+          </div>
+          <div>
+            {nextEvents.length ? (
+              nextEvents.map((event) => (
+                <EventLine event={event} key={event.id} />
+              ))
+            ) : (
+              <div className="border-t border-white/15 py-6 text-sm leading-7 text-slate-300">
+                No approved events are scheduled yet.
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-[.7fr_1.3fr]">
+            <div>
+              <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#c8203f]">
+                Programs
+              </p>
+              <h2 className="mt-5 font-display text-5xl font-extrabold uppercase leading-[.92] text-[#171717] sm:text-6xl">
+                Learning with depth.
+              </h2>
+            </div>
+            <div className="grid gap-5 md:grid-cols-3">
+              {programs.map((program) => (
+                <Link
+                  className="group block"
+                  href="/programs"
+                  key={program.label}
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden bg-[#171717]">
+                    <Image
+                      alt={`${program.label} at Balili Elementary School`}
+                      className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-105"
+                      fill
+                      src={program.image}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#171717]/82 via-transparent to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-5">
+                      <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-[#c8203f]">
+                        {program.label}
+                      </p>
+                      <h3 className="mt-3 font-display text-xl font-extrabold leading-tight text-white">
+                        {program.title}
+                      </h3>
+                    </div>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>
         </div>
-
-        <div className="relative z-10 -mt-16 px-4 sm:px-6 lg:absolute lg:bottom-0 lg:left-0 lg:right-0 lg:mt-0 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <div className="grid overflow-hidden rounded-t-[2rem] border border-white/15 bg-white shadow-[0_-15px_55px_rgba(7,27,51,.18)] sm:grid-cols-2 lg:grid-cols-4">
-              {quickLinks.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <Link
-                    className={`shine-card group relative flex items-center gap-4 overflow-hidden p-5 transition hover:bg-slate-50 lg:p-6 ${
-                      index
-                        ? "border-t border-slate-100 sm:border-l sm:border-t-0"
-                        : ""
-                    } ${index === 2 ? "sm:border-l-0 lg:border-l" : ""}`}
-                    href={item.href}
-                    key={item.href}
-                  >
-                    <div
-                      className={`grid size-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br text-white shadow-lg ${item.color}`}
-                    >
-                      <Icon size={22} />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-display text-sm font-extrabold text-navy-950">
-                        {item.label}
-                      </p>
-                      <p className="mt-1 truncate text-xs text-slate-500">
-                        {item.text}
-                      </p>
-                    </div>
-                    <ChevronRight
-                      className="ml-auto shrink-0 text-slate-300 transition group-hover:translate-x-1 group-hover:text-skybrand-500"
-                      size={17}
-                    />
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </div>
       </section>
 
-      <section className="relative overflow-hidden py-24">
-        <div className="absolute inset-0 soft-grid opacity-50" />
-        <div className="relative mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:px-8">
-          <div className="relative">
-            <div className="relative overflow-hidden rounded-[2rem] shadow-[0_30px_80px_rgba(7,27,51,.18)]">
-              <Image
-                alt="Balili pupils learning together in the classroom"
-                className="aspect-[4/3] h-full w-full object-cover"
-                height={900}
-                src="/assets/balili-classroom.webp"
-                width={1200}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-950/45 via-transparent to-transparent" />
-              <div className="glass-panel absolute bottom-5 left-5 right-5 rounded-2xl p-4 text-white sm:max-w-xs">
-                <p className="text-xs font-bold uppercase text-skybrand-200">
-                  Learning together
-                </p>
-                <p className="mt-1 text-sm font-semibold leading-6">
-                  Curiosity grows when every child has a voice at the table.
-                </p>
-              </div>
-            </div>
-            <div className="absolute -bottom-7 right-4 hidden rounded-2xl bg-amber-400 p-5 text-navy-950 shadow-xl sm:block">
-              <Medal size={24} />
-              <p className="mt-3 font-display text-2xl font-extrabold">6</p>
-              <p className="text-xs font-bold">Grade levels</p>
-            </div>
-          </div>
-
-          <div>
-            <p className="flex items-center gap-3 text-xs font-bold uppercase text-skybrand-600">
-              <span className="h-px w-10 bg-skybrand-500" />A school that sees
-              every learner
-            </p>
-            <h2 className="text-balance mt-5 font-display text-4xl font-extrabold leading-tight text-navy-950 sm:text-5xl">
-              Rooted in community, moving forward with purpose.
-            </h2>
-            <p className="mt-6 text-base leading-8 text-slate-600">
-              Balili Elementary School combines the warmth of a close-knit
-              community with clear, timely information that helps teachers and
-              families respond to every learner&apos;s needs.
-            </p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {communityFeatures.map((feature) => {
-                const Icon = feature.icon;
-                return (
-                  <div className="flex gap-3" key={feature.title}>
-                    <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-skybrand-50 text-skybrand-600">
-                      <Icon size={19} />
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-navy-950">
-                        {feature.title}
-                      </h3>
-                      <p className="mt-1 text-xs leading-5 text-slate-500">
-                        {feature.text}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <Link
-              className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-skybrand-600 hover:text-navy-900"
-              href="/about"
-            >
-              Learn more about Balili
-              <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="relative overflow-hidden bg-navy-950 py-14 text-white">
-        <div className="absolute inset-0 public-grid opacity-10" />
-        <div className="relative mx-auto grid max-w-7xl gap-8 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
-          {stats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <div
-                className={`flex items-center gap-5 border-white/10 sm:border-l sm:pl-7 ${
-                  index === 0 ? "sm:border-l-0 sm:pl-0" : ""
-                }`}
-                key={stat.label}
-              >
-                <div className="grid size-12 shrink-0 place-items-center rounded-2xl bg-white/10 text-skybrand-300">
-                  <Icon size={22} />
-                </div>
-                <div>
-                  <p className="font-display text-3xl font-extrabold">
-                    {stat.value}
-                  </p>
-                  <p className="mt-1 text-xs font-medium text-slate-300">
-                    {stat.label}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="bg-gradient-to-b from-white to-skybrand-50/50 py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase text-skybrand-600">
-              Programs that help children flourish
-            </p>
-            <h2 className="text-balance mt-4 font-display text-4xl font-extrabold text-navy-950 sm:text-5xl">
-              Learning goes beyond the lesson.
-            </h2>
-            <p className="mt-5 text-base leading-8 text-slate-600">
-              Our programs nurture strong foundations, healthy habits,
-              creativity, character, and belonging.
-            </p>
-          </div>
-
-          <div className="scroll-soft mt-12 flex snap-x gap-5 overflow-x-auto pb-4 lg:grid lg:grid-cols-3 lg:overflow-visible lg:pb-0">
-            {programs.map((program) => {
-              const Icon = program.icon;
-              return (
-                <article
-                  className="shine-card group relative flex min-h-[27rem] w-[min(22rem,86vw)] shrink-0 snap-start flex-col overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white transition duration-500 hover:-translate-y-1.5 hover:shadow-glow lg:w-auto"
-                  key={program.title}
-                >
-                  <div className="relative h-44 shrink-0 overflow-hidden">
-                    <Image
-                      alt={`${program.title} at Balili Elementary School`}
-                      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                      fill
-                      src={program.image}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-navy-950/65 via-transparent to-transparent" />
-                    <div
-                      className={`absolute bottom-4 left-5 grid size-12 place-items-center rounded-2xl text-white shadow-lg ring-4 ring-white/25 transition duration-300 group-hover:rotate-3 group-hover:scale-110 ${program.color}`}
-                    >
-                      <Icon size={24} />
-                    </div>
-                  </div>
-                  <div
-                    className={`flex flex-1 flex-col bg-gradient-to-br p-6 ${program.tint}`}
-                  >
-                    <h3 className="font-display text-xl font-extrabold text-navy-950">
-                      {program.title}
-                    </h3>
-                    <p className="mt-3 flex-1 text-sm leading-7 text-slate-500">
-                      {program.text}
-                    </p>
-                    <Link
-                      className="mt-5 flex items-center gap-2 text-xs font-bold uppercase text-navy-900"
-                      href="/programs"
-                    >
-                      Discover program
-                      <ArrowRight size={15} />
-                    </Link>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col justify-between gap-5 border-b-2 border-navy-950 pb-6 sm:flex-row sm:items-end">
-            <div>
-              <p className="text-xs font-extrabold uppercase text-skybrand-600">
-                From our school community
-              </p>
-              <h2 className="mt-3 font-display text-5xl font-extrabold leading-none text-navy-950 sm:text-6xl">
-                The Balili Bulletin
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
-                A livelier front-page digest for reminders, learner moments, and
-                community activities.
-              </p>
-            </div>
-            <Link
-              className="inline-flex w-fit items-center gap-2 rounded-full border border-navy-950 bg-navy-950 px-5 py-3 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:border-skybrand-600 hover:bg-skybrand-600"
-              href="/announcements"
-            >
-              View all school news
-              <ArrowRight size={16} />
-            </Link>
-          </div>
-
-          {tickerItems.length ? (
-            <div className="marquee-mask mt-5 overflow-hidden border-y border-slate-300 bg-white/70 py-3 backdrop-blur">
-              <div className="marquee-track flex w-max gap-8">
-                {tickerItems.map((item, index) => (
-                  <span
-                    className="flex items-center gap-3 text-xs font-extrabold uppercase text-navy-950"
-                    key={`${item.id}-${index}`}
-                  >
-                    <span
-                      className={`size-2.5 rounded-full ${announcementAccent(index)}`}
-                    />
-                    {item.title}
-                    <span className="text-slate-400">
-                      {formatPublishedDate(item.published_at)}
-                    </span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          ) : null}
-
-          {lead ? (
-            <div className="mt-10 grid gap-6 lg:grid-cols-[1.28fr_.72fr]">
-              <article className="shine-card group relative min-h-[31rem] overflow-hidden rounded-[2rem] bg-navy-950 text-white shadow-editorial">
-                <Image
-                  alt="Balili learners enjoying a featured school activity"
-                  className="absolute inset-0 h-full w-full object-cover opacity-70 transition duration-1000 group-hover:scale-105"
-                  fill
-                  src="/assets/news-feature.webp"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/80 to-navy-950/25" />
-                <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-navy-950 via-navy-950/80 to-transparent" />
-                <div className="relative flex min-h-[31rem] flex-col justify-end p-7 sm:p-10">
-                  <div className="mb-6 flex flex-wrap items-center gap-2">
-                    <Badge tone="emerald">Latest published story</Badge>
-                  </div>
-                  <div className="grid max-w-3xl gap-6 sm:grid-cols-[auto_1fr] sm:items-start">
-                    <div
-                      className={`grid size-16 place-items-center rounded-3xl bg-gradient-to-br ${announcementGradient(0)} shadow-xl shadow-black/20`}
-                    >
-                      <LeadIcon size={32} />
-                    </div>
-                    <div>
-                      <p className="text-xs font-extrabold uppercase text-skybrand-200">
-                        School update - {formatPublishedDate(lead.published_at)}
-                      </p>
-                      <h3 className="mt-3 font-display text-4xl font-extrabold leading-none sm:text-5xl">
-                        {lead.title}
-                      </h3>
-                      <p className="mt-5 max-w-2xl text-base leading-8 text-slate-200">
-                        {lead.body}
-                      </p>
-                      <Link
-                        className="mt-7 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-extrabold text-navy-950 transition hover:-translate-y-0.5 hover:bg-skybrand-100"
-                        href="/announcements"
-                      >
-                        Read the bulletin
-                        <ArrowRight size={16} />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </article>
-
-              <div className="grid gap-4">
-                {announcements.slice(1).map((item, index) => {
-                  const Icon =
-                    announcementStyles[(index + 1) % announcementStyles.length]
-                      .icon;
-                  return (
-                    <article
-                      className="group relative overflow-hidden rounded-[1.6rem] border border-slate-200 bg-white p-5 shadow-soft transition duration-500 hover:-translate-y-1 hover:border-skybrand-300 hover:shadow-glow"
-                      key={item.id}
-                    >
-                      <div className="relative flex gap-4">
-                        <div
-                          className={`grid size-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${announcementGradient(index + 1)} text-white shadow-md transition duration-500 group-hover:rotate-6 group-hover:scale-110`}
-                        >
-                          <Icon size={24} />
-                        </div>
-                        <div className="min-w-0">
-                          <p
-                            className={`text-[10px] font-extrabold uppercase ${announcementInk(index + 1)}`}
-                          >
-                            School update -{" "}
-                            {formatPublishedDate(item.published_at)}
-                          </p>
-                          <h3 className="mt-2 font-display text-lg font-extrabold leading-tight text-navy-950">
-                            {item.title}
-                          </h3>
-                          <p className="mt-2 text-xs leading-6 text-slate-500">
-                            {item.body}
-                          </p>
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
-                <article className="relative overflow-hidden rounded-[1.6rem] bg-gradient-to-br from-navy-950 to-navy-800 p-6 text-white shadow-editorial">
-                  <p className="text-xs font-extrabold uppercase text-skybrand-300">
-                    Calendar source
-                  </p>
-                  <h3 className="mt-3 font-display text-2xl font-extrabold">
-                    Approved events publish automatically.
-                  </h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-300">
-                    Staff can submit calendar items from their dashboard, and
-                    approved events appear here and on the Events page.
-                  </p>
-                  <Link
-                    className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-skybrand-200"
-                    href="/events"
-                  >
-                    Open events
-                    <ArrowRight size={15} />
-                  </Link>
-                </article>
-              </div>
-            </div>
-          ) : (
-            <div className="mt-10 rounded-[2rem] border border-dashed border-slate-300 bg-white/80 p-8 text-center shadow-soft">
-              <BellRing className="mx-auto text-skybrand-600" size={34} />
-              <h3 className="mt-4 font-display text-2xl font-extrabold text-navy-950">
-                No published announcements yet
-              </h3>
-              <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-slate-600">
-                Once an announcement is published in the database, it will feed
-                this home page bulletin without hardcoded demo content.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="relative overflow-hidden bg-slate-50 py-24">
-        <div className="absolute inset-0 soft-grid opacity-40" />
-        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[.72fr_1.28fr] lg:items-center lg:px-8">
-          <div>
-            <p className="text-xs font-extrabold uppercase text-skybrand-600">
-              School calendar
-            </p>
-            <h2 className="text-balance mt-4 font-display text-4xl font-extrabold text-navy-950">
-              Plan around the moments that bring Balili together.
-            </h2>
-            <p className="mt-5 max-w-lg text-base leading-8 text-slate-600">
-              A compact calendar preview for families who want dates at a
-              glance, with the full events page ready for deeper planning.
-            </p>
-            <div className="mt-7 grid gap-3">
-              {events.length ? (
-                events
-                  .slice(0, 4)
-                  .map((event, index) => (
-                    <EventCard event={event} index={index} key={event.id} />
-                  ))
-              ) : (
-                <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-5 text-sm leading-7 text-slate-600">
-                  No approved events are scheduled yet. Admin-approved calendar
-                  items will appear here automatically.
-                </div>
-              )}
-            </div>
-            <Link
-              className="shine-card relative mt-7 inline-flex items-center gap-2 overflow-hidden rounded-xl bg-navy-900 px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-skybrand-600"
-              href="/events"
-            >
-              Open full calendar
-              <CalendarDays size={17} />
-            </Link>
-          </div>
-
-          <div className="grid overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-editorial xl:grid-cols-[1fr_.8fr]">
-            <div className="p-5 sm:p-7">
-              <div className="mb-4 flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs font-extrabold uppercase text-skybrand-600">
-                    At a glance
-                  </p>
-                  <h3 className="mt-2 font-display text-2xl font-extrabold text-navy-950">
-                    {formatCalendarMonth(calendarBase)}
-                  </h3>
-                </div>
-                <Badge tone="emerald">{events.length} events</Badge>
-              </div>
-              <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-extrabold uppercase text-slate-400">
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                  (day) => (
-                    <span className="py-2" key={day}>
-                      {day}
-                    </span>
-                  ),
-                )}
-              </div>
-              <div className="mt-1 grid grid-cols-7 gap-1">
-                {calendarDays.map((day, index) => (
-                  <span
-                    className={`relative grid aspect-square place-items-center rounded-xl text-sm font-bold ${
-                      day
-                        ? highlightedEventDays.has(day)
-                          ? "bg-navy-900 text-white shadow-[0_8px_20px_rgba(11,36,71,.18)]"
-                          : "text-slate-600 hover:bg-skybrand-50"
-                        : "text-transparent"
-                    }`}
-                    key={`${day || "blank"}-${index}`}
-                  >
-                    {day || "."}
-                    {day && highlightedEventDays.has(day) ? (
-                      <span className="absolute bottom-1.5 size-1.5 rounded-full bg-skybrand-300" />
-                    ) : null}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-navy-950 to-navy-800 p-6 text-white sm:p-7">
-              <p className="text-xs font-extrabold uppercase text-skybrand-300">
-                Selected date
-              </p>
-              <h3 className="mt-2 font-display text-2xl font-extrabold">
-                {selectedEvent
-                  ? formatPublishedDate(selectedEvent.starts_at)
-                  : "No event selected"}
-              </h3>
-              <div className="mt-6 space-y-3">
-                {selectedEvent ? (
-                  <article className="rounded-2xl border border-white/10 bg-white/[.08] p-4 backdrop-blur-md">
-                    <Badge tone="emerald">Approved event</Badge>
-                    <h4 className="mt-3 font-display text-lg font-extrabold">
-                      {selectedEvent.title}
-                    </h4>
-                    {selectedEvent.body ? (
-                      <p className="mt-2 text-sm leading-6 text-slate-300">
-                        {selectedEvent.body}
-                      </p>
-                    ) : null}
-                    <div className="mt-4 grid gap-2 text-xs font-semibold text-slate-300">
-                      <span className="flex items-center gap-2">
-                        <Clock3 size={14} className="text-skybrand-300" />
-                        {formatEventTime(selectedEvent.starts_at)}
-                      </span>
-                      <span className="flex items-center gap-2">
-                        <MapPin size={14} className="text-skybrand-300" />
-                        Balili Elementary School
-                      </span>
-                    </div>
-                  </article>
-                ) : null}
-                <div className="rounded-2xl border border-dashed border-white/20 p-5 text-sm leading-7 text-slate-300">
-                  Highlighted dates come from approved database events. Pending
-                  staff submissions do not appear here until admin approval.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-[2.3rem] bg-navy-950 px-7 py-14 text-white shadow-[0_35px_90px_rgba(7,27,51,.23)] sm:px-12 lg:px-16">
+      <section className="bg-[#f5f7fa] py-20">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <div className="relative min-h-[28rem] overflow-hidden bg-[#171717] p-8 text-white sm:p-12 lg:p-16">
             <Image
               alt=""
-              className="absolute inset-0 h-full w-full object-cover opacity-20"
+              className="absolute inset-0 h-full w-full object-cover opacity-24"
               fill
               src="/assets/balili-classroom.webp"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/95 to-navy-950/65" />
-            <div className="relative grid gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div className="max-w-3xl">
-                <Quote size={34} className="text-skybrand-400" />
-                <blockquote className="text-balance mt-6 font-display text-2xl font-extrabold leading-relaxed sm:text-3xl">
-                  &quot;Children do their best learning when they feel safe,
-                  known, and encouraged to keep growing.&quot;
-                </blockquote>
-                <p className="mt-6 text-sm font-bold">
-                  Dr. Elena D. Reyes{" "}
-                  <span className="font-normal text-slate-400">
-                    - School Principal
-                  </span>
-                </p>
-              </div>
-              <Link
-                className="inline-flex w-fit items-center gap-2 rounded-xl bg-skybrand-500 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-skybrand-400"
-                href="/contact"
-              >
-                Connect with our school
-                <ArrowUpRight size={17} />
-              </Link>
+            <div className="relative max-w-4xl">
+              <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#c8203f]">
+                Principal
+              </p>
+              <blockquote className="mt-8 font-display text-4xl font-extrabold uppercase leading-[1.02] text-white sm:text-6xl">
+                Children learn best when they are safe, known, and encouraged to
+                keep growing.
+              </blockquote>
+              <p className="mt-8 text-sm font-bold uppercase tracking-[0.18em] text-slate-300">
+                {school.principal} / School Principal I
+              </p>
             </div>
           </div>
         </div>
       </section>
     </>
-  );
-}
-
-function EventCard({ event, index }: { event: HomeEvent; index: number }) {
-  const colors = [
-    "bg-skybrand-500",
-    "bg-violet-500",
-    "bg-emerald-500",
-    "bg-amber-500",
-  ];
-
-  return (
-    <article className="shine-card group relative flex gap-4 overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 transition duration-500 hover:-translate-y-1 hover:border-skybrand-300 hover:shadow-glow">
-      <div
-        className={`flex size-16 shrink-0 flex-col items-center justify-center rounded-2xl text-center text-white shadow-md ${
-          colors[index % colors.length]
-        }`}
-      >
-        <span className="text-[10px] font-bold uppercase">
-          {formatEventMonth(event.starts_at)}
-        </span>
-        <span className="font-display text-2xl font-extrabold">
-          {formatEventDay(event.starts_at)}
-        </span>
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-[10px] font-bold uppercase text-skybrand-600">
-          Approved event
-        </p>
-        <h3 className="mt-1 truncate font-display font-bold text-navy-950">
-          {event.title}
-        </h3>
-        <p className="mt-1 text-xs text-slate-500">
-          {formatEventTime(event.starts_at)} - Balili Elementary School
-        </p>
-      </div>
-      <ChevronRight
-        className="mt-5 shrink-0 text-slate-300 transition group-hover:translate-x-1 group-hover:text-skybrand-500"
-        size={18}
-      />
-    </article>
   );
 }

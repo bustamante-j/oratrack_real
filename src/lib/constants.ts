@@ -3,9 +3,11 @@ import type { AppRole } from "@/types/domain";
 export const school = {
   name: "Balili Elementary School",
   platform: "ORATRACK",
-  location: "Purok 3, Balili, La Trinidad, Benguet 2601",
-  email: "hello@balilies.edu.ph",
-  phone: "(074) 422-0186",
+  schoolId: "135617",
+  principal: "Herman Saweg",
+  location: "Balili, La Trinidad, Benguet",
+  email: "135617@deped.gov.ph",
+  phone: "(074) 422-6570",
   hours: "Mon to Fri, 7:30 AM to 5:00 PM",
 };
 

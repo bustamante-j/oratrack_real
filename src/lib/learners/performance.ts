@@ -70,6 +70,17 @@ export type LearnerPerformanceData = {
     numeracy_rating: string;
     remarks: string | null;
   }>;
+  awards: Array<{
+    id: string;
+    certificate_template_id: string | null;
+    enrollment_id: string;
+    certificate_type: "recognition" | "completion";
+    generated_at: string;
+  }>;
+  certificateTemplates: Array<{
+    id: string;
+    name: string;
+  }>;
 };
 
 export async function getLearnerPerformanceData(
@@ -121,33 +132,45 @@ export async function getLearnerPerformanceData(
 
   const enrollments = enrollmentResult.data ?? [];
   const enrollmentIds = enrollments.map((enrollment) => enrollment.id);
-  const [attendanceResult, gradeResult, literacyResult] = enrollmentIds.length
-    ? await Promise.all([
-        supabase
-          .from("attendance_records")
-          .select(
-            "id,attendance_date_id,enrollment_id,am_status,pm_status,remarks",
-          )
-          .in("enrollment_id", enrollmentIds),
-        supabase
-          .from("grades")
-          .select(
-            "id,enrollment_id,subject_id,grade_period_id,numeric_grade,remarks",
-          )
-          .in("enrollment_id", enrollmentIds),
-        supabase
-          .from("literacy_numeracy_records")
-          .select("id,enrollment_id,literacy_rating,numeracy_rating,remarks")
-          .in("enrollment_id", enrollmentIds),
-      ])
-    : [
-        { data: [], error: null },
-        { data: [], error: null },
-        { data: [], error: null },
-      ];
+  const [attendanceResult, gradeResult, literacyResult, awardResult] =
+    enrollmentIds.length
+      ? await Promise.all([
+          supabase
+            .from("attendance_records")
+            .select(
+              "id,attendance_date_id,enrollment_id,am_status,pm_status,remarks",
+            )
+            .in("enrollment_id", enrollmentIds),
+          supabase
+            .from("grades")
+            .select(
+              "id,enrollment_id,subject_id,grade_period_id,numeric_grade,remarks",
+            )
+            .in("enrollment_id", enrollmentIds),
+          supabase
+            .from("literacy_numeracy_records")
+            .select("id,enrollment_id,literacy_rating,numeracy_rating,remarks")
+            .in("enrollment_id", enrollmentIds),
+          supabase
+            .from("generated_certificates")
+            .select(
+              "id,certificate_template_id,enrollment_id,certificate_type,generated_at",
+            )
+            .in("enrollment_id", enrollmentIds)
+            .order("generated_at", { ascending: false }),
+        ])
+      : [
+          { data: [], error: null },
+          { data: [], error: null },
+          { data: [], error: null },
+          { data: [], error: null },
+        ];
 
   const secondError =
-    attendanceResult.error ?? gradeResult.error ?? literacyResult.error;
+    attendanceResult.error ??
+    gradeResult.error ??
+    literacyResult.error ??
+    awardResult.error;
 
   if (secondError) {
     throw new Error(secondError.message);
@@ -164,28 +187,47 @@ export async function getLearnerPerformanceData(
   const periodIds = [
     ...new Set((gradeResult.data ?? []).map((grade) => grade.grade_period_id)),
   ];
-  const [attendanceDateResult, subjectResult, periodResult] = await Promise.all(
-    [
-      attendanceDateIds.length
-        ? supabase
-            .from("attendance_dates")
-            .select("id,attendance_on")
-            .in("id", attendanceDateIds)
-        : { data: [], error: null },
-      subjectIds.length
-        ? supabase.from("subjects").select("id,code,name").in("id", subjectIds)
-        : { data: [], error: null },
-      periodIds.length
-        ? supabase
-            .from("grade_periods")
-            .select("id,code,name,sort_order")
-            .in("id", periodIds)
-        : { data: [], error: null },
-    ],
-  );
+  const templateIds = [
+    ...new Set(
+      (awardResult.data ?? [])
+        .map((award) => award.certificate_template_id)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  ];
+  const [
+    attendanceDateResult,
+    subjectResult,
+    periodResult,
+    certificateTemplateResult,
+  ] = await Promise.all([
+    attendanceDateIds.length
+      ? supabase
+          .from("attendance_dates")
+          .select("id,attendance_on")
+          .in("id", attendanceDateIds)
+      : { data: [], error: null },
+    subjectIds.length
+      ? supabase.from("subjects").select("id,code,name").in("id", subjectIds)
+      : { data: [], error: null },
+    periodIds.length
+      ? supabase
+          .from("grade_periods")
+          .select("id,code,name,sort_order")
+          .in("id", periodIds)
+      : { data: [], error: null },
+    templateIds.length
+      ? supabase
+          .from("certificate_templates")
+          .select("id,name")
+          .in("id", templateIds)
+      : { data: [], error: null },
+  ]);
 
   const thirdError =
-    attendanceDateResult.error ?? subjectResult.error ?? periodResult.error;
+    attendanceDateResult.error ??
+    subjectResult.error ??
+    periodResult.error ??
+    certificateTemplateResult.error;
 
   if (thirdError) {
     throw new Error(thirdError.message);
@@ -204,5 +246,7 @@ export async function getLearnerPerformanceData(
     subjects: subjectResult.data ?? [],
     periods: periodResult.data ?? [],
     literacy: literacyResult.data ?? [],
+    awards: awardResult.data ?? [],
+    certificateTemplates: certificateTemplateResult.data ?? [],
   } as LearnerPerformanceData;
 }

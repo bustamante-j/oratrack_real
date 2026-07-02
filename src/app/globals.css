@@ -264,6 +264,13 @@ textarea.input {
 .portal-shell table {
   border-collapse: separate;
   border-spacing: 0;
+  width: 100%;
+}
+
+.portal-shell .table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .portal-shell tbody tr {

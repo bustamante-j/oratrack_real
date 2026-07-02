@@ -1,4 +1,11 @@
-import { Award, Download, FileText, PlusCircle, Printer } from "lucide-react";
+import {
+  Award,
+  Download,
+  FileText,
+  ImageUp,
+  PlusCircle,
+  Printer,
+} from "lucide-react";
 
 import { ActionDisclosure } from "@/components/ui/action-disclosure";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -9,6 +16,7 @@ import {
   generateCertificateAction,
 } from "@/lib/certificates/actions";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Json } from "@/types/database";
 import { certificateTypes, type CertificateType } from "@/types/domain";
 
 export const metadata = {
@@ -38,6 +46,7 @@ type CertificateTemplate = {
   id: string;
   name: string;
   certificate_type: CertificateType;
+  template_payload: Json;
   is_active: boolean;
   created_at: string;
 };
@@ -74,6 +83,16 @@ function learnerName(learner: Learner) {
   ]
     .filter(Boolean)
     .join(" ");
+}
+
+function templateHasImage(payload: Json) {
+  return (
+    typeof payload === "object" &&
+    payload !== null &&
+    !Array.isArray(payload) &&
+    typeof payload.imagePath === "string" &&
+    payload.imagePath.length > 0
+  );
 }
 
 function typeLabel(type: CertificateType) {
@@ -125,7 +144,7 @@ export default async function AdminCertificatesPage() {
   ] = await Promise.all([
     supabase
       .from("certificate_templates")
-      .select("id,name,certificate_type,is_active,created_at")
+      .select("id,name,certificate_type,template_payload,is_active,created_at")
       .order("created_at", { ascending: false }),
     supabase
       .from("generated_certificates")
@@ -260,8 +279,18 @@ export default async function AdminCertificatesPage() {
                   ))}
                 </select>
               </label>
+              <label>
+                <span className="label">Template image</span>
+                <input
+                  accept="image/png,image/jpeg,image/webp"
+                  className="input"
+                  name="templateImage"
+                  type="file"
+                />
+              </label>
               <div>
                 <SubmitButton pendingLabel="Creating template...">
+                  <ImageUp size={17} />
                   Create template
                 </SubmitButton>
               </div>
@@ -280,9 +309,16 @@ export default async function AdminCertificatesPage() {
                     {typeLabel(template.certificate_type)}
                   </span>
                 </div>
-                <p className="mt-2 text-xs font-bold uppercase text-slate-500">
-                  {template.is_active ? "Active" : "Inactive"} template
-                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <span className="rounded-full bg-white px-3 py-1 text-xs font-bold uppercase text-slate-500">
+                    {template.is_active ? "Active" : "Inactive"}
+                  </span>
+                  {templateHasImage(template.template_payload) ? (
+                    <span className="rounded-full bg-skybrand-50 px-3 py-1 text-xs font-bold uppercase text-skybrand-700">
+                      Image
+                    </span>
+                  ) : null}
+                </div>
               </article>
             ))}
           </div>
@@ -395,7 +431,7 @@ export default async function AdminCertificatesPage() {
                     </p>
                   </div>
                   <a
-                    className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
+                    className="inline-flex min-h-9 w-fit items-center justify-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
                     href={`/api/certificates?id=${certificate.id}`}
                   >
                     <Download size={17} />

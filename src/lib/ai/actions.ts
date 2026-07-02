@@ -11,6 +11,7 @@ export type AiAssistantState = {
   draft?: string;
   notice?: string;
   mode?: string;
+  prompt?: string;
   message?: string;
   errors?: Record<string, string[] | undefined>;
 };
@@ -214,5 +215,6 @@ export async function submitAiPromptAction(
     draft,
     notice,
     mode,
+    prompt: parsed.data.prompt,
   };
 }

@@ -46,6 +46,7 @@ export type CertificatePdfInput = {
   gradeLevelLabel: string;
   sectionName: string;
   templateName?: string;
+  templateImage?: Buffer;
   generatedAt: string;
 };
 
@@ -69,6 +70,21 @@ export function createCertificatePdf(
     doc.on("data", (chunk: Buffer) => chunks.push(chunk));
     doc.on("end", () => resolve(Buffer.concat(chunks)));
     doc.on("error", reject);
+
+    if (input.templateImage) {
+      doc.image(input.templateImage, 36, 36, {
+        align: "center",
+        fit: [pageWidth - 72, pageHeight - 72],
+        valign: "center",
+      });
+      doc
+        .save()
+        .opacity(0.86)
+        .fillColor("#ffffff")
+        .roundedRect(104, 104, pageWidth - 208, pageHeight - 238, 22)
+        .fill()
+        .restore();
+    }
 
     doc
       .lineWidth(3)

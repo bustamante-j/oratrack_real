@@ -7,6 +7,10 @@ import {
   Upload,
 } from "lucide-react";
 
+import {
+  AllSubjectGradeSheet,
+  type AllSubjectGradeRow,
+} from "@/components/grades/all-subject-grade-sheet";
 import { ActionDisclosure } from "@/components/ui/action-disclosure";
 import { ButtonLink } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -15,7 +19,11 @@ import { SubmitButton } from "@/components/ui/submit-button";
 import { requireAuthenticatedProfile } from "@/lib/auth/session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-import { importGradeWorkbookAction, saveGradeRecordsAction } from "./actions";
+import {
+  importGradeWorkbookAction,
+  saveAllSubjectGradeRecordsAction,
+  saveGradeRecordsAction,
+} from "./actions";
 
 export const metadata = {
   title: "Grades",
@@ -319,10 +327,49 @@ export default async function GradesPage({
         };
       })
     : [];
+  const sectionAssignments = selectedSection
+    ? assignments.filter(
+        (assignment) => assignment.section_id === selectedSection.id,
+      )
+    : [];
+  const allSubjectRows: AllSubjectGradeRow[] = selectedEnrollments.flatMap(
+    (enrollment) =>
+      sectionAssignments.map((assignment) => {
+        const learner = learnerById.get(enrollment.learner_id);
+        const subject = subjectById.get(assignment.subject_id);
+
+        return {
+          key: `${assignment.id}_${enrollment.id}`,
+          assignmentId: assignment.id,
+          enrollmentId: enrollment.id,
+          learnerName: learner ? learnerName(learner) : "Learner",
+          lrn: learner?.lrn ?? "Unrecorded",
+          subjectCode: subject?.code ?? "Subject",
+          subjectName: subject?.name ?? "Subject",
+          grades: Object.fromEntries(
+            selectedGradePeriods.map((period) => {
+              const grade = grades.find(
+                (record) =>
+                  record.enrollment_id === enrollment.id &&
+                  record.subject_id === assignment.subject_id &&
+                  record.grade_period_id === period.id,
+              );
+
+              return [period.id, grade ? Number(grade.numeric_grade) : null];
+            }),
+          ),
+        };
+      }),
+  );
   const assignmentLabel =
     selectedAssignment && selectedSection && selectedSubject
       ? `${gradeLabel(gradeById, selectedSection.grade_level_id)} ${selectedSection.name} - ${selectedSubject.code}`
       : "No subject assignment";
+  const gradeDownloadHref = selectedSection
+    ? `/api/reports/export?reportType=grades&schoolYearId=${encodeURIComponent(
+        selectedSection.school_year_id,
+      )}&sectionId=${encodeURIComponent(selectedSection.id)}`
+    : "/api/reports/export?reportType=grades";
 
   return (
     <div className="space-y-4">
@@ -523,6 +570,33 @@ export default async function GradesPage({
                   />
                 </div>
               )}
+            </section>
+
+            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
+              <div className="flex items-start gap-3">
+                <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
+                  <FileSpreadsheet size={24} />
+                </span>
+                <div>
+                  <h2 className="font-display text-xl font-extrabold text-navy-950">
+                    All-subject sheet
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    {selectedSection
+                      ? `${gradeLabel(gradeById, selectedSection.grade_level_id)} ${selectedSection.name}`
+                      : "Select a section"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <AllSubjectGradeSheet
+                  action={saveAllSubjectGradeRecordsAction}
+                  downloadHref={gradeDownloadHref}
+                  periods={selectedGradePeriods}
+                  rows={allSubjectRows}
+                />
+              </div>
             </section>
 
             <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">

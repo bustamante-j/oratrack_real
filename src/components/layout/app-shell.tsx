@@ -59,18 +59,22 @@ export function AppShell({
     .toUpperCase();
   const profilePath =
     profile.role === "admin_principal" ? "/admin/profile" : "/teacher/profile";
-  const sidebarWidth = sidebarCollapsed ? "lg:w-20" : "lg:w-64";
-  const contentOffset = sidebarCollapsed ? "lg:pl-20" : "lg:pl-64";
+  const sidebarWidth = sidebarCollapsed ? "lg:w-24" : "lg:w-64";
+  const contentOffset = sidebarCollapsed ? "lg:pl-24" : "lg:pl-64";
 
   return (
     <div className="min-h-screen min-w-0 overflow-x-hidden bg-[#f3f7fb]">
       <aside
         className={`fixed inset-y-0 left-0 z-50 hidden overflow-hidden border-r border-white/10 bg-navy-950 text-white shadow-[18px_0_55px_rgba(7,27,51,.18)] transition-[width] duration-200 lg:flex lg:flex-col ${sidebarWidth}`}
       >
-        <div className="flex h-14 items-center justify-between gap-2 border-b border-white/10 px-4">
-          <Link className="flex items-center gap-3" href="/">
-            <BrandLogo compact inverse showText={!sidebarCollapsed} />
-          </Link>
+        <div
+          className={`flex h-14 items-center border-b border-white/10 ${sidebarCollapsed ? "justify-center px-3" : "justify-between gap-2 px-4"}`}
+        >
+          {sidebarCollapsed ? null : (
+            <Link className="flex items-center gap-3" href="/">
+              <BrandLogo compact inverse showText />
+            </Link>
+          )}
           <button
             aria-label={
               sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"

@@ -11,6 +11,7 @@
     "test": "vitest run",
     "format": "prettier --write .",
     "db:seed:fake": "node scripts/seed-fake-data.mjs",
+    "db:seed:presentation": "node scripts/seed-fake-data.mjs",
     "db:seed:public-home": "node scripts/seed-public-home-data.mjs"
   },
   "dependencies": {

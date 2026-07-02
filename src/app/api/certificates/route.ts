@@ -1,6 +1,8 @@
 import { getSessionProfile } from "@/lib/auth/session";
 import { createCertificatePdf } from "@/lib/reports/pdf";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Json } from "@/types/database";
 
 export const runtime = "nodejs";
 
@@ -26,6 +28,36 @@ function safeFilename(value: string) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "")
     .slice(0, 80);
+}
+
+function templateImagePath(payload: Json) {
+  if (
+    typeof payload === "object" &&
+    payload !== null &&
+    !Array.isArray(payload) &&
+    typeof payload.imagePath === "string"
+  ) {
+    return payload.imagePath;
+  }
+
+  return null;
+}
+
+async function downloadTemplateImage(path: string | null) {
+  if (!path) return undefined;
+
+  try {
+    const admin = createSupabaseAdminClient();
+    const { data, error } = await admin.storage
+      .from("certificates")
+      .download(path);
+
+    if (error || !data) return undefined;
+
+    return Buffer.from(await data.arrayBuffer());
+  } catch {
+    return undefined;
+  }
 }
 
 export async function GET(request: Request) {
@@ -111,7 +143,7 @@ export async function GET(request: Request) {
     certificate.certificate_template_id
       ? supabase
           .from("certificate_templates")
-          .select("id,name")
+          .select("id,name,template_payload")
           .eq("id", certificate.certificate_template_id)
           .single()
       : Promise.resolve({ data: null, error: null }),
@@ -140,6 +172,11 @@ export async function GET(request: Request) {
   }
 
   const name = learnerName(learner);
+  const templateImage = await downloadTemplateImage(
+    templateResult.data
+      ? templateImagePath(templateResult.data.template_payload as Json)
+      : null,
+  );
   const pdf = await createCertificatePdf({
     certificateType: certificate.certificate_type,
     learnerName: name,
@@ -148,6 +185,7 @@ export async function GET(request: Request) {
     gradeLevelLabel: gradeLevel.label,
     sectionName: sectionResult.data?.name ?? "Unsectioned",
     templateName: templateResult.data?.name,
+    templateImage,
     generatedAt: certificate.generated_at,
   });
 

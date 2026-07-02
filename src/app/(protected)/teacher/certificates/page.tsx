@@ -312,7 +312,7 @@ export default async function TeacherCertificatesPage() {
                     </p>
                   </div>
                   <a
-                    className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
+                    className="inline-flex min-h-9 w-fit items-center justify-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
                     href={`/api/certificates?id=${certificate.id}`}
                   >
                     <Download size={17} />

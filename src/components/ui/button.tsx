@@ -16,7 +16,7 @@ const variants = {
 };
 
 const base =
-  "inline-flex min-h-9 items-center justify-center gap-2 rounded-lg px-3 py-1.5 text-center text-sm font-bold transition";
+  "inline-flex min-h-9 w-fit max-w-full items-center justify-center gap-2 rounded-lg px-3 py-1.5 text-center text-sm font-bold transition";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: keyof typeof variants;

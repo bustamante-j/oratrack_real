@@ -47,6 +47,26 @@ function optionalFormValue(value: FormDataEntryValue | null) {
   return trimmed.length ? trimmed : undefined;
 }
 
+function requiredFormString(value: FormDataEntryValue | null, label: string) {
+  if (typeof value !== "string" || !value.trim()) {
+    throw new Error(`${label} is required.`);
+  }
+
+  return value.trim();
+}
+
+function parseGradeValue(value: FormDataEntryValue | null) {
+  if (typeof value !== "string" || !value.trim()) return null;
+
+  const numeric = Number(value);
+
+  if (!Number.isFinite(numeric) || numeric < 0 || numeric > 100) {
+    throw new Error("Grades must be between 0 and 100.");
+  }
+
+  return numeric;
+}
+
 function cellText(row: ExcelJS.Row, index: number) {
   const value = row.getCell(index).value;
 
@@ -230,6 +250,145 @@ export async function saveGradeRecordsAction(formData: FormData) {
       sectionId: context.section.id,
       subjectId: context.assignment.subject_id,
       gradePeriodId: parsed.gradePeriodId,
+      recordCount: savedGrades?.length ?? 0,
+    },
+  });
+
+  revalidateGradeViews();
+}
+
+export async function saveAllSubjectGradeRecordsAction(formData: FormData) {
+  const profile = await requireAuthenticatedProfile();
+  const rowKeys = formData
+    .getAll("rowKey")
+    .filter((value): value is string => typeof value === "string");
+  const gradePeriodIds = [
+    ...new Set(
+      formData
+        .getAll("gradePeriodId")
+        .filter((value): value is string => typeof value === "string"),
+    ),
+  ];
+
+  if (!rowKeys.length || !gradePeriodIds.length) {
+    throw new Error("No grade sheet rows were submitted.");
+  }
+
+  const records: Array<{
+    assignmentId: string;
+    enrollmentId: string;
+    gradePeriodId: string;
+    numericGrade: number;
+  }> = [];
+
+  for (const rowKey of rowKeys) {
+    const assignmentId = requiredFormString(
+      formData.get(`assignmentId-${rowKey}`),
+      "Assignment",
+    );
+    const enrollmentId = requiredFormString(
+      formData.get(`enrollmentId-${rowKey}`),
+      "Enrollment",
+    );
+
+    for (const gradePeriodId of gradePeriodIds) {
+      const numericGrade = parseGradeValue(
+        formData.get(`grade-${rowKey}-${gradePeriodId}`),
+      );
+
+      if (numericGrade === null) continue;
+
+      records.push({
+        assignmentId,
+        enrollmentId,
+        gradePeriodId,
+        numericGrade,
+      });
+    }
+  }
+
+  if (!records.length) {
+    throw new Error("Enter at least one grade before saving the sheet.");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const contexts = new Map<string, GradeAssignmentContext>();
+
+  for (const assignmentId of new Set(
+    records.map((record) => record.assignmentId),
+  )) {
+    contexts.set(
+      assignmentId,
+      await getGradeAssignmentContext(
+        supabase,
+        assignmentId,
+        profile.userId,
+        profile.role,
+      ),
+    );
+  }
+
+  for (const [assignmentId, context] of contexts) {
+    const assignmentRecords = records.filter(
+      (record) => record.assignmentId === assignmentId,
+    );
+    const periodIds = [
+      ...new Set(assignmentRecords.map((record) => record.gradePeriodId)),
+    ];
+    const enrollmentIds = [
+      ...new Set(assignmentRecords.map((record) => record.enrollmentId)),
+    ];
+
+    await Promise.all(
+      periodIds.map((periodId) =>
+        assertGradePeriodMatchesSection(
+          supabase,
+          periodId,
+          context.section.school_year_id,
+        ),
+      ),
+    );
+    await assertEnrollmentsBelongToSection(
+      supabase,
+      enrollmentIds,
+      context.section.id,
+    );
+  }
+
+  const { data: savedGrades, error } = await supabase
+    .from("grades")
+    .upsert(
+      records.map((record) => {
+        const context = contexts.get(record.assignmentId);
+
+        if (!context) {
+          throw new Error("Grade assignment context is missing.");
+        }
+
+        return {
+          enrollment_id: record.enrollmentId,
+          subject_id: context.assignment.subject_id,
+          grade_period_id: record.gradePeriodId,
+          numeric_grade: record.numericGrade,
+          remarks: null,
+          encoded_by: profile.userId,
+        };
+      }),
+      { onConflict: "enrollment_id,subject_id,grade_period_id" },
+    )
+    .select("id");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  await logAuditEvent(supabase, {
+    actorId: profile.userId,
+    action: "grade_changed",
+    entityTable: "grades",
+    metadata: {
+      mode: "all_subject_sheet",
+      assignmentCount: contexts.size,
       recordCount: savedGrades?.length ?? 0,
     },
   });
