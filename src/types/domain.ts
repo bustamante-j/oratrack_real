@@ -50,13 +50,13 @@ export type LessonPlanStatus = (typeof lessonPlanStatuses)[number];
 export type NavItem = {
   href: string;
   label: string;
+  group?: string;
   icon?: string;
 };
 
 export type ModuleDefinition = {
   id: string;
   title: string;
-  phase: string;
   href: string;
   summary: string;
   capabilities: string[];

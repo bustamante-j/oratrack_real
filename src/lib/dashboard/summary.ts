@@ -31,19 +31,9 @@ function attendanceValue(status: string) {
 }
 
 function defaultGraphs(modules: ModuleDefinition[]): DashboardGraphData {
-  const orderedPhases = [
-    ...new Set(
-      modules
-        .map((module) => Number(module.phase.replace(/\D/g, "")))
-        .filter(Boolean)
-        .sort((a, b) => a - b),
-    ),
-  ];
-  const phaseTrend = orderedPhases.map((phase) => ({
-    name: `P${phase}`,
-    value: modules.filter(
-      (module) => Number(module.phase.replace(/\D/g, "")) <= phase,
-    ).length,
+  const phaseTrend = modules.map((module, index) => ({
+    name: module.title.split(" ")[0],
+    value: index + 1,
   }));
   const inIds = (ids: string[]) =>
     modules.filter((module) => ids.includes(module.id)).length;
@@ -84,8 +74,8 @@ function defaultSummary(
         tone: "sky",
       },
       {
-        label: "Build phases",
-        value: numberText(new Set(modules.map((module) => module.phase)).size),
+        label: "Modules",
+        value: numberText(modules.length),
         detail: "Implemented portal areas",
         icon: "ChartLineUp",
         tone: "purple",

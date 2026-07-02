@@ -184,8 +184,8 @@ export function DashboardGraphs({ data }: { data: DashboardGraphData }) {
       </div>
 
       {visible ? (
-        <div className="grid gap-4 xl:grid-cols-[1.25fr_.75fr] 2xl:grid-cols-3">
-          <ChartCard title="Phase coverage">
+        <div className="grid gap-4">
+          <ChartCard title="Module coverage">
             {mode === "table" ? (
               <TableGraph data={data.phaseTrend} />
             ) : mode === "bar" ? (

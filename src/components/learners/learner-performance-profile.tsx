@@ -79,7 +79,7 @@ export function LearnerPerformanceProfile({
     data.guardians.find((guardian) => guardian.is_primary) ?? data.guardians[0];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <Link
         className="inline-flex items-center gap-2 text-sm font-bold text-skybrand-600 hover:text-navy-900"
         href={backHref}
@@ -88,8 +88,8 @@ export function LearnerPerformanceProfile({
         Back to learners
       </Link>
 
-      <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-soft">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+      <section className="rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-soft">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <p className="text-xs font-bold uppercase text-skybrand-600">
               Learner profile
@@ -161,11 +161,11 @@ export function LearnerPerformanceProfile({
         ))}
       </div>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
         <h2 className="font-display text-xl font-extrabold text-navy-950">
           Enrollment history
         </h2>
-        <div className="mt-5 grid gap-3 lg:grid-cols-2">
+        <div className="mt-5 grid gap-3">
           {data.enrollments.map((enrollment) => (
             <article
               className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
@@ -188,8 +188,8 @@ export function LearnerPerformanceProfile({
         </div>
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <div className="grid gap-4">
+        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
           <h2 className="font-display text-xl font-extrabold text-navy-950">
             Individual attendance
           </h2>
@@ -236,7 +236,7 @@ export function LearnerPerformanceProfile({
           )}
         </section>
 
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
           <h2 className="font-display text-xl font-extrabold text-navy-950">
             Academic performance
           </h2>
@@ -282,7 +282,7 @@ export function LearnerPerformanceProfile({
         </section>
       </div>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex items-start gap-3">
           <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
             <Shield size={24} />
@@ -292,7 +292,7 @@ export function LearnerPerformanceProfile({
               Literacy and numeracy
             </h2>
             {data.literacy.length ? (
-              <div className="mt-4 grid gap-3 md:grid-cols-2">
+              <div className="mt-4 grid gap-3">
                 {data.literacy.map((record) => (
                   <article
                     className="rounded-2xl border border-slate-200 bg-slate-50 p-4"

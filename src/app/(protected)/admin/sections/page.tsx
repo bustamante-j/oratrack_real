@@ -156,10 +156,9 @@ export default async function SectionsPage() {
   const setupReady = schoolYears.length > 0 && gradeLevels.length > 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">Phase 4</p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Sections and subjects
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -171,7 +170,7 @@ export default async function SectionsPage() {
         </details>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+      <div className="grid gap-4">
         <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
           <div className="flex items-start gap-3">
             <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
@@ -189,7 +188,7 @@ export default async function SectionsPage() {
             </div>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-4">
             <MetricStrip
               items={[
                 { label: "School years", value: schoolYears.length },
@@ -227,7 +226,7 @@ export default async function SectionsPage() {
       </div>
 
       {setupReady ? (
-        <div className="grid gap-6 xl:grid-cols-3">
+        <div className="grid gap-4">
           <ActionDisclosure
             icon={<BookOpen size={17} />}
             meta="Code and grade"
@@ -497,7 +496,7 @@ export default async function SectionsPage() {
         </div>
 
         {subjects.length ? (
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {subjects.map((subject) => (
               <div
                 className="rounded-lg border border-slate-200 bg-slate-50 p-4"

@@ -128,12 +128,9 @@ export default async function TeacherLessonPlansPage() {
   ).length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">
-          Phase 14
-        </p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Lesson plans
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -161,7 +158,7 @@ export default async function TeacherLessonPlansPage() {
       >
         {years.length ? (
           <form action={uploadLessonPlanAction} className="grid gap-4">
-            <div className="grid gap-4 lg:grid-cols-3">
+            <div className="grid gap-4">
               <label>
                 <span className="label">School year</span>
                 <select className="input" name="schoolYearId" required>
@@ -239,7 +236,7 @@ export default async function TeacherLessonPlansPage() {
         </div>
 
         {lessonPlans.length ? (
-          <div className="mt-6 grid gap-4">
+          <div className="mt-4 grid gap-4">
             {lessonPlans.map((plan) => {
               const file = plan.file_id ? fileById.get(plan.file_id) : null;
               const subject = plan.subject_id
@@ -330,7 +327,7 @@ export default async function TeacherLessonPlansPage() {
             })}
           </div>
         ) : (
-          <div className="mt-6">
+          <div className="mt-4">
             <EmptyState
               message="Uploaded lesson plans will appear here with review status and download links."
               title="No lesson plans uploaded"

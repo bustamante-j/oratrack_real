@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { canOpenRoleArea, getRoleLandingPath } from "@/lib/auth/permissions";
 import { isSupabaseConfigured } from "@/lib/env";
+import { getAvatarUrl } from "@/lib/profile/avatar";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { AppRole } from "@/types/domain";
 
@@ -14,6 +15,7 @@ type ProfileRecord = {
   full_name: string | null;
   role: AppRole;
   status: "active" | "inactive";
+  avatar_path: string | null;
 };
 
 export type AuthProfile = {
@@ -22,6 +24,8 @@ export type AuthProfile = {
   fullName: string;
   role: AppRole;
   status: "active" | "inactive";
+  avatarPath: string | null;
+  avatarUrl: string | null;
 };
 
 export type SessionState =
@@ -45,7 +49,7 @@ export const getSessionProfile = cache(async (): Promise<SessionState> => {
 
   const { data } = await supabase
     .from("profiles")
-    .select("user_id,email,full_name,role,status")
+    .select("user_id,email,full_name,role,status,avatar_path")
     .eq("user_id", user.id)
     .single();
   const profile = data as unknown as ProfileRecord | null;
@@ -62,6 +66,8 @@ export const getSessionProfile = cache(async (): Promise<SessionState> => {
       fullName: profile.full_name ?? user.email ?? "Staff user",
       role: profile.role,
       status: profile.status,
+      avatarPath: profile.avatar_path,
+      avatarUrl: getAvatarUrl(profile.avatar_path),
     },
   };
 });

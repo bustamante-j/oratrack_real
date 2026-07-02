@@ -11,8 +11,7 @@ type MetricStripProps = {
 };
 
 export function MetricStrip({ columns = "four", items }: MetricStripProps) {
-  const columnClass =
-    columns === "three" ? "sm:grid-cols-3" : "sm:grid-cols-2 xl:grid-cols-4";
+  const columnClass = columns === "three" ? "sm:grid-cols-3" : "sm:grid-cols-2";
   const numericItems = items
     .map((item) => {
       const value =

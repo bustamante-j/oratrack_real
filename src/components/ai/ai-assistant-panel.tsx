@@ -58,20 +58,17 @@ export function AiAssistantPanel({
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">
-          Phase 12
-        </p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           {title}
         </h1>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+      <div className="grid gap-4">
         <form
           action={action}
-          className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft"
+          className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft"
         >
           <div className="flex items-start gap-3">
             <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
@@ -84,7 +81,7 @@ export function AiAssistantPanel({
             </div>
           </div>
 
-          <div className="mt-6 grid gap-4">
+          <div className="mt-4 grid gap-4">
             <label>
               <span className="label">Intent</span>
               <select className="input" name="intent" required>
@@ -165,7 +162,7 @@ export function AiAssistantPanel({
           </div>
         </form>
 
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
           <div className="flex items-start gap-3">
             <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
               <ClipboardCheck size={24} />
@@ -177,7 +174,7 @@ export function AiAssistantPanel({
             </div>
           </div>
 
-          <pre className="mt-6 min-h-72 whitespace-pre-wrap rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm leading-7 text-slate-700">
+          <pre className="mt-4 min-h-72 whitespace-pre-wrap rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm leading-7 text-slate-700">
             {state.draft ?? ""}
           </pre>
           {state.notice ? (
@@ -193,7 +190,7 @@ export function AiAssistantPanel({
         </section>
       </div>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
         <h2 className="font-display text-xl font-extrabold text-navy-950">
           Recent AI activity
         </h2>

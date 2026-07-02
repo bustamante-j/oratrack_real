@@ -73,7 +73,7 @@ export function EventDashboard({
   const upcomingPublished = publishedEvents.slice(0, 8);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div>
         <p className="text-xs font-bold uppercase text-skybrand-600">
           Event calendar
@@ -104,8 +104,8 @@ export function EventDashboard({
         ))}
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <div className="grid gap-4">
+        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
           <div className="flex items-start gap-3">
             <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
               <CalendarPlus size={24} />
@@ -117,7 +117,7 @@ export function EventDashboard({
             </div>
           </div>
 
-          <form action={submitPublicEventAction} className="mt-6 grid gap-4">
+          <form action={submitPublicEventAction} className="mt-4 grid gap-4">
             <label>
               <span className="label">Title</span>
               <input className="input" name="title" required />
@@ -152,7 +152,7 @@ export function EventDashboard({
           </form>
         </section>
 
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
           <div className="flex items-start gap-3">
             <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
               <CalendarCheck2 size={24} />
@@ -165,7 +165,7 @@ export function EventDashboard({
           </div>
 
           {upcomingPublished.length ? (
-            <div className="mt-6 grid gap-3">
+            <div className="mt-4 grid gap-3">
               {upcomingPublished.map((event, index) => (
                 <EventRow
                   event={event}
@@ -177,14 +177,14 @@ export function EventDashboard({
               ))}
             </div>
           ) : (
-            <p className="mt-6 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+            <p className="mt-4 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
               No approved upcoming events yet.
             </p>
           )}
         </section>
       </div>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
+      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
         <div className="flex items-start gap-3">
           <span className="grid size-12 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
             <Clock3 size={24} />
@@ -197,7 +197,7 @@ export function EventDashboard({
         </div>
 
         {visiblePending.length ? (
-          <div className="mt-6 grid gap-3 lg:grid-cols-2">
+          <div className="mt-4 grid gap-3">
             {visiblePending.map((event, index) => (
               <EventRow
                 event={event}
@@ -209,7 +209,7 @@ export function EventDashboard({
             ))}
           </div>
         ) : (
-          <p className="mt-6 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+          <p className="mt-4 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
             No pending events to review.
           </p>
         )}

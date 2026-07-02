@@ -13,10 +13,9 @@ export function ModulePage({
   if (!module) notFound();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <Badge tone="emerald">{module.phase}</Badge>
-        <h1 className="mt-4 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           {module.title}
         </h1>
         <details className="mt-3 max-w-3xl">
@@ -29,7 +28,7 @@ export function ModulePage({
         </details>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_0.8fr]">
+      <div className="grid gap-4">
         <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
           <h2 className="font-display font-extrabold text-navy-950">
             Expected workflow

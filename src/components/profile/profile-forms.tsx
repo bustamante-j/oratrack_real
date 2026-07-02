@@ -1,15 +1,17 @@
 "use client";
 
 import { useActionState } from "react";
-import { KeyRound, Save } from "lucide-react";
+import { ImageUp, KeyRound, Save } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
   changeOwnPasswordAction,
+  uploadOwnAvatarAction,
   updateOwnProfileAction,
 } from "@/lib/profile/actions";
 
 type ProfileFormData = {
+  avatarUrl: string | null;
   fullName: string;
   phone: string;
 };
@@ -27,19 +29,64 @@ export function ProfileForms({ profile }: { profile: ProfileFormData }) {
     updateOwnProfileAction,
     {},
   );
+  const [avatarState, avatarAction, avatarPending] = useActionState(
+    uploadOwnAvatarAction,
+    {},
+  );
   const [passwordState, passwordAction, passwordPending] = useActionState(
     changeOwnPasswordAction,
     {},
   );
 
   return (
-    <div className="grid gap-6 xl:grid-cols-2">
+    <div className="grid gap-4">
+      <form
+        action={avatarAction}
+        className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span
+              className="grid size-11 place-items-center overflow-hidden rounded-lg bg-skybrand-50 bg-cover bg-center text-skybrand-600"
+              style={
+                profile.avatarUrl
+                  ? { backgroundImage: `url(${profile.avatarUrl})` }
+                  : undefined
+              }
+            >
+              {profile.avatarUrl ? null : <ImageUp size={21} />}
+            </span>
+            <h2 className="font-display text-lg font-extrabold text-navy-950">
+              Profile photo
+            </h2>
+          </div>
+          <label className="min-w-[min(100%,18rem)]">
+            <span className="label">Image</span>
+            <input
+              accept="image/jpeg,image/png,image/webp"
+              className="input"
+              name="avatar"
+              required
+              type="file"
+            />
+          </label>
+          <Button disabled={avatarPending} type="submit">
+            {avatarPending ? "Uploading..." : "Upload"}
+          </Button>
+        </div>
+        {avatarState.message ? (
+          <p className="mt-3 rounded-lg bg-skybrand-50 px-3 py-2 text-sm font-semibold text-navy-900">
+            {avatarState.message}
+          </p>
+        ) : null}
+      </form>
+
       <form
         action={profileAction}
-        className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft"
+        className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft"
       >
         <div className="flex items-start gap-3">
-          <span className="grid size-11 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+          <span className="grid size-10 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
             <Save size={21} />
           </span>
           <div>
@@ -49,7 +96,7 @@ export function ProfileForms({ profile }: { profile: ProfileFormData }) {
           </div>
         </div>
 
-        <div className="mt-5 grid gap-4">
+        <div className="mt-4 grid gap-3">
           <label>
             <span className="label">Full name</span>
             <input
@@ -77,17 +124,17 @@ export function ProfileForms({ profile }: { profile: ProfileFormData }) {
           </p>
         ) : null}
 
-        <Button className="mt-6" disabled={profilePending} type="submit">
+        <Button className="mt-4" disabled={profilePending} type="submit">
           {profilePending ? "Saving..." : "Save profile"}
         </Button>
       </form>
 
       <form
         action={passwordAction}
-        className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft"
+        className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft"
       >
         <div className="flex items-start gap-3">
-          <span className="grid size-11 place-items-center rounded-2xl bg-skybrand-50 text-skybrand-600">
+          <span className="grid size-10 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
             <KeyRound size={21} />
           </span>
           <div>
@@ -97,7 +144,7 @@ export function ProfileForms({ profile }: { profile: ProfileFormData }) {
           </div>
         </div>
 
-        <div className="mt-5 grid gap-4">
+        <div className="mt-4 grid gap-3">
           <label>
             <span className="label">Current password</span>
             <input
@@ -141,7 +188,7 @@ export function ProfileForms({ profile }: { profile: ProfileFormData }) {
           </p>
         ) : null}
 
-        <Button className="mt-6" disabled={passwordPending} type="submit">
+        <Button className="mt-4" disabled={passwordPending} type="submit">
           {passwordPending ? "Changing..." : "Change password"}
         </Button>
       </form>

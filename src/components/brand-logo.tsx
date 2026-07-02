@@ -7,11 +7,13 @@ export function BrandLogo({
   inverse = false,
   className,
   markClassName,
+  showText = true,
 }: {
   compact?: boolean;
   inverse?: boolean;
   className?: string;
   markClassName?: string;
+  showText?: boolean;
 }) {
   return (
     <span className={cn("inline-flex items-center gap-3", className)}>
@@ -31,15 +33,17 @@ export function BrandLogo({
           width={96}
         />
       </span>
-      <span
-        className={cn(
-          "font-display text-xl font-extrabold",
-          compact ? "text-xl" : "text-xl sm:text-2xl",
-          inverse ? "text-white" : "text-navy-950",
-        )}
-      >
-        ORATRACK
-      </span>
+      {showText ? (
+        <span
+          className={cn(
+            "font-display text-xl font-extrabold",
+            compact ? "text-xl" : "text-xl sm:text-2xl",
+            inverse ? "text-white" : "text-navy-950",
+          )}
+        >
+          ORATRACK
+        </span>
+      ) : null}
     </span>
   );
 }

@@ -231,12 +231,9 @@ export default async function LiteracyNumeracyPage({
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">
-          Phase 10
-        </p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Literacy and numeracy
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -310,7 +307,7 @@ export default async function LiteracyNumeracyPage({
             {selectedSection && selectedEnrollments.length ? (
               <form
                 action={saveLiteracyNumeracySheetAction}
-                className="mt-6 overflow-x-auto rounded-lg border border-slate-200"
+                className="mt-4 overflow-x-auto rounded-lg border border-slate-200"
               >
                 <input
                   name="sectionId"
@@ -401,7 +398,7 @@ export default async function LiteracyNumeracyPage({
                 </div>
               </form>
             ) : (
-              <div className="mt-6">
+              <div className="mt-4">
                 <EmptyState
                   message="Enroll learners into this advisory section before encoding ratings."
                   title="No learners in section"
@@ -410,7 +407,7 @@ export default async function LiteracyNumeracyPage({
             )}
           </section>
 
-          <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+          <div className="grid gap-4">
             <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
                 <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
@@ -423,7 +420,7 @@ export default async function LiteracyNumeracyPage({
                 </div>
               </div>
 
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 {[
                   ["Literacy", literacyCounts],
                   ["Numeracy", numeracyCounts],
@@ -470,7 +467,7 @@ export default async function LiteracyNumeracyPage({
               </div>
 
               {lowRows.length ? (
-                <div className="mt-6 grid gap-3 md:grid-cols-2">
+                <div className="mt-4 grid gap-3">
                   {lowRows.slice(0, 8).map((row) => (
                     <article
                       className="rounded-lg border border-amber-200 bg-amber-50 p-4"
@@ -497,7 +494,7 @@ export default async function LiteracyNumeracyPage({
                   ))}
                 </div>
               ) : (
-                <div className="mt-6">
+                <div className="mt-4">
                   <EmptyState
                     message="No encoded beginning or developing ratings in this section."
                     title="No focus records"

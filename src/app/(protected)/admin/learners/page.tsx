@@ -224,10 +224,9 @@ export default async function LearnersPage({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">Phase 6</p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Learner repository
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -248,7 +247,7 @@ export default async function LearnersPage({
         ]}
       />
 
-      <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid gap-4">
         <ActionDisclosure
           icon={<UserPlus size={17} />}
           meta="Identity and guardian"
@@ -337,7 +336,7 @@ export default async function LearnersPage({
             </div>
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-4 flex flex-wrap gap-3">
             <ButtonLink
               href="/api/templates/learner-import"
               variant="secondary"
@@ -398,7 +397,7 @@ export default async function LearnersPage({
           </div>
         </div>
 
-        <div className="mt-6 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+        <div className="mt-4 grid gap-4">
           <ActionDisclosure
             className="bg-slate-50 shadow-none"
             icon={<GraduationCap size={17} />}
@@ -605,10 +604,10 @@ export default async function LearnersPage({
         </div>
 
         {filteredLearners.length ? (
-          <div className="mt-6">
+          <div className="mt-4">
             <ViewModePanel
               analytics={
-                <div className="grid gap-5 lg:grid-cols-2">
+                <div className="grid gap-4">
                   <AnalyticsSummary
                     items={[
                       {
@@ -681,7 +680,7 @@ export default async function LearnersPage({
               }
               label="Learner view"
               cards={
-                <div className="grid gap-4 xl:grid-cols-2">
+                <div className="grid gap-4">
                   {filteredLearners.map((learner) => {
                     const learnerEnrollments =
                       enrollmentsByLearner.get(learner.id) ?? [];
@@ -1189,7 +1188,7 @@ export default async function LearnersPage({
             />
           </div>
         ) : (
-          <div className="mt-6">
+          <div className="mt-4">
             <EmptyState
               message="No learner records match the current filter."
               title="No learners found"

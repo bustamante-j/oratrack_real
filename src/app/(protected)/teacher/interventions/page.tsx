@@ -254,12 +254,9 @@ export default async function InterventionsPage({
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">
-          Phase 11
-        </p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Interventions
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -280,7 +277,7 @@ export default async function InterventionsPage({
         ]}
       />
 
-      <div className="grid gap-6 xl:grid-cols-[0.82fr_1.18fr]">
+      <div className="grid gap-4">
         <ActionDisclosure
           icon={<ClipboardPlus size={17} />}
           meta="Learner support"
@@ -422,7 +419,7 @@ export default async function InterventionsPage({
           </div>
 
           {filteredInterventions.length ? (
-            <div className="mt-6 grid gap-4">
+            <div className="mt-4 grid gap-4">
               {filteredInterventions.map((intervention) => {
                 const learner = learnerById.get(intervention.learner_id);
                 const enrollment = intervention.enrollment_id
@@ -580,7 +577,7 @@ export default async function InterventionsPage({
               })}
             </div>
           ) : (
-            <div className="mt-6">
+            <div className="mt-4">
               <EmptyState
                 message="No intervention records match the current filter."
                 title="No interventions found"

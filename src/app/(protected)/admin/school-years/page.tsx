@@ -70,10 +70,9 @@ export default async function SchoolYearsPage() {
   }, new Map<string, GradePeriod[]>());
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">Phase 4</p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           School years
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -85,7 +84,7 @@ export default async function SchoolYearsPage() {
         </details>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[0.82fr_1.18fr]">
+      <div className="grid gap-4">
         <ActionDisclosure
           icon={<CalendarDays size={17} />}
           meta="Name and dates"
@@ -250,7 +249,7 @@ export default async function SchoolYearsPage() {
         </div>
 
         {schoolYears.length ? (
-          <div className="mt-5 grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="mt-5 grid gap-4">
             <ActionDisclosure
               className="bg-slate-50 shadow-none"
               icon={<BookOpenCheck size={17} />}

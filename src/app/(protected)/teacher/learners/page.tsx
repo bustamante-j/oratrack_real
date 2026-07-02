@@ -196,10 +196,9 @@ export default async function TeacherLearnersPage({
     : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">Phase 6</p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Assigned learners
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -261,10 +260,10 @@ export default async function TeacherLearnersPage({
         </div>
 
         {filteredLearners.length ? (
-          <div className="mt-6">
+          <div className="mt-4">
             <ViewModePanel
               analytics={
-                <div className="grid gap-5 lg:grid-cols-2">
+                <div className="grid gap-4">
                   <AnalyticsSummary
                     items={[
                       {
@@ -343,7 +342,7 @@ export default async function TeacherLearnersPage({
               }
               label="Learner view"
               cards={
-                <div className="grid gap-4 xl:grid-cols-2">
+                <div className="grid gap-4">
                   {filteredLearners.map((learner) => {
                     const learnerEnrollments =
                       enrollmentsByLearner.get(learner.id) ?? [];
@@ -568,7 +567,7 @@ export default async function TeacherLearnersPage({
             />
           </div>
         ) : (
-          <div className="mt-6">
+          <div className="mt-4">
             <EmptyState
               message="No assigned learners match the current filter."
               title="No learners found"

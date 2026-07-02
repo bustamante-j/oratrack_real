@@ -51,14 +51,14 @@ export function DashboardHome({
     summary?.stats ??
     modules.slice(0, 4).map((module) => ({
       label: module.title,
-      value: module.phase,
+      value: String(module.capabilities.length),
       detail: module.summary,
       icon: "SquaresFour",
       tone: "sky" as const,
     }));
   const graphs = summary?.graphs ?? {
     phaseTrend: modules.map((module, index) => ({
-      name: module.phase.replace("Phase ", "P"),
+      name: module.title.split(" ")[0],
       value: index + 1,
     })),
     operationalFocus: modules.slice(0, 5).map((module) => ({
@@ -79,7 +79,7 @@ export function DashboardHome({
     }));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <h1 className="text-balance font-display text-2xl font-extrabold tracking-tight text-navy-950 sm:text-3xl">
@@ -97,7 +97,7 @@ export function DashboardHome({
         ) : null}
       </div>
 
-      <div className="grid gap-x-5 rounded-lg border border-slate-200 bg-white px-4 shadow-soft sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+      <div className="grid gap-x-5 rounded-lg border border-slate-200 bg-white px-4 shadow-soft sm:grid-cols-2 2xl:grid-cols-6">
         {stats.map((stat) => {
           const Icon =
             iconMap[stat.icon as keyof typeof iconMap] ?? SquaresFour;
@@ -158,12 +158,9 @@ export function DashboardHome({
       <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-soft">
         {modules.map((module) => (
           <article
-            className="grid min-w-0 gap-3 border-t border-slate-100 p-4 first:border-t-0 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-center"
+            className="grid min-w-0 gap-3 border-t border-slate-100 p-3 first:border-t-0 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
             key={module.href}
           >
-            <p className="text-xs font-bold uppercase text-skybrand-600">
-              {module.phase}
-            </p>
             <h2 className="text-balance font-display text-sm font-extrabold text-navy-950">
               {module.title}
             </h2>

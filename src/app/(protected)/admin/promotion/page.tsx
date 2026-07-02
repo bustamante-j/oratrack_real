@@ -333,10 +333,9 @@ export default async function PromotionPage() {
   const recentPromotionRows = promotedEnrollments.slice(0, 8);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">Phase 7</p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Promotion and class assignment
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -358,7 +357,7 @@ export default async function PromotionPage() {
       />
 
       {setupReady ? (
-        <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+        <div className="grid gap-4">
           <ActionDisclosure
             icon={<GraduationCap size={17} />}
             meta="Cohort action"
@@ -475,7 +474,7 @@ export default async function PromotionPage() {
             </div>
 
             {cohortRows.length ? (
-              <div className="mt-6 overflow-x-auto rounded-lg border border-slate-200">
+              <div className="mt-4 overflow-x-auto rounded-lg border border-slate-200">
                 <table className="min-w-[720px] text-left text-sm">
                   <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
                     <tr>
@@ -511,7 +510,7 @@ export default async function PromotionPage() {
                 </table>
               </div>
             ) : (
-              <div className="mt-6">
+              <div className="mt-4">
                 <EmptyState
                   message="Add active learner enrollments before running promotion."
                   title="No ready cohorts"
@@ -552,7 +551,7 @@ export default async function PromotionPage() {
         </div>
 
         {classLoadRows.length ? (
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {classLoadRows.slice(0, 12).map((row) => {
               const section = row.sectionId
                 ? sectionById.get(row.sectionId)
@@ -599,7 +598,7 @@ export default async function PromotionPage() {
             })}
           </div>
         ) : (
-          <div className="mt-6">
+          <div className="mt-4">
             <EmptyState
               message="Enroll learners before reviewing class assignment load."
               title="No enrolled classes"
@@ -621,7 +620,7 @@ export default async function PromotionPage() {
         </div>
 
         {recentPromotionRows.length ? (
-          <div className="mt-6 overflow-x-auto rounded-lg border border-slate-200">
+          <div className="mt-4 overflow-x-auto rounded-lg border border-slate-200">
             <table className="min-w-[920px] text-left text-sm">
               <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
                 <tr>
@@ -700,7 +699,7 @@ export default async function PromotionPage() {
             </table>
           </div>
         ) : (
-          <div className="mt-6">
+          <div className="mt-4">
             <EmptyState
               message="Promotion history appears after a batch is saved."
               title="No promotions yet"

@@ -187,12 +187,9 @@ export default async function TeacherCertificatesPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">
-          Phase 13
-        </p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Certificates
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -285,7 +282,7 @@ export default async function TeacherCertificatesPage() {
         </div>
 
         {certificates.length ? (
-          <div className="mt-6 grid gap-3">
+          <div className="mt-4 grid gap-3">
             {certificates.map((certificate) => {
               const enrollment = enrollmentById.get(certificate.enrollment_id);
 
@@ -326,7 +323,7 @@ export default async function TeacherCertificatesPage() {
             })}
           </div>
         ) : (
-          <div className="mt-6">
+          <div className="mt-4">
             <EmptyState
               message="Generated certificates will appear here after your first certificate is created."
               title="No certificate history"

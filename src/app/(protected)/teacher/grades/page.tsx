@@ -325,10 +325,9 @@ export default async function GradesPage({
       : "No subject assignment";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">Phase 9</p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Grades
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -354,7 +353,7 @@ export default async function GradesPage({
 
       {assignments.length ? (
         <>
-          <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+          <div className="grid gap-4">
             <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
                 <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
@@ -371,7 +370,7 @@ export default async function GradesPage({
                 </div>
               </div>
 
-              <form className="mt-6 grid gap-4 md:grid-cols-[1fr_1fr_auto]">
+              <form className="mt-4 grid gap-4 md:grid-cols-[1fr_1fr_auto]">
                 <label>
                   <span className="label">Assignment</span>
                   <select
@@ -427,7 +426,7 @@ export default async function GradesPage({
               selectedEnrollments.length ? (
                 <form
                   action={saveGradeRecordsAction}
-                  className="mt-6 overflow-x-auto rounded-lg border border-slate-200"
+                  className="mt-4 overflow-x-auto rounded-lg border border-slate-200"
                 >
                   <input
                     name="assignmentId"
@@ -499,7 +498,7 @@ export default async function GradesPage({
                   </div>
                 </form>
               ) : (
-                <div className="mt-6">
+                <div className="mt-4">
                   <EmptyState
                     action={
                       !selectedGradePeriods.length ? (
@@ -538,7 +537,7 @@ export default async function GradesPage({
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-wrap gap-3">
+              <div className="mt-4 flex flex-wrap gap-3">
                 <ButtonLink
                   href="/api/templates/grade-import"
                   variant="secondary"
@@ -584,7 +583,7 @@ export default async function GradesPage({
                 </ActionDisclosure>
               ) : null}
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 {[
                   ["Missing", missingCount],
                   [
@@ -617,7 +616,7 @@ export default async function GradesPage({
             </section>
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+          <div className="grid gap-4">
             <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
                 <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
@@ -631,7 +630,7 @@ export default async function GradesPage({
               </div>
 
               {subjectAverages.length ? (
-                <div className="mt-6 grid gap-3">
+                <div className="mt-4 grid gap-3">
                   {subjectAverages.map((row) => (
                     <div
                       className="rounded-lg border border-slate-200 bg-slate-50 p-4"
@@ -658,7 +657,7 @@ export default async function GradesPage({
                   ))}
                 </div>
               ) : (
-                <div className="mt-6">
+                <div className="mt-4">
                   <EmptyState
                     message="Period averages appear once grade periods and records exist."
                     title="No averages yet"
@@ -680,7 +679,7 @@ export default async function GradesPage({
               </div>
 
               {recentBatches.length ? (
-                <div className="mt-6 overflow-x-auto rounded-lg border border-slate-200">
+                <div className="mt-4 overflow-x-auto rounded-lg border border-slate-200">
                   <table className="min-w-[760px] text-left text-sm">
                     <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
                       <tr>
@@ -718,7 +717,7 @@ export default async function GradesPage({
                   </table>
                 </div>
               ) : (
-                <div className="mt-6">
+                <div className="mt-4">
                   <EmptyState
                     message="Successful Excel imports will appear here."
                     title="No import batches"

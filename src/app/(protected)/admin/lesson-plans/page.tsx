@@ -150,12 +150,9 @@ export default async function AdminLessonPlansPage() {
   ).length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">
-          Phase 14
-        </p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Lesson plan review
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -189,7 +186,7 @@ export default async function AdminLessonPlansPage() {
         </div>
 
         {lessonPlans.length ? (
-          <div className="mt-6 grid gap-4">
+          <div className="mt-4 grid gap-4">
             {lessonPlans.map((plan) => {
               const file = plan.file_id ? fileById.get(plan.file_id) : null;
               const subject = plan.subject_id
@@ -294,7 +291,7 @@ export default async function AdminLessonPlansPage() {
             })}
           </div>
         ) : (
-          <div className="mt-6">
+          <div className="mt-4">
             <EmptyState
               message="Teacher uploads will appear here after lesson plans are submitted."
               title="No lesson plans submitted"

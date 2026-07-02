@@ -189,10 +189,9 @@ export default async function UsersPage() {
   ).length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">Phase 5</p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Teacher accounts
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -218,10 +217,7 @@ export default async function UsersPage() {
         meta="Name, email, role"
         title="Create staff account"
       >
-        <form
-          action={createTeacherAccountAction}
-          className="grid gap-4 lg:grid-cols-4"
-        >
+        <form action={createTeacherAccountAction} className="grid gap-4">
           <label className="lg:col-span-2">
             <span className="label">Full name</span>
             <input className="input" name="fullName" required />
@@ -351,7 +347,7 @@ export default async function UsersPage() {
                   </summary>
 
                   <div className="border-t border-slate-100 px-4 pb-5 pt-4">
-                    <div className="grid gap-5 xl:grid-cols-[0.85fr_1.15fr]">
+                    <div className="grid gap-5">
                       <dl className="grid gap-3 text-sm sm:grid-cols-2">
                         {[
                           [
@@ -437,7 +433,7 @@ export default async function UsersPage() {
                       </div>
                     </div>
 
-                    <div className="mt-5 grid gap-4 xl:grid-cols-2">
+                    <div className="mt-5 grid gap-4">
                       <details className="border-t border-slate-100 pt-4">
                         <summary className="inline-flex cursor-pointer items-center gap-2 text-sm font-bold text-navy-950">
                           <UserCog size={17} />
@@ -581,7 +577,7 @@ export default async function UsersPage() {
             })}
           </div>
         ) : (
-          <div className="mt-6">
+          <div className="mt-4">
             <EmptyState
               message="Create the first teacher account after the Supabase service role key is configured on the server."
               title="No staff accounts yet"

@@ -379,12 +379,9 @@ export default async function AdminAnalyticsPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">
-          Phase 15
-        </p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Analytics dashboard
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -409,7 +406,7 @@ export default async function AdminAnalyticsPage() {
             ]}
           />
 
-          <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+          <div className="grid gap-4">
             <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
               <div className="flex items-start gap-3">
                 <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
@@ -422,7 +419,7 @@ export default async function AdminAnalyticsPage() {
                 </div>
               </div>
 
-              <div className="mt-6 grid gap-4">
+              <div className="mt-4 grid gap-4">
                 {gradeCards
                   .filter((card) => card.enrollmentCount > 0)
                   .map((card) => (
@@ -487,7 +484,7 @@ export default async function AdminAnalyticsPage() {
               </div>
 
               {watchlist.length ? (
-                <div className="mt-6 grid gap-3">
+                <div className="mt-4 grid gap-3">
                   {watchlist.map(({ learner, reasons }) => (
                     <article
                       className="rounded-lg border border-slate-200 bg-slate-50 p-4"
@@ -513,7 +510,7 @@ export default async function AdminAnalyticsPage() {
                   ))}
                 </div>
               ) : (
-                <p className="mt-6 rounded-lg bg-slate-50 p-4 text-sm text-slate-600">
+                <p className="mt-4 rounded-lg bg-slate-50 p-4 text-sm text-slate-600">
                   No learner risk signals are visible from the current data.
                 </p>
               )}

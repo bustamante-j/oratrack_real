@@ -197,12 +197,9 @@ export default async function AdminCertificatesPage() {
   ).length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">
-          Phase 13
-        </p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Certificates
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -223,7 +220,7 @@ export default async function AdminCertificatesPage() {
         ]}
       />
 
-      <div className="grid gap-6 xl:grid-cols-[0.82fr_1.18fr]">
+      <div className="grid gap-4">
         <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
           <div className="flex items-center justify-between gap-3">
             <h2 className="font-display text-xl font-extrabold text-navy-950">
@@ -271,7 +268,7 @@ export default async function AdminCertificatesPage() {
             </form>
           </ActionDisclosure>
 
-          <div className="mt-6 grid gap-3">
+          <div className="mt-4 grid gap-3">
             {templates.slice(0, 5).map((template) => (
               <article
                 className="rounded-lg border border-slate-200 bg-slate-50 p-4"
@@ -368,7 +365,7 @@ export default async function AdminCertificatesPage() {
         </div>
 
         {certificates.length ? (
-          <div className="mt-6 grid gap-3">
+          <div className="mt-4 grid gap-3">
             {certificates.map((certificate) => {
               const enrollment = enrollmentById.get(certificate.enrollment_id);
 
@@ -409,7 +406,7 @@ export default async function AdminCertificatesPage() {
             })}
           </div>
         ) : (
-          <div className="mt-6">
+          <div className="mt-4">
             <EmptyState
               message="Generated certificates will appear here after the first PDF is created."
               title="No certificates generated"

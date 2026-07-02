@@ -4,6 +4,7 @@ import { ProfileForms } from "@/components/profile/profile-forms";
 import { EmptyState } from "@/components/ui/empty-state";
 import { requireRole } from "@/lib/auth/session";
 import { roleLabels } from "@/lib/constants";
+import { getAvatarUrl } from "@/lib/profile/avatar";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { AppRole } from "@/types/domain";
 
@@ -14,6 +15,7 @@ type ProfileRecord = {
   role: AppRole;
   status: "active" | "inactive";
   phone: string | null;
+  avatar_path: string | null;
 };
 
 type TeacherProfileRecord = {
@@ -45,7 +47,7 @@ export async function ProfileSettings({
   const [profileResult, teacherProfileResult] = await Promise.all([
     supabase
       .from("profiles")
-      .select("user_id,email,full_name,role,status,phone")
+      .select("user_id,email,full_name,role,status,phone,avatar_path")
       .eq("user_id", session.profile.userId)
       .single(),
     supabase
@@ -68,16 +70,15 @@ export async function ProfileSettings({
     teacherProfileResult.data as TeacherProfileRecord | null;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">Phase 5</p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           {title}
         </h1>
       </div>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-soft">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-navy-900 px-3 py-1 text-xs font-bold text-white">
@@ -87,7 +88,7 @@ export async function ProfileSettings({
                 {profile.status}
               </span>
             </div>
-            <h2 className="mt-4 font-display text-2xl font-extrabold text-navy-950">
+            <h2 className="mt-3 font-display text-xl font-extrabold text-navy-950">
               {profile.full_name || profile.email || "Staff account"}
             </h2>
             <p className="mt-1 text-sm text-slate-600">
@@ -95,8 +96,8 @@ export async function ProfileSettings({
             </p>
           </div>
 
-          <div className="grid gap-3 text-sm text-slate-600 sm:grid-cols-2 lg:min-w-[28rem]">
-            <div className="rounded-2xl bg-slate-50 p-4">
+          <div className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2 lg:min-w-[28rem]">
+            <div className="rounded-lg bg-slate-50 p-3">
               <Mail className="text-skybrand-600" size={18} />
               <p className="mt-2 text-xs font-bold uppercase text-slate-500">
                 Phone
@@ -105,7 +106,7 @@ export async function ProfileSettings({
                 {profile.phone || "Unassigned"}
               </p>
             </div>
-            <div className="rounded-2xl bg-slate-50 p-4">
+            <div className="rounded-lg bg-slate-50 p-3">
               <BadgeCheck className="text-skybrand-600" size={18} />
               <p className="mt-2 text-xs font-bold uppercase text-slate-500">
                 Employee number
@@ -114,7 +115,7 @@ export async function ProfileSettings({
                 {teacherProfile?.employee_number || "Unassigned"}
               </p>
             </div>
-            <div className="rounded-2xl bg-slate-50 p-4">
+            <div className="rounded-lg bg-slate-50 p-3">
               <BriefcaseBusiness className="text-skybrand-600" size={18} />
               <p className="mt-2 text-xs font-bold uppercase text-slate-500">
                 Position
@@ -123,7 +124,7 @@ export async function ProfileSettings({
                 {teacherProfile?.position_title || "Unassigned"}
               </p>
             </div>
-            <div className="rounded-2xl bg-slate-50 p-4">
+            <div className="rounded-lg bg-slate-50 p-3">
               <ShieldCheck className="text-skybrand-600" size={18} />
               <p className="mt-2 text-xs font-bold uppercase text-slate-500">
                 Specialization
@@ -138,6 +139,7 @@ export async function ProfileSettings({
 
       <ProfileForms
         profile={{
+          avatarUrl: getAvatarUrl(profile.avatar_path),
           fullName: profile.full_name ?? "",
           phone: profile.phone ?? "",
         }}

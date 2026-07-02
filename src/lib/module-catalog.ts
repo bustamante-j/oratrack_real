@@ -4,7 +4,6 @@ export const adminModules: ModuleDefinition[] = [
   {
     id: "school-years",
     title: "School years",
-    phase: "Phase 4",
     href: "/admin/school-years",
     summary:
       "Create school years and keep enrollment history separated by year.",
@@ -20,7 +19,6 @@ export const adminModules: ModuleDefinition[] = [
   {
     id: "users",
     title: "Teacher accounts",
-    phase: "Phase 5",
     href: "/admin/users",
     summary: "Create, activate, deactivate, and assign teacher roles.",
     capabilities: [
@@ -38,7 +36,6 @@ export const adminModules: ModuleDefinition[] = [
   {
     id: "sections",
     title: "Sections and subjects",
-    phase: "Phase 4",
     href: "/admin/sections",
     summary:
       "Manage grade levels, sections, advisers, subjects, and subject teachers.",
@@ -53,7 +50,6 @@ export const adminModules: ModuleDefinition[] = [
   {
     id: "learners",
     title: "Learner repository",
-    phase: "Phase 6",
     href: "/admin/learners",
     summary: "Maintain stable learner identity and yearly enrollment records.",
     capabilities: [
@@ -68,7 +64,6 @@ export const adminModules: ModuleDefinition[] = [
   {
     id: "promotion",
     title: "Promotion",
-    phase: "Phase 7",
     href: "/admin/promotion",
     summary:
       "Promote learners into the next school year while preserving history.",
@@ -84,7 +79,6 @@ export const adminModules: ModuleDefinition[] = [
   {
     id: "analytics",
     title: "Analytics dashboard",
-    phase: "Phase 15",
     href: "/admin/analytics",
     summary:
       "School-wide attendance, performance, literacy, numeracy, and risk views.",
@@ -99,7 +93,6 @@ export const adminModules: ModuleDefinition[] = [
   {
     id: "reports",
     title: "Automated reports",
-    phase: "Phase 16",
     href: "/admin/reports",
     summary:
       "Generate attendance, performance, risk, profile, and promotion reports.",
@@ -114,7 +107,6 @@ export const adminModules: ModuleDefinition[] = [
   {
     id: "certificates",
     title: "Certificates",
-    phase: "Phase 13",
     href: "/admin/certificates",
     summary:
       "Manage recognition and completion certificate templates and batches.",
@@ -129,7 +121,6 @@ export const adminModules: ModuleDefinition[] = [
   {
     id: "lesson-plans",
     title: "Lesson plans",
-    phase: "Phase 14",
     href: "/admin/lesson-plans",
     summary: "Review and download private lesson-plan uploads via signed URLs.",
     capabilities: [
@@ -143,7 +134,6 @@ export const adminModules: ModuleDefinition[] = [
   {
     id: "ai",
     title: "AI assistant",
-    phase: "Phase 12",
     href: "/admin/ai",
     summary:
       "Permission-aware summaries, draft narratives, and proposed actions.",
@@ -162,7 +152,6 @@ export const teacherModules: ModuleDefinition[] = [
   {
     id: "learners",
     title: "Assigned learners",
-    phase: "Phase 6",
     href: "/teacher/learners",
     summary:
       "View assigned learner records, histories, and intervention context.",
@@ -177,7 +166,6 @@ export const teacherModules: ModuleDefinition[] = [
   {
     id: "attendance",
     title: "Attendance",
-    phase: "Phase 8",
     href: "/teacher/attendance",
     summary: "Create attendance dates and record AM/PM status per learner.",
     capabilities: [
@@ -191,7 +179,6 @@ export const teacherModules: ModuleDefinition[] = [
   {
     id: "grades",
     title: "Grades",
-    phase: "Phase 9",
     href: "/teacher/grades",
     summary: "Import Excel grades or manually encode subject averages.",
     capabilities: [
@@ -205,7 +192,6 @@ export const teacherModules: ModuleDefinition[] = [
   {
     id: "literacy-numeracy",
     title: "Literacy and numeracy",
-    phase: "Phase 10",
     href: "/teacher/literacy-numeracy",
     summary: "Encode literacy and numeracy ratings and review class summaries.",
     capabilities: [
@@ -219,7 +205,6 @@ export const teacherModules: ModuleDefinition[] = [
   {
     id: "interventions",
     title: "Interventions",
-    phase: "Phase 11",
     href: "/teacher/interventions",
     summary: "Record intervention notes, progress, and follow-up dates.",
     capabilities: [
@@ -233,7 +218,6 @@ export const teacherModules: ModuleDefinition[] = [
   {
     id: "reports",
     title: "Class reports",
-    phase: "Phase 16",
     href: "/teacher/reports",
     summary:
       "Generate class attendance, performance, and learner profile reports.",
@@ -248,7 +232,6 @@ export const teacherModules: ModuleDefinition[] = [
   {
     id: "certificates",
     title: "Certificates",
-    phase: "Phase 13",
     href: "/teacher/certificates",
     summary:
       "Generate recognition or completion certificates for assigned learners.",
@@ -263,7 +246,6 @@ export const teacherModules: ModuleDefinition[] = [
   {
     id: "lesson-plans",
     title: "Lesson plans",
-    phase: "Phase 14",
     href: "/teacher/lesson-plans",
     summary: "Upload, replace, and download private lesson-plan files.",
     capabilities: [
@@ -277,7 +259,6 @@ export const teacherModules: ModuleDefinition[] = [
   {
     id: "ai",
     title: "AI assistant",
-    phase: "Phase 12",
     href: "/teacher/ai",
     summary:
       "Draft parent messages, intervention notes, and class insights safely.",

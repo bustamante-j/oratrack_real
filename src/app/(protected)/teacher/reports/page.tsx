@@ -142,12 +142,9 @@ export default async function TeacherReportsPage() {
   const yearById = new Map(years.map((year) => [year.id, year]));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-skybrand-600">
-          Phase 16
-        </p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold text-navy-950">
+        <h1 className="font-display text-2xl font-extrabold text-navy-950">
           Class reports
         </h1>
         <details className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
@@ -174,7 +171,7 @@ export default async function TeacherReportsPage() {
         title="Export report"
       >
         <form action="/api/reports/export" className="grid gap-4" method="get">
-          <div className="grid gap-4 lg:grid-cols-4">
+          <div className="grid gap-4">
             <label>
               <span className="label">Report type</span>
               <select className="input" name="reportType" required>
@@ -243,7 +240,7 @@ export default async function TeacherReportsPage() {
         </div>
 
         {exports.length ? (
-          <div className="mt-6 grid gap-3">
+          <div className="mt-4 grid gap-3">
             {exports.map((item) => (
               <article
                 className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4"
@@ -266,7 +263,7 @@ export default async function TeacherReportsPage() {
             ))}
           </div>
         ) : (
-          <div className="mt-6">
+          <div className="mt-4">
             <EmptyState
               message="Report exports will appear here after your first PDF is generated."
               title="No report exports"
