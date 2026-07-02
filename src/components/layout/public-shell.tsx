@@ -8,9 +8,13 @@ import { publicNavItems } from "@/lib/navigation";
 export function PublicShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen w-full overflow-hidden bg-white text-slate-800">
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-[#171717]/96 text-white backdrop-blur-xl">
+      <header className="sticky top-0 z-30 border-b border-white/10 bg-navy-950/96 text-white backdrop-blur-xl">
         <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-6 lg:px-8">
-          <Link aria-label="ORATRACK home" className="group min-w-0" href="/">
+          <Link
+            aria-label="Balili Elementary School home"
+            className="group min-w-0"
+            href="/"
+          >
             <BrandLogo
               className="transition duration-300 group-hover:-translate-y-0.5"
               compact
@@ -35,10 +39,10 @@ export function PublicShell({ children }: { children: ReactNode }) {
           </nav>
 
           <Link
-            className="inline-flex min-h-10 shrink-0 items-center bg-[#c8203f] px-4 text-xs font-extrabold uppercase tracking-[0.16em] text-white transition hover:bg-white hover:text-[#171717]"
+            className="inline-flex min-h-10 shrink-0 items-center bg-skybrand-500 px-4 text-xs font-extrabold uppercase tracking-[0.16em] text-white transition hover:bg-white hover:text-navy-950"
             href="/login"
           >
-            Portal
+            Staff portal
           </Link>
         </div>
         <nav
@@ -59,15 +63,15 @@ export function PublicShell({ children }: { children: ReactNode }) {
 
       <main>{children}</main>
 
-      <footer className="bg-[#171717] text-white">
+      <footer className="bg-navy-950 text-white">
         <div className="mx-auto max-w-7xl px-5 py-16 sm:px-6 lg:px-8">
           <div className="grid gap-10 border-b border-white/10 pb-12 md:grid-cols-[1.2fr_.8fr_.8fr]">
             <div>
               <BrandLogo inverse markClassName="rounded-none shadow-none" />
               <p className="mt-5 max-w-md text-sm leading-7 text-slate-300">
-                A public-facing school portal for Balili Elementary School,
-                built around verified identity, approved events, and real
-                learner-support workflows.
+                Balili Elementary School welcomes learners and families to a
+                caring community shaped by curiosity, service, and everyday
+                growth.
               </p>
               <div className="mt-6 text-xs font-bold uppercase tracking-[0.18em] text-white/45">
                 School ID {school.schoolId} / {school.location}

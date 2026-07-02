@@ -14,17 +14,17 @@ const chapters = [
 const programs = [
   {
     label: "Reading",
-    title: "Foundational literacy that moves with each learner.",
+    title: "Building confident readers through daily practice.",
     image: "/assets/program-reading.webp",
   },
   {
     label: "Wellness",
-    title: "Nutrition, movement, and daily routines that support readiness.",
+    title: "Healthy routines that help children come ready to learn.",
     image: "/assets/program-nutrition.webp",
   },
   {
     label: "Culture",
-    title: "Arts, local identity, and community participation.",
+    title: "Creativity, local identity, and community participation.",
     image: "/assets/program-arts.webp",
   },
 ];
@@ -70,9 +70,9 @@ function statRows(
   metrics: Awaited<ReturnType<typeof getHomePageData>>["metrics"],
 ) {
   return [
-    ["Active learners", shortNumber(metrics.activeLearners)],
-    ["Active staff", shortNumber(metrics.activeStaff)],
-    ["Attendance rate", attendanceMetric(metrics.attendanceRate)],
+    ["Enrolled learners", shortNumber(metrics.activeLearners)],
+    ["Teachers and staff", shortNumber(metrics.activeStaff)],
+    ["Attendance", attendanceMetric(metrics.attendanceRate)],
     ["Grade levels", shortNumber(metrics.activeGradeLevels)],
   ] as const;
 }
@@ -105,7 +105,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-[#171717] text-white">
+      <section className="relative isolate overflow-hidden bg-navy-950 text-white">
         <Image
           alt="Balili Elementary School campus"
           className="absolute inset-0 -z-20 h-full w-full object-cover opacity-42"
@@ -113,17 +113,17 @@ export default async function HomePage() {
           priority
           src="/assets/balili-campus-hero.webp"
         />
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_62%_45%,rgba(255,255,255,.13),transparent_24%),linear-gradient(90deg,#171717_0%,rgba(23,23,23,.94)_36%,rgba(23,23,23,.74)_68%,rgba(23,23,23,.96)_100%)]" />
-        <div className="absolute bottom-0 left-0 right-0 -z-10 h-56 bg-gradient-to-t from-[#171717] to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_62%_45%,rgba(142,220,255,.18),transparent_24%),linear-gradient(90deg,#071b33_0%,rgba(7,27,51,.95)_36%,rgba(11,36,71,.78)_68%,rgba(7,27,51,.97)_100%)]" />
+        <div className="absolute bottom-0 left-0 right-0 -z-10 h-56 bg-gradient-to-t from-navy-950 to-transparent" />
 
-        <div className="mx-auto grid min-h-[760px] max-w-7xl grid-cols-1 px-5 py-10 sm:px-6 lg:grid-cols-[4rem_1fr] lg:px-8">
+        <div className="mx-auto grid min-h-[720px] max-w-7xl grid-cols-1 px-5 py-10 sm:px-6 lg:grid-cols-[4rem_1fr] lg:px-8">
           <nav
             aria-label="Landing sections"
             className="hidden flex-col items-center justify-center gap-5 text-sm font-extrabold text-white/35 lg:flex"
           >
             {chapters.map((chapter) => (
               <Link
-                className="transition hover:text-[#c8203f]"
+                className="transition hover:text-skybrand-300"
                 href={chapter.href}
                 key={chapter.number}
               >
@@ -134,27 +134,27 @@ export default async function HomePage() {
 
           <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_.95fr]">
             <div className="relative z-10 max-w-4xl pt-12 lg:pt-0">
-              <p className="text-xs font-extrabold uppercase tracking-[0.32em] text-[#c8203f]">
+              <p className="text-xs font-extrabold uppercase tracking-[0.32em] text-skybrand-200">
                 {school.name}
               </p>
-              <h1 className="mt-6 max-w-5xl font-display text-[clamp(4rem,12vw,9.5rem)] font-extrabold uppercase leading-[.82] text-white">
-                Fuel
-                <span className="block text-white/70">Learning</span>
-                Victory
+              <h1 className="mt-6 max-w-5xl font-display text-[clamp(3.4rem,10vw,8rem)] font-extrabold uppercase leading-[.88] text-white">
+                Learn
+                <span className="block text-skybrand-200">Grow</span>
+                Together
               </h1>
-              <p className="mt-7 max-w-xl text-base font-semibold uppercase leading-7 tracking-wide text-slate-300">
-                A public school portal for real events, learner milestones, and
-                data-informed care in Balili, La Trinidad.
+              <p className="mt-7 max-w-xl text-base font-semibold leading-7 text-slate-200">
+                A welcoming elementary school community where children build
+                confidence, curiosity, and care for others each day.
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
                 <Link
-                  className="inline-flex min-h-11 items-center bg-[#c8203f] px-5 text-sm font-extrabold uppercase tracking-wide text-white transition hover:bg-white hover:text-[#171717]"
+                  className="inline-flex min-h-11 items-center bg-skybrand-500 px-5 text-sm font-extrabold uppercase tracking-wide text-white transition hover:bg-white hover:text-navy-950"
                   href="/events"
                 >
-                  View events
+                  School calendar
                 </Link>
                 <Link
-                  className="inline-flex min-h-11 items-center border border-white/30 px-5 text-sm font-extrabold uppercase tracking-wide text-white transition hover:border-white hover:bg-white hover:text-[#171717]"
+                  className="inline-flex min-h-11 items-center border border-white/30 px-5 text-sm font-extrabold uppercase tracking-wide text-white transition hover:border-white hover:bg-white hover:text-navy-950"
                   href="/login"
                 >
                   Staff portal
@@ -165,19 +165,19 @@ export default async function HomePage() {
             <div className="relative min-h-[34rem] lg:min-h-[44rem]">
               <Image
                 alt="Balili learners and school community"
-                className="absolute bottom-0 right-0 h-[92%] w-[78%] object-cover opacity-95 shadow-[0_40px_110px_rgba(0,0,0,.45)] grayscale-[20%]"
+                className="absolute bottom-0 right-0 h-[92%] w-[78%] object-cover opacity-95 shadow-[0_40px_110px_rgba(7,27,51,.45)]"
                 fill
                 sizes="(min-width: 1024px) 42vw, 90vw"
                 src="/assets/section-family.webp"
               />
               <div className="absolute inset-y-16 left-0 hidden w-[52%] border border-white/10 bg-white/[.05] backdrop-blur-[2px] lg:block" />
-              <div className="absolute bottom-14 left-0 max-w-sm border-l-4 border-[#c8203f] bg-[#171717]/72 px-5 py-4 backdrop-blur-md">
+              <div className="absolute bottom-14 left-0 max-w-sm border-l-4 border-skybrand-400 bg-navy-950/78 px-5 py-4 backdrop-blur-md">
                 <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-white/45">
                   School ID {school.schoolId}
                 </p>
                 <p className="mt-3 text-sm font-bold uppercase leading-6 text-white">
-                  Every record, announcement, and approved calendar item points
-                  back to real school activity.
+                  Serving learners and families in {school.location} with care,
+                  discipline, and community partnership.
                 </p>
               </div>
             </div>
@@ -185,7 +185,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#171717] text-white">
+      <section className="bg-navy-950 text-white">
         <div className="mx-auto grid max-w-7xl border-y border-white/10 px-5 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
           {stats.map(([label, value]) => (
             <div
@@ -204,11 +204,11 @@ export default async function HomePage() {
       <section className="bg-white py-20">
         <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-6 lg:grid-cols-[.82fr_1.18fr] lg:px-8">
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#c8203f]">
-              Public record
+            <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-skybrand-600">
+              Our school
             </p>
-            <h2 className="mt-5 max-w-xl font-display text-5xl font-extrabold uppercase leading-[.92] text-[#171717] sm:text-6xl">
-              Built around real school data.
+            <h2 className="mt-5 max-w-xl font-display text-5xl font-extrabold uppercase leading-[.92] text-navy-950 sm:text-6xl">
+              A place to learn, belong, and grow.
             </h2>
           </div>
           <div className="grid gap-5 text-sm leading-7 text-slate-600 sm:grid-cols-2">
@@ -217,20 +217,20 @@ export default async function HomePage() {
               {school.schoolId}, located in {school.location}.
             </p>
             <p>
-              ORATRACK connects the public site to approved events,
-              announcements, and live school metrics so the landing page does
-              not rely on decorative placeholder content.
+              Families can check school updates, upcoming activities, and
+              reminders from one official online space for the Balili Elementary
+              School community.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="bg-[#f5f7fa] py-20">
+      <section className="bg-skybrand-50 py-20">
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 border-y border-[#171717]/15 py-7">
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 border-y border-navy-950/15 py-7">
             {chapters.map((chapter) => (
               <Link
-                className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#171717] transition hover:text-[#c8203f]"
+                className="text-sm font-extrabold uppercase tracking-[0.2em] text-navy-950 transition hover:text-skybrand-600"
                 href={chapter.href}
                 key={chapter.number}
               >
@@ -244,18 +244,18 @@ export default async function HomePage() {
       <section className="bg-white py-20">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-6 lg:grid-cols-[1.15fr_.85fr] lg:px-8">
           <div>
-            <div className="border-b border-[#171717] pb-5">
-              <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#c8203f]">
+            <div className="border-b border-navy-950 pb-5">
+              <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-skybrand-600">
                 Latest bulletin
               </p>
-              <h2 className="mt-4 font-display text-5xl font-extrabold uppercase leading-none text-[#171717] sm:text-6xl">
+              <h2 className="mt-4 font-display text-5xl font-extrabold uppercase leading-none text-navy-950 sm:text-6xl">
                 School news
               </h2>
             </div>
 
             {lead ? (
               <article className="grid gap-6 py-8 lg:grid-cols-[.92fr_1.08fr]">
-                <div className="relative min-h-[24rem] overflow-hidden bg-[#171717]">
+                <div className="relative min-h-[24rem] overflow-hidden bg-navy-950">
                   <Image
                     alt="Balili school update"
                     className="h-full w-full object-cover opacity-86"
@@ -264,17 +264,17 @@ export default async function HomePage() {
                   />
                 </div>
                 <div className="flex flex-col justify-end">
-                  <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-[#c8203f]">
+                  <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-skybrand-600">
                     {formatPublishedDate(lead.published_at)}
                   </p>
-                  <h3 className="mt-4 font-display text-4xl font-extrabold leading-[.95] text-[#171717]">
+                  <h3 className="mt-4 font-display text-4xl font-extrabold leading-[.95] text-navy-950">
                     {lead.title}
                   </h3>
                   <p className="mt-5 text-sm leading-7 text-slate-600">
                     {lead.body}
                   </p>
                   <Link
-                    className="mt-7 inline-flex w-fit border border-[#171717] px-5 py-3 text-xs font-extrabold uppercase tracking-[0.18em] text-[#171717] transition hover:bg-[#171717] hover:text-white"
+                    className="mt-7 inline-flex w-fit border border-navy-950 px-5 py-3 text-xs font-extrabold uppercase tracking-[0.18em] text-navy-950 transition hover:bg-navy-950 hover:text-white"
                     href="/announcements"
                   >
                     Read bulletin
@@ -290,7 +290,7 @@ export default async function HomePage() {
           </div>
 
           <aside className="border-l border-slate-200 pl-0 lg:pl-8">
-            <h3 className="font-display text-2xl font-extrabold uppercase text-[#171717]">
+            <h3 className="font-display text-2xl font-extrabold uppercase text-navy-950">
               More updates
             </h3>
             <div className="mt-5">
@@ -303,7 +303,7 @@ export default async function HomePage() {
                     <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
                       {formatPublishedDate(item.published_at)}
                     </p>
-                    <h4 className="mt-3 font-display text-xl font-extrabold leading-tight text-[#171717]">
+                    <h4 className="mt-3 font-display text-xl font-extrabold leading-tight text-navy-950">
                       {item.title}
                     </h4>
                   </article>
@@ -318,21 +318,21 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#171717] py-20 text-white">
+      <section className="bg-navy-950 py-20 text-white">
         <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-6 lg:grid-cols-[.82fr_1.18fr] lg:px-8">
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#c8203f]">
+            <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-skybrand-300">
               Calendar
             </p>
             <h2 className="mt-5 font-display text-5xl font-extrabold uppercase leading-[.92] text-white sm:text-6xl">
-              Approved events go public.
+              School activities and reminders.
             </h2>
             <p className="mt-6 max-w-md text-sm leading-7 text-slate-300">
-              Teacher and staff submissions stay private until approved by an
-              admin, then appear on the public calendar and home page.
+              Stay updated on school programs, family meetings, learner
+              activities, and community events.
             </p>
             <Link
-              className="mt-8 inline-flex w-fit border border-white/35 px-5 py-3 text-xs font-extrabold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white hover:text-[#171717]"
+              className="mt-8 inline-flex w-fit border border-white/35 px-5 py-3 text-xs font-extrabold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white hover:text-navy-950"
               href="/events"
             >
               Open calendar
@@ -356,11 +356,11 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-[.7fr_1.3fr]">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#c8203f]">
+              <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-skybrand-600">
                 Programs
               </p>
-              <h2 className="mt-5 font-display text-5xl font-extrabold uppercase leading-[.92] text-[#171717] sm:text-6xl">
-                Learning with depth.
+              <h2 className="mt-5 font-display text-5xl font-extrabold uppercase leading-[.92] text-navy-950 sm:text-6xl">
+                Learning for the whole child.
               </h2>
             </div>
             <div className="grid gap-5 md:grid-cols-3">
@@ -370,16 +370,16 @@ export default async function HomePage() {
                   href="/programs"
                   key={program.label}
                 >
-                  <div className="relative aspect-[4/5] overflow-hidden bg-[#171717]">
+                  <div className="relative aspect-[4/5] overflow-hidden bg-navy-950">
                     <Image
                       alt={`${program.label} at Balili Elementary School`}
                       className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-105"
                       fill
                       src={program.image}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#171717]/82 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-navy-950/82 via-transparent to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-5">
-                      <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-[#c8203f]">
+                      <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-skybrand-200">
                         {program.label}
                       </p>
                       <h3 className="mt-3 font-display text-xl font-extrabold leading-tight text-white">
@@ -394,9 +394,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#f5f7fa] py-20">
+      <section className="bg-skybrand-50 py-20">
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-          <div className="relative min-h-[28rem] overflow-hidden bg-[#171717] p-8 text-white sm:p-12 lg:p-16">
+          <div className="relative min-h-[28rem] overflow-hidden bg-navy-950 p-8 text-white sm:p-12 lg:p-16">
             <Image
               alt=""
               className="absolute inset-0 h-full w-full object-cover opacity-24"
@@ -404,7 +404,7 @@ export default async function HomePage() {
               src="/assets/balili-classroom.webp"
             />
             <div className="relative max-w-4xl">
-              <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#c8203f]">
+              <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-skybrand-300">
                 Principal
               </p>
               <blockquote className="mt-8 font-display text-4xl font-extrabold uppercase leading-[1.02] text-white sm:text-6xl">
