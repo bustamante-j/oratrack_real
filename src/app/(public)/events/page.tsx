@@ -14,8 +14,8 @@ type PublicEvent = {
   starts_at: string;
   ends_at: string | null;
   published_at: string | null;
-  location: string | null;
-  event_type: string | null;
+  location?: string | null;
+  event_type?: string | null;
 };
 
 function formatMonth(value: string) {
@@ -54,19 +54,43 @@ function formatTime(value: string | null) {
   }).format(new Date(value));
 }
 
-export default async function EventsPage() {
+async function getPublishedEvents() {
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
+  const detailedResult = await supabase
     .from("public_events")
     .select("id,title,body,starts_at,ends_at,published_at,location,event_type")
     .not("published_at", "is", null)
     .order("starts_at", { ascending: true });
 
-  if (error) {
-    throw new Error(error.message);
+  if (!detailedResult.error) {
+    return (detailedResult.data ?? []) as PublicEvent[];
   }
 
-  const events = (data ?? []) as PublicEvent[];
+  const canUseBaseSchema =
+    detailedResult.error.message.includes("location") ||
+    detailedResult.error.message.includes("event_type");
+
+  if (!canUseBaseSchema) {
+    console.error(detailedResult.error.message);
+    return [];
+  }
+
+  const baseResult = await supabase
+    .from("public_events")
+    .select("id,title,body,starts_at,ends_at,published_at")
+    .not("published_at", "is", null)
+    .order("starts_at", { ascending: true });
+
+  if (baseResult.error) {
+    console.error(baseResult.error.message);
+    return [];
+  }
+
+  return (baseResult.data ?? []) as PublicEvent[];
+}
+
+export default async function EventsPage() {
+  const events = await getPublishedEvents();
   const featured = events.slice(0, 2);
   const upcoming = events.slice(2);
 
