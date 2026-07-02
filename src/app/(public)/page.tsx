@@ -4,13 +4,6 @@ import Link from "next/link";
 import { school } from "@/lib/constants";
 import { getHomePageData, type HomeEvent } from "@/lib/public/home-data";
 
-const chapters = [
-  { number: "01", label: "News", href: "/announcements" },
-  { number: "02", label: "Events", href: "/events" },
-  { number: "03", label: "Programs", href: "/programs" },
-  { number: "04", label: "Contact", href: "/contact" },
-];
-
 const programs = [
   {
     label: "Reading",
@@ -116,22 +109,7 @@ export default async function HomePage() {
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_62%_45%,rgba(142,220,255,.18),transparent_24%),linear-gradient(90deg,#071b33_0%,rgba(7,27,51,.95)_36%,rgba(11,36,71,.78)_68%,rgba(7,27,51,.97)_100%)]" />
         <div className="absolute bottom-0 left-0 right-0 -z-10 h-56 bg-gradient-to-t from-navy-950 to-transparent" />
 
-        <div className="mx-auto grid min-h-[720px] max-w-7xl grid-cols-1 px-5 py-10 sm:px-6 lg:grid-cols-[4rem_1fr] lg:px-8">
-          <nav
-            aria-label="Landing sections"
-            className="hidden flex-col items-center justify-center gap-5 text-sm font-extrabold text-white/35 lg:flex"
-          >
-            {chapters.map((chapter) => (
-              <Link
-                className="transition hover:text-skybrand-300"
-                href={chapter.href}
-                key={chapter.number}
-              >
-                {chapter.number}
-              </Link>
-            ))}
-          </nav>
-
+        <div className="mx-auto grid min-h-[720px] max-w-7xl grid-cols-1 px-5 py-10 sm:px-6 lg:px-8">
           <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_.95fr]">
             <div className="relative z-10 max-w-4xl pt-12 lg:pt-0">
               <p className="text-xs font-extrabold uppercase tracking-[0.32em] text-skybrand-200">
@@ -152,12 +130,6 @@ export default async function HomePage() {
                   href="/events"
                 >
                   School calendar
-                </Link>
-                <Link
-                  className="inline-flex min-h-11 items-center border border-white/30 px-5 text-sm font-extrabold uppercase tracking-wide text-white transition hover:border-white hover:bg-white hover:text-navy-950"
-                  href="/login"
-                >
-                  Staff portal
                 </Link>
               </div>
             </div>
@@ -202,7 +174,7 @@ export default async function HomePage() {
       </section>
 
       <section className="bg-white py-20">
-        <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-6 lg:grid-cols-[.82fr_1.18fr] lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-6 lg:grid-cols-[.78fr_1.22fr] lg:px-8">
           <div>
             <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-skybrand-600">
               Our school
@@ -211,32 +183,39 @@ export default async function HomePage() {
               A place to learn, belong, and grow.
             </h2>
           </div>
-          <div className="grid gap-5 text-sm leading-7 text-slate-600 sm:grid-cols-2">
-            <p>
-              Balili Elementary School is listed by DepEd Benguet as School ID{" "}
-              {school.schoolId}, located in {school.location}.
-            </p>
-            <p>
-              Families can check school updates, upcoming activities, and
-              reminders from one official online space for the Balili Elementary
-              School community.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-skybrand-50 py-20">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 border-y border-navy-950/15 py-7">
-            {chapters.map((chapter) => (
-              <Link
-                className="text-sm font-extrabold uppercase tracking-[0.2em] text-navy-950 transition hover:text-skybrand-600"
-                href={chapter.href}
-                key={chapter.number}
-              >
-                {chapter.label}
-              </Link>
-            ))}
+          <div className="grid gap-6 lg:grid-cols-[1fr_.9fr]">
+            <div className="border-l-4 border-skybrand-500 pl-6">
+              <p className="text-lg font-bold leading-8 text-navy-950">
+                Balili Elementary School serves learners and families in{" "}
+                {school.location} through a caring public school community
+                focused on daily learning, attendance, and steady support.
+              </p>
+              <p className="mt-5 text-sm leading-7 text-slate-600">
+                This site keeps official announcements, school activities,
+                learner milestones, and family reminders easy to find in one
+                clean public space.
+              </p>
+            </div>
+            <dl className="divide-y divide-slate-200 border-y border-slate-200">
+              {[
+                ["School ID", school.schoolId],
+                ["Principal", school.principal],
+                ["Location", school.location],
+                ["Office", school.hours],
+              ].map(([label, value]) => (
+                <div
+                  className="grid gap-2 py-4 sm:grid-cols-[8rem_1fr]"
+                  key={label}
+                >
+                  <dt className="text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">
+                    {label}
+                  </dt>
+                  <dd className="text-sm font-bold leading-6 text-navy-950">
+                    {value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
       </section>

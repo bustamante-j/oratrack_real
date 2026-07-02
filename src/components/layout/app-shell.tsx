@@ -20,16 +20,26 @@ import { PortalNavLinks } from "@/components/layout/portal-nav";
 import { logoutAction } from "@/lib/auth/actions";
 import type { SessionState } from "@/lib/auth/session";
 import { roleLabels, school } from "@/lib/constants";
-import type { NavItem } from "@/types/domain";
+import type { NavItem, PortalNotification } from "@/types/domain";
+
+function notificationTone(tone: PortalNotification["tone"]) {
+  if (tone === "rose") return "bg-rose-500";
+  if (tone === "amber") return "bg-amber-500";
+  if (tone === "green") return "bg-emerald-500";
+  if (tone === "sky") return "bg-skybrand-500";
+  return "bg-slate-400";
+}
 
 export function AppShell({
   children,
   navItems,
+  notifications = [],
   session,
   title,
 }: {
   children: ReactNode;
   navItems: NavItem[];
+  notifications?: PortalNotification[];
   session: SessionState;
   title: string;
 }) {
@@ -61,6 +71,7 @@ export function AppShell({
     profile.role === "admin_principal" ? "/admin/profile" : "/teacher/profile";
   const sidebarWidth = sidebarCollapsed ? "lg:w-24" : "lg:w-64";
   const contentOffset = sidebarCollapsed ? "lg:pl-24" : "lg:pl-64";
+  const notificationCount = notifications.length;
 
   return (
     <div className="min-h-screen min-w-0 overflow-x-hidden bg-[#f3f7fb]">
@@ -119,14 +130,56 @@ export function AppShell({
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-2">
-              <button
-                aria-label="Notifications"
-                className="relative grid size-9 place-items-center rounded-lg border border-transparent text-slate-500 transition hover:border-slate-200 hover:bg-slate-50 hover:text-navy-900"
-                type="button"
-              >
-                <Bell size={20} weight="duotone" />
-                <span className="absolute right-2 top-2 size-2 rounded-full bg-rose-500 ring-2 ring-white" />
-              </button>
+              <details className="group/notifications relative">
+                <summary
+                  aria-label="Notifications"
+                  className="relative grid size-9 cursor-pointer list-none place-items-center rounded-lg border border-transparent text-slate-500 transition hover:border-slate-200 hover:bg-slate-50 hover:text-navy-900 [&::-webkit-details-marker]:hidden"
+                >
+                  <Bell size={20} weight="duotone" />
+                  {notificationCount ? (
+                    <span className="absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-rose-500 px-1 text-[10px] font-extrabold leading-5 text-white ring-2 ring-white">
+                      {notificationCount}
+                    </span>
+                  ) : null}
+                </summary>
+                <div className="absolute right-0 mt-2 w-[min(22rem,calc(100vw-2rem))] rounded-lg border border-slate-200 bg-white p-2 shadow-[0_18px_55px_rgba(15,55,95,.18)]">
+                  <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-3 py-2">
+                    <p className="text-sm font-extrabold text-navy-950">
+                      Notifications
+                    </p>
+                    <span className="rounded-full bg-slate-100 px-2 py-1 text-[10px] font-extrabold uppercase text-slate-500">
+                      {notificationCount ? `${notificationCount} open` : "Clear"}
+                    </span>
+                  </div>
+                  {notificationCount ? (
+                    <div className="max-h-80 overflow-y-auto py-1">
+                      {notifications.map((notification) => (
+                        <Link
+                          className="grid grid-cols-[.65rem_1fr] gap-3 rounded-lg px-3 py-3 transition hover:bg-slate-50"
+                          href={notification.href}
+                          key={notification.id}
+                        >
+                          <span
+                            className={`mt-1.5 size-2 rounded-full ${notificationTone(notification.tone)}`}
+                          />
+                          <span className="min-w-0">
+                            <span className="block text-sm font-bold leading-5 text-navy-950">
+                              {notification.title}
+                            </span>
+                            <span className="mt-1 block text-xs leading-5 text-slate-500">
+                              {notification.detail}
+                            </span>
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="px-3 py-5 text-sm leading-6 text-slate-500">
+                      No pending school items right now.
+                    </p>
+                  )}
+                </div>
+              </details>
               <details className="group/profile relative">
                 <summary className="flex cursor-pointer list-none items-center gap-2 rounded-lg border border-slate-200 bg-white px-2 py-1.5 transition hover:border-slate-300 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
                   <span

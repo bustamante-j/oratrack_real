@@ -54,6 +54,14 @@ export type NavItem = {
   icon?: string;
 };
 
+export type PortalNotification = {
+  id: string;
+  title: string;
+  detail: string;
+  href: string;
+  tone?: "sky" | "amber" | "green" | "rose" | "slate";
+};
+
 export type ModuleDefinition = {
   id: string;
   title: string;

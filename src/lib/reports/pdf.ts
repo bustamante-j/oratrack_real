@@ -201,7 +201,7 @@ export function createCertificatePdf(
       .fontSize(8)
       .fillColor("#64748b")
       .text(
-        `Template: ${input.templateName ?? "Temporary clean template"} | Generated ${new Date(input.generatedAt).toLocaleDateString("en")}`,
+        `Template: ${input.templateName ?? "Certificate template"} | Generated ${new Date(input.generatedAt).toLocaleDateString("en")}`,
         48,
         pageHeight - 66,
         { align: "center", width: pageWidth - 96 },

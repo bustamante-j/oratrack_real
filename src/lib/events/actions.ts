@@ -50,6 +50,7 @@ export async function submitPublicEventAction(formData: FormData) {
   const supabase = await createSupabaseServerClient();
   const adminSupabase = createSupabaseAdminClient();
   const isAdmin = profile.role === "admin_principal";
+  const now = new Date().toISOString();
   const { data: event, error } = await adminSupabase
     .from("public_events")
     .insert({
@@ -57,8 +58,11 @@ export async function submitPublicEventAction(formData: FormData) {
       body: parsed.body ?? null,
       starts_at: manilaDateTimeToIso(parsed.startsAt),
       ends_at: parsed.endsAt ? manilaDateTimeToIso(parsed.endsAt) : null,
-      published_at: isAdmin ? new Date().toISOString() : null,
+      published_at: isAdmin ? now : null,
       created_by: profile.userId,
+      review_status: isAdmin ? "approved" : "pending",
+      reviewed_by: isAdmin ? profile.userId : null,
+      reviewed_at: isAdmin ? now : null,
     })
     .select("id")
     .single();
@@ -87,9 +91,15 @@ export async function approvePublicEventAction(formData: FormData) {
     id: formData.get("id"),
   });
   const supabase = await createSupabaseServerClient();
+  const now = new Date().toISOString();
   const { error } = await supabase
     .from("public_events")
-    .update({ published_at: new Date().toISOString() })
+    .update({
+      published_at: now,
+      review_status: "approved",
+      reviewed_by: admin.userId,
+      reviewed_at: now,
+    })
     .eq("id", parsed.id);
 
   if (error) {
@@ -114,7 +124,12 @@ export async function unpublishPublicEventAction(formData: FormData) {
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from("public_events")
-    .update({ published_at: null })
+    .update({
+      published_at: null,
+      review_status: "pending",
+      reviewed_by: null,
+      reviewed_at: null,
+    })
     .eq("id", parsed.id);
 
   if (error) {

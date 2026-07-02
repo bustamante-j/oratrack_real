@@ -363,7 +363,7 @@ export default async function AdminCertificatesPage() {
                   <label>
                     <span className="label">Template</span>
                     <select className="input" name="templateId">
-                      <option value="">Temporary clean template</option>
+                      <option value="">Certificate template</option>
                       {activeTemplates.map((template) => (
                         <option key={template.id} value={template.id}>
                           {template.name} (
@@ -426,7 +426,7 @@ export default async function AdminCertificatesPage() {
                       {typeLabel(certificate.certificate_type)} -{" "}
                       {templateById.get(
                         certificate.certificate_template_id ?? "",
-                      )?.name ?? "Temporary clean template"}{" "}
+                      )?.name ?? "Certificate template"}{" "}
                       - {formatDateTime(certificate.generated_at)}
                     </p>
                   </div>

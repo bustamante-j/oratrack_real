@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { BellRing, Clock3 } from "lucide-react";
 
 import { EmptyState } from "@/components/ui/empty-state";
 import { PublicHero } from "@/components/public-hero";
@@ -20,9 +19,28 @@ function formatDate(value: string | null) {
   if (!value) return "Published";
 
   return new Intl.DateTimeFormat("en-PH", {
-    dateStyle: "medium",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
     timeZone: "Asia/Manila",
   }).format(new Date(value));
+}
+
+function formatMonthDay(value: string | null) {
+  if (!value) return ["Now", ""];
+
+  const date = new Date(value);
+
+  return [
+    new Intl.DateTimeFormat("en-PH", {
+      month: "short",
+      timeZone: "Asia/Manila",
+    }).format(date),
+    new Intl.DateTimeFormat("en-PH", {
+      day: "2-digit",
+      timeZone: "Asia/Manila",
+    }).format(date),
+  ];
 }
 
 export default async function AnnouncementsPage() {
@@ -38,69 +56,98 @@ export default async function AnnouncementsPage() {
   }
 
   const announcements = (data ?? []) as Announcement[];
+  const lead = announcements[0] ?? null;
+  const rest = announcements.slice(1);
 
   return (
     <>
       <PublicHero
-        description="A clearer bulletin space for official school updates, reminders, and learner milestones."
+        description="Official school reminders, updates, and announcements for learners, parents, and guardians."
         eyebrow="School bulletin"
         image="/assets/section-news.webp"
         title="News and Announcements"
       />
 
-      <section className="relative overflow-hidden bg-white py-20">
-        <div className="absolute inset-0 newsprint opacity-70" />
-        <div className="relative mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[.95fr_1.05fr] lg:px-8">
-          <div className="grid gap-4">
-            {announcements.length ? (
-              announcements.map((announcement, index) => (
-                <article
-                  className="shine-card rounded-[1.75rem] border border-slate-200 bg-white p-7 shadow-soft transition hover:-translate-y-1 hover:border-skybrand-300 hover:shadow-glow"
-                  key={announcement.id}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div
-                      className={`grid size-14 place-items-center rounded-2xl bg-gradient-to-br text-white shadow-lg ${
-                        [
-                          "from-skybrand-500 to-blue-600",
-                          "from-emerald-500 to-teal-600",
-                          "from-amber-400 to-orange-500",
-                          "from-violet-500 to-indigo-600",
-                        ][index % 4]
-                      }`}
-                    >
-                      <BellRing size={27} />
-                    </div>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2.5 py-1 text-[10px] font-extrabold uppercase text-slate-600">
-                      <Clock3 size={12} />
-                      {formatDate(announcement.published_at)}
-                    </span>
-                  </div>
-                  <h2 className="mt-6 font-display text-2xl font-extrabold text-navy-950">
-                    {announcement.title}
-                  </h2>
-                  <p className="mt-3 text-sm leading-7 text-slate-600">
-                    {announcement.body}
-                  </p>
-                </article>
-              ))
-            ) : (
-              <EmptyState
-                message="Published announcements will appear here after school staff add official updates."
-                title="No announcements published"
-              />
-            )}
-          </div>
-
-          <div className="relative min-h-[24rem] overflow-hidden rounded-[2rem] bg-navy-950 shadow-editorial">
-            <Image
-              alt="Balili school news feature"
-              className="h-full w-full object-cover opacity-85"
-              fill
-              src="/assets/news-feature.webp"
+      <section className="bg-white py-20">
+        <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:px-8">
+          {lead ? (
+            <article className="grid gap-7">
+              <div className="relative min-h-[28rem] overflow-hidden bg-navy-950">
+                <Image
+                  alt="Featured school announcement"
+                  className="h-full w-full object-cover opacity-88"
+                  fill
+                  src="/assets/news-feature.webp"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent" />
+              </div>
+              <div className="border-l-4 border-skybrand-500 pl-6">
+                <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-skybrand-600">
+                  Latest bulletin / {formatDate(lead.published_at)}
+                </p>
+                <h2 className="mt-4 font-display text-4xl font-extrabold uppercase leading-[.98] text-navy-950 sm:text-5xl">
+                  {lead.title}
+                </h2>
+                <p className="mt-5 text-sm leading-7 text-slate-600">
+                  {lead.body}
+                </p>
+              </div>
+            </article>
+          ) : (
+            <EmptyState
+              message="Published announcements will appear here after school staff add official updates."
+              title="No announcements published"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/20 to-transparent" />
-          </div>
+          )}
+
+          <aside className="lg:border-l lg:border-slate-200 lg:pl-8">
+            <div className="border-b border-navy-950 pb-5">
+              <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-skybrand-600">
+                Archive
+              </p>
+              <h2 className="mt-4 font-display text-4xl font-extrabold uppercase leading-none text-navy-950">
+                More updates
+              </h2>
+            </div>
+
+            {rest.length ? (
+              <div className="divide-y divide-slate-200">
+                {rest.map((announcement) => {
+                  const [month, day] = formatMonthDay(
+                    announcement.published_at,
+                  );
+
+                  return (
+                    <article
+                      className="grid gap-4 py-6 sm:grid-cols-[5rem_1fr]"
+                      key={announcement.id}
+                    >
+                      <div className="border border-navy-950/15 py-3 text-center">
+                        <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-skybrand-600">
+                          {month}
+                        </p>
+                        <p className="mt-1 font-display text-3xl font-extrabold leading-none text-navy-950">
+                          {day}
+                        </p>
+                      </div>
+                      <div>
+                        <h3 className="font-display text-xl font-extrabold leading-tight text-navy-950">
+                          {announcement.title}
+                        </h3>
+                        <p className="mt-3 line-clamp-3 text-sm leading-7 text-slate-600">
+                          {announcement.body}
+                        </p>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : lead ? (
+              <p className="py-6 text-sm leading-7 text-slate-500">
+                Additional bulletins will appear here after publication.
+              </p>
+            ) : null}
+          </aside>
         </div>
       </section>
     </>

@@ -247,7 +247,7 @@ export default async function TeacherCertificatesPage() {
               <label>
                 <span className="label">Template</span>
                 <select className="input" name="templateId">
-                  <option value="">Temporary clean template</option>
+                  <option value="">Certificate template</option>
                   {templates.map((template) => (
                     <option key={template.id} value={template.id}>
                       {template.name} ({typeLabel(template.certificate_type)})
@@ -307,7 +307,7 @@ export default async function TeacherCertificatesPage() {
                       {typeLabel(certificate.certificate_type)} -{" "}
                       {templateById.get(
                         certificate.certificate_template_id ?? "",
-                      )?.name ?? "Temporary clean template"}{" "}
+                      )?.name ?? "Certificate template"}{" "}
                       - {formatDateTime(certificate.generated_at)}
                     </p>
                   </div>

@@ -1,15 +1,5 @@
 import Image from "next/image";
-import {
-  Clock,
-  FileText,
-  Mail,
-  MapPin,
-  Phone,
-  Send,
-  Users,
-} from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PublicHero } from "@/components/public-hero";
 import { externalSchoolLinks, school } from "@/lib/constants";
@@ -18,109 +8,88 @@ export const metadata = {
   title: "Contact",
 };
 
-export default function ContactPage() {
-  const contactMethods = [
-    { icon: MapPin, label: "Visit us", value: school.location },
-    { icon: Phone, label: "SDO Benguet line", value: school.phone },
-    { icon: Mail, label: "Send an email", value: school.email },
-    { icon: Clock, label: "School hours", value: school.hours },
-  ];
+const contactRows = [
+  ["Address", school.location],
+  ["Telephone", school.phone],
+  ["Email", school.email],
+  ["Office hours", school.hours],
+];
 
+const inquiryTopics = [
+  "General inquiry",
+  "Enrollment",
+  "Student records",
+  "Family concern",
+  "School activity",
+];
+
+export default function ContactPage() {
   return (
     <>
       <PublicHero
-        description="Reach the school office for enrollment questions, records, family concerns, and community partnerships."
+        description="Reach the school office for enrollment questions, records, family concerns, and community coordination."
         eyebrow="Contact us"
         image="/assets/section-family.webp"
-        title="Our doors are open to the community"
+        title="Contact"
       />
 
-      <section className="relative overflow-hidden bg-slate-50 py-20">
-        <div className="absolute inset-0 soft-grid opacity-50" />
-        <div className="relative mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[.92fr_1.08fr] lg:px-8">
-          <div className="space-y-5">
-            <div className="relative min-h-[24rem] overflow-hidden rounded-[2rem] bg-navy-950 shadow-editorial">
-              <Image
-                alt="Balili school community and family support"
-                className="h-full w-full object-cover opacity-75"
-                fill
-                src="/assets/section-family.webp"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/35 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6 text-white sm:p-8">
-                <Badge tone="emerald">School office</Badge>
-                <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight">
-                  A clear place for questions, visits, and family support.
-                </h2>
-              </div>
+      <section className="bg-white py-20">
+        <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-6 lg:grid-cols-[.82fr_1.18fr] lg:px-8">
+          <div className="grid gap-6">
+            <div>
+              <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-skybrand-600">
+                School office
+              </p>
+              <h2 className="mt-5 font-display text-5xl font-extrabold uppercase leading-[.92] text-navy-950 sm:text-6xl">
+                We are here to help.
+              </h2>
+              <p className="mt-6 text-sm leading-7 text-slate-600">
+                Families may contact the office for enrollment, records,
+                school activities, and learner-related concerns.
+              </p>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              {contactMethods.map((method) => {
-                const Icon = method.icon;
-                return (
-                  <div
-                    className="rounded-2xl border border-slate-200 bg-white p-5 shadow-soft"
-                    key={method.label}
-                  >
-                    <div className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-skybrand-500 to-blue-600 text-white shadow-md">
-                      <Icon size={23} />
-                    </div>
-                    <p className="mt-5 text-xs font-extrabold uppercase text-slate-400">
-                      {method.label}
-                    </p>
-                    <p className="mt-2 text-sm font-bold leading-6 text-navy-950">
-                      {method.value}
-                    </p>
-                  </div>
-                );
-              })}
+            <dl className="divide-y divide-slate-200 border-y border-slate-200">
+              {contactRows.map(([label, value]) => (
+                <div
+                  className="grid gap-2 py-4 sm:grid-cols-[8rem_1fr]"
+                  key={label}
+                >
+                  <dt className="text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">
+                    {label}
+                  </dt>
+                  <dd className="text-sm font-bold leading-6 text-navy-950">
+                    {value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            <div className="relative min-h-[21rem] overflow-hidden bg-navy-950">
+              <Image
+                alt="Balili Elementary School office and family support"
+                className="h-full w-full object-cover opacity-82"
+                fill
+                src="/assets/balili-classroom.webp"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-transparent to-transparent" />
+              <p className="absolute bottom-6 left-6 right-6 font-display text-2xl font-extrabold uppercase leading-tight text-white">
+                Clear communication helps the school respond faster and better.
+              </p>
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-slate-200 bg-white shadow-editorial">
-            <div className="grid border-b border-slate-200 lg:grid-cols-[1fr_.75fr]">
-              <div className="p-7 sm:p-10">
-                <p className="text-xs font-extrabold uppercase text-skybrand-600">
-                  Send an inquiry
-                </p>
-                <h2 className="mt-3 font-display text-3xl font-extrabold leading-tight text-navy-950">
-                  How can we help?
-                </h2>
-                <p className="mt-3 text-sm leading-7 text-slate-600">
-                  Choose the closest topic and prepare your message for the
-                  office.
-                </p>
-              </div>
-              <div className="hidden bg-gradient-to-br from-navy-950 to-navy-800 p-8 text-white lg:block">
-                <Send size={34} className="text-skybrand-300" />
-                <p className="mt-8 text-xs font-extrabold uppercase text-skybrand-300">
-                  Response path
-                </p>
-                <p className="mt-2 text-sm leading-7 text-slate-300">
-                  Office to adviser or records desk to family follow-up.
-                </p>
-              </div>
+          <div className="border border-slate-200 bg-white shadow-editorial">
+            <div className="border-b border-slate-200 p-6 sm:p-8">
+              <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-skybrand-600">
+                Send an inquiry
+              </p>
+              <h2 className="mt-4 font-display text-4xl font-extrabold uppercase leading-none text-navy-950">
+                Message details
+              </h2>
             </div>
 
-            <div className="grid gap-3 border-b border-slate-100 bg-slate-50 p-5 sm:grid-cols-3">
-              {[
-                ["Enrollment and records", FileText],
-                ["Family concerns", Users],
-                ["Events and schedules", Clock],
-              ].map(([title, Icon]) => (
-                <div className="rounded-2xl bg-white p-4" key={title as string}>
-                  <div className="grid size-10 place-items-center rounded-xl bg-skybrand-50 text-skybrand-600">
-                    <Icon size={19} />
-                  </div>
-                  <h3 className="mt-4 text-sm font-extrabold text-navy-950">
-                    {title as string}
-                  </h3>
-                </div>
-              ))}
-            </div>
-
-            <form className="grid gap-4 p-7 sm:grid-cols-2 sm:p-10">
+            <form className="grid gap-4 p-6 sm:grid-cols-2 sm:p-8">
               <label>
                 <span className="label">Full name</span>
                 <input className="input" placeholder="Your name" />
@@ -140,10 +109,9 @@ export default function ContactPage() {
               <label>
                 <span className="label">Topic</span>
                 <select className="input">
-                  <option>General inquiry</option>
-                  <option>Enrollment</option>
-                  <option>Student records</option>
-                  <option>Family concern</option>
+                  {inquiryTopics.map((topic) => (
+                    <option key={topic}>{topic}</option>
+                  ))}
                 </select>
               </label>
               <label className="sm:col-span-2">
@@ -153,11 +121,11 @@ export default function ContactPage() {
                   placeholder="Tell us what you need help with."
                 />
               </label>
-              <div className="flex flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex flex-wrap gap-2">
+              <div className="flex flex-col gap-4 border-t border-slate-200 pt-5 sm:col-span-2 md:flex-row md:items-center md:justify-between">
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
                   {externalSchoolLinks.map((link) => (
                     <a
-                      className="text-xs font-bold text-skybrand-600 hover:text-navy-900"
+                      className="text-xs font-bold uppercase tracking-[0.12em] text-skybrand-600 hover:text-navy-900"
                       href={link.href}
                       key={link.label}
                       rel="noreferrer"

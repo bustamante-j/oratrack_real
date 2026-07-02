@@ -1,59 +1,44 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  BookOpen,
-  HeartHandshake,
-  Palette,
-  Salad,
-  ShieldCheck,
-  Trophy,
-} from "lucide-react";
 
 import { PublicHero } from "@/components/public-hero";
 
 const programs = [
   {
-    icon: BookOpen,
     image: "/assets/program-reading.webp",
     title: "Reading and Literacy",
-    short: "Build confident, joyful readers",
-    color: "bg-skybrand-500",
+    summary:
+      "Daily reading routines, classroom support, and activities that help learners build confidence with words and stories.",
   },
   {
-    icon: Salad,
     image: "/assets/program-nutrition.webp",
     title: "School Nutrition",
-    short: "Healthy bodies, ready minds",
-    color: "bg-emerald-500",
+    summary:
+      "Health and nutrition support that helps children come to class ready to participate and learn.",
   },
   {
-    icon: Trophy,
     image: "/assets/program-sports.webp",
     title: "Sports and Wellness",
-    short: "Move, play, and grow together",
-    color: "bg-violet-500",
+    summary:
+      "Movement, play, and wellness activities that strengthen teamwork, discipline, and healthy habits.",
   },
   {
-    icon: Palette,
     image: "/assets/program-arts.webp",
     title: "Arts and Culture",
-    short: "Create with pride and imagination",
-    color: "bg-rose-500",
+    summary:
+      "Creative activities and school events that encourage learners to express themselves and value community identity.",
   },
   {
-    icon: ShieldCheck,
     image: "/assets/section-support.webp",
     title: "Learner Support",
-    short: "Timely care for every learner",
-    color: "bg-amber-500",
+    summary:
+      "Teacher-led monitoring and follow-up for learners who need academic, attendance, or wellness support.",
   },
   {
-    icon: HeartHandshake,
     image: "/assets/section-family.webp",
     title: "Family Partnerships",
-    short: "Families belong in school life",
-    color: "bg-blue-600",
+    summary:
+      "Clear communication with families so school reminders, concerns, and milestones are easier to follow.",
   },
 ];
 
@@ -65,57 +50,70 @@ export default function ProgramsPage() {
   return (
     <>
       <PublicHero
-        description="Explore academic, wellness, creative, and family programs designed around the whole child."
+        description="School programs that support learning, health, creativity, and family partnership."
         eyebrow="Programs and services"
         image="/assets/programs-hero.webp"
-        title="Every learner deserves more ways to thrive"
+        title="Programs"
       />
 
-      <section className="relative z-10 -mt-14 px-4 pb-20 sm:px-6">
-        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-3">
-          {programs.map((program) => {
-            const Icon = program.icon;
-            return (
+      <section className="bg-white py-20">
+        <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-6 lg:grid-cols-[.75fr_1.25fr] lg:px-8">
+          <div>
+            <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-skybrand-600">
+              Learning support
+            </p>
+            <h2 className="mt-5 font-display text-5xl font-extrabold uppercase leading-[.92] text-navy-950 sm:text-6xl">
+              Programs for the whole child.
+            </h2>
+            <p className="mt-6 text-sm leading-7 text-slate-600">
+              The school supports learners through core academics, health,
+              values formation, creativity, and close coordination with
+              families.
+            </p>
+          </div>
+
+          <div className="grid gap-6">
+            {programs.map((program, index) => (
               <article
-                className="group overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-soft transition hover:-translate-y-1 hover:border-skybrand-300 hover:shadow-glow"
+                className="grid overflow-hidden border-y border-slate-200 py-6 sm:grid-cols-[12rem_1fr] sm:gap-6"
                 key={program.title}
               >
-                <div className="relative h-56 overflow-hidden bg-navy-950">
+                <div className="relative min-h-40 bg-navy-950">
                   <Image
                     alt={`${program.title} at Balili Elementary School`}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    className="h-full w-full object-cover opacity-90"
                     fill
                     src={program.image}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent" />
-                  <div
-                    className={`absolute bottom-5 left-5 grid size-12 place-items-center rounded-2xl text-white shadow-lg ${program.color}`}
-                  >
-                    <Icon size={23} />
-                  </div>
                 </div>
-                <div className="p-6">
-                  <p className="text-xs font-bold uppercase text-skybrand-600">
-                    {program.short}
+                <div className="pt-5 sm:pt-0">
+                  <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-skybrand-600">
+                    {String(index + 1).padStart(2, "0")}
                   </p>
-                  <h2 className="mt-3 font-display text-xl font-extrabold text-navy-950">
+                  <h3 className="mt-3 font-display text-2xl font-extrabold uppercase leading-tight text-navy-950">
                     {program.title}
-                  </h2>
+                  </h3>
                   <p className="mt-3 text-sm leading-7 text-slate-600">
-                    Temporary clean content placeholder for school-approved
-                    program details.
+                    {program.summary}
                   </p>
-                  <Link
-                    className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-skybrand-600 hover:text-navy-900"
-                    href="/contact"
-                  >
-                    Talk to the school office
-                    <ArrowRight size={16} />
-                  </Link>
                 </div>
               </article>
-            );
-          })}
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-navy-950 py-16 text-white">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+          <p className="max-w-2xl font-display text-3xl font-extrabold uppercase leading-tight">
+            Have questions about school programs or learner support?
+          </p>
+          <Link
+            className="inline-flex min-h-11 w-fit items-center border border-white/35 px-5 text-xs font-extrabold uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white hover:text-navy-950"
+            href="/contact"
+          >
+            Contact the office
+          </Link>
         </div>
       </section>
     </>

@@ -91,7 +91,7 @@ export function AllSubjectGradeSheet({
   return (
     <form
       action={action}
-      className="overflow-hidden rounded-lg border border-slate-200"
+      className="overflow-hidden rounded-lg border border-slate-200 bg-white"
     >
       {periods.map((period) => (
         <input
@@ -101,36 +101,46 @@ export function AllSubjectGradeSheet({
           value={period.id}
         />
       ))}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-600">
+      <div className="grid gap-4 border-b border-slate-200 bg-navy-950 px-4 py-4 text-white sm:grid-cols-[1fr_auto] sm:items-center">
+        <div>
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-skybrand-300">
+            Class record
+          </p>
+          <h3 className="mt-1 font-display text-xl font-extrabold uppercase leading-tight">
+            All-subject grade sheet
+          </h3>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <span className="border border-white/20 px-3 py-1.5 text-xs font-bold text-white">
             {encodedCount} encoded
           </span>
-          <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-600">
+          <span className="border border-white/20 px-3 py-1.5 text-xs font-bold text-white">
             Avg {formatAverage(classAverage)}
           </span>
+          <a
+            className="inline-flex min-h-8 w-fit items-center justify-center gap-2 bg-white px-3 py-1.5 text-xs font-extrabold uppercase tracking-[0.12em] text-navy-950 transition hover:bg-skybrand-100"
+            href={downloadHref}
+          >
+            <Download size={15} />
+            Download grades
+          </a>
         </div>
-        <a
-          className="inline-flex min-h-9 w-fit items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-navy-950 transition hover:border-slate-300 hover:bg-slate-50"
-          href={downloadHref}
-        >
-          <Download size={17} />
-          Download grades
-        </a>
       </div>
 
       <div className="table-scroll scroll-soft">
         <table className="min-w-[980px] text-left text-sm">
-          <thead className="bg-white text-xs font-bold uppercase text-slate-500">
+          <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
             <tr>
-              <th className="px-4 py-3">Learner</th>
-              <th className="px-4 py-3">Subject</th>
+              <th className="sticky left-0 z-10 bg-slate-50 px-4 py-3">
+                Learner
+              </th>
+              <th className="px-4 py-3">Learning area</th>
               {periods.map((period) => (
-                <th className="px-3 py-3" key={period.id}>
+                <th className="px-3 py-3 text-center" key={period.id}>
                   {period.code}
                 </th>
               ))}
-              <th className="px-4 py-3">Average</th>
+              <th className="px-4 py-3 text-center">Final</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 bg-white">
@@ -148,7 +158,7 @@ export function AllSubjectGradeSheet({
 
               return (
                 <tr key={row.key}>
-                  <td className="px-4 py-3">
+                  <td className="sticky left-0 z-[1] bg-white px-4 py-3 shadow-[1px_0_0_#e2e8f0]">
                     <input name="rowKey" type="hidden" value={row.key} />
                     <input
                       name={`assignmentId-${row.key}`}
@@ -177,9 +187,9 @@ export function AllSubjectGradeSheet({
                     const key = valueKey(row.key, period.id);
 
                     return (
-                      <td className="px-3 py-3" key={period.id}>
+                      <td className="px-3 py-3 text-center" key={period.id}>
                         <input
-                          className="input w-24"
+                          className="input mx-auto w-24 text-center font-semibold"
                           max="100"
                           min="0"
                           name={`grade-${row.key}-${period.id}`}
@@ -196,7 +206,7 @@ export function AllSubjectGradeSheet({
                       </td>
                     );
                   })}
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 text-center">
                     <span className="rounded-full bg-skybrand-50 px-3 py-1 text-xs font-bold text-navy-900">
                       {formatAverage(rowAverage)}
                     </span>
@@ -208,7 +218,7 @@ export function AllSubjectGradeSheet({
         </table>
       </div>
 
-      <div className="border-t border-slate-200 bg-white p-4">
+      <div className="flex justify-end border-t border-slate-200 bg-slate-50 p-4">
         <SubmitButton pendingLabel="Saving sheet...">
           <Save size={17} />
           Save sheet

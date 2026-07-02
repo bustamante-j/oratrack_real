@@ -46,6 +46,23 @@ function percent(value: number | null) {
   return `${value.toFixed(1)}%`;
 }
 
+function gradeTone(value: number | null) {
+  if (value === null) return "bg-slate-100 text-slate-500";
+  if (value >= 90) return "bg-emerald-50 text-emerald-700";
+  if (value >= 85) return "bg-skybrand-50 text-navy-900";
+  if (value >= 75) return "bg-amber-50 text-amber-700";
+  return "bg-rose-50 text-rose-700";
+}
+
+function gradeRemark(value: number | null) {
+  if (value === null) return "No grade";
+  if (value >= 90) return "Outstanding";
+  if (value >= 85) return "Very satisfactory";
+  if (value >= 80) return "Satisfactory";
+  if (value >= 75) return "Passed";
+  return "For support";
+}
+
 export function LearnerPerformanceProfile({
   data,
   backHref,
@@ -62,7 +79,6 @@ export function LearnerPerformanceProfile({
   const subjectById = new Map(
     data.subjects.map((subject) => [subject.id, subject]),
   );
-  const periodById = new Map(data.periods.map((period) => [period.id, period]));
   const templateById = new Map(
     data.certificateTemplates.map((template) => [template.id, template]),
   );
@@ -79,6 +95,45 @@ export function LearnerPerformanceProfile({
   const gradeAverage = average(
     data.grades.map((grade) => Number(grade.numeric_grade)),
   );
+  const sortedPeriods = [...data.periods].sort(
+    (a, b) => a.sort_order - b.sort_order,
+  );
+  const gradeRows = [...new Set(data.grades.map((grade) => grade.subject_id))]
+    .map((subjectId) => {
+      const subject = subjectById.get(subjectId);
+      const periodGrades = sortedPeriods.map((period) => {
+        const grade = data.grades.find(
+          (record) =>
+            record.subject_id === subjectId &&
+            record.grade_period_id === period.id,
+        );
+
+        return grade ? Number(grade.numeric_grade) : null;
+      });
+      const rowAverage = average(
+        periodGrades.filter(
+          (value): value is number =>
+            typeof value === "number" && Number.isFinite(value),
+        ),
+      );
+      const remarks = [
+        ...new Set(
+          data.grades
+            .filter((grade) => grade.subject_id === subjectId)
+            .map((grade) => grade.remarks)
+            .filter((remark): remark is string => Boolean(remark)),
+        ),
+      ];
+
+      return {
+        subjectCode: subject?.code ?? "Subject",
+        subjectName: subject?.name ?? "Subject",
+        periodGrades,
+        average: rowAverage,
+        remarks: remarks[0] ?? gradeRemark(rowAverage),
+      };
+    })
+    .sort((a, b) => a.subjectCode.localeCompare(b.subjectCode));
   const primaryGuardian =
     data.guardians.find((guardian) => guardian.is_primary) ?? data.guardians[0];
 
@@ -189,7 +244,7 @@ export function LearnerPerformanceProfile({
                     {award.certificate_template_id
                       ? (templateById.get(award.certificate_template_id)
                           ?.name ?? "Certificate template")
-                      : "Temporary clean template"}
+                      : "Certificate template"}
                   </p>
                 </div>
                 <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-600">
@@ -280,38 +335,71 @@ export function LearnerPerformanceProfile({
           )}
         </section>
 
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
-          <h2 className="font-display text-xl font-extrabold text-navy-950">
-            Academic performance
-          </h2>
-          {data.grades.length ? (
-            <div className="mt-5 overflow-x-auto rounded-2xl border border-slate-200">
-              <table className="min-w-[680px] text-left text-sm">
+        <section className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-soft">
+          <div className="grid gap-4 border-b border-slate-200 bg-navy-950 px-5 py-5 text-white md:grid-cols-[1fr_auto] md:items-end">
+            <div>
+              <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-skybrand-300">
+                Learner report card
+              </p>
+              <h2 className="mt-2 font-display text-2xl font-extrabold uppercase leading-tight">
+                Academic performance
+              </h2>
+            </div>
+            <div className="w-fit border border-white/20 px-4 py-3">
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-white/50">
+                General average
+              </p>
+              <p className="mt-1 font-display text-3xl font-extrabold leading-none">
+                {gradeAverage === null ? "N/A" : gradeAverage.toFixed(2)}
+              </p>
+            </div>
+          </div>
+          {gradeRows.length ? (
+            <div className="table-scroll scroll-soft">
+              <table className="min-w-[860px] text-left text-sm">
                 <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
                   <tr>
-                    <th className="px-4 py-3">Subject</th>
-                    <th className="px-4 py-3">Period</th>
-                    <th className="px-4 py-3">Grade</th>
+                    <th className="px-4 py-3">Learning area</th>
+                    {sortedPeriods.map((period) => (
+                      <th className="px-3 py-3 text-center" key={period.id}>
+                        {period.code}
+                      </th>
+                    ))}
+                    <th className="px-4 py-3 text-center">Final</th>
                     <th className="px-4 py-3">Remarks</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {data.grades.map((grade) => (
-                    <tr key={grade.id}>
-                      <td className="px-4 py-4 font-semibold text-navy-950">
-                        {subjectById.get(grade.subject_id)?.name ?? "Subject"}
-                      </td>
-                      <td className="px-4 py-4 text-slate-600">
-                        {periodById.get(grade.grade_period_id)?.name ??
-                          "Period"}
-                      </td>
+                <tbody className="divide-y divide-slate-100 bg-white">
+                  {gradeRows.map((row) => (
+                    <tr key={row.subjectCode}>
                       <td className="px-4 py-4">
-                        <span className="rounded-full bg-skybrand-50 px-3 py-1 text-xs font-bold text-navy-900">
-                          {Number(grade.numeric_grade).toFixed(2)}
+                        <p className="font-semibold text-navy-950">
+                          {row.subjectName}
+                        </p>
+                        <p className="mt-1 text-xs font-bold uppercase text-slate-400">
+                          {row.subjectCode}
+                        </p>
+                      </td>
+                      {row.periodGrades.map((value, index) => (
+                        <td className="px-3 py-4 text-center" key={index}>
+                          <span
+                            className={`inline-flex min-w-14 justify-center rounded-full px-3 py-1 text-xs font-bold ${gradeTone(value)}`}
+                          >
+                            {value === null ? "-" : value.toFixed(2)}
+                          </span>
+                        </td>
+                      ))}
+                      <td className="px-4 py-4 text-center">
+                        <span
+                          className={`inline-flex min-w-16 justify-center rounded-full px-3 py-1 text-xs font-extrabold ${gradeTone(row.average)}`}
+                        >
+                          {row.average === null
+                            ? "N/A"
+                            : row.average.toFixed(2)}
                         </span>
                       </td>
-                      <td className="px-4 py-4 text-slate-600">
-                        {grade.remarks || "-"}
+                      <td className="px-4 py-4 text-sm font-semibold text-slate-600">
+                        {row.remarks}
                       </td>
                     </tr>
                   ))}
@@ -319,7 +407,7 @@ export function LearnerPerformanceProfile({
               </table>
             </div>
           ) : (
-            <p className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+            <p className="m-4 rounded-lg bg-slate-50 p-4 text-sm text-slate-600">
               No grade records are visible for this learner.
             </p>
           )}

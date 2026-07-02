@@ -401,23 +401,26 @@ export default async function GradesPage({
       {assignments.length ? (
         <>
           <div className="grid gap-4">
-            <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
-              <div className="flex items-start gap-3">
-                <span className="grid size-12 place-items-center rounded-lg bg-skybrand-50 text-skybrand-600">
+            <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-soft">
+              <div className="grid gap-3 border-b border-slate-200 bg-navy-950 p-4 text-white sm:grid-cols-[auto_1fr]">
+                <span className="grid size-11 place-items-center rounded-lg bg-white/10 text-skybrand-300">
                   <BookOpenCheck size={24} />
                 </span>
                 <div>
-                  <h2 className="font-display text-xl font-extrabold text-navy-950">
+                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-skybrand-300">
+                    Class record
+                  </p>
+                  <h2 className="mt-1 font-display text-xl font-extrabold uppercase leading-tight text-white">
                     Grade sheet
                   </h2>
-                  <p className="mt-1 text-sm text-slate-500">
+                  <p className="mt-1 text-sm text-slate-300">
                     {assignmentLabel}
                     {selectedPeriod ? ` - ${selectedPeriod.name}` : ""}
                   </p>
                 </div>
               </div>
 
-              <form className="mt-4 grid gap-4 md:grid-cols-[1fr_1fr_auto]">
+              <form className="grid gap-4 p-4 md:grid-cols-[1fr_1fr_auto]">
                 <label>
                   <span className="label">Assignment</span>
                   <select
@@ -473,7 +476,7 @@ export default async function GradesPage({
               selectedEnrollments.length ? (
                 <form
                   action={saveGradeRecordsAction}
-                  className="mt-4 overflow-x-auto rounded-lg border border-slate-200"
+                  className="mx-4 mb-4 overflow-x-auto rounded-lg border border-slate-200"
                 >
                   <input
                     name="assignmentId"
@@ -489,7 +492,7 @@ export default async function GradesPage({
                     <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500">
                       <tr>
                         <th className="px-4 py-3">Learner</th>
-                        <th className="px-4 py-3">Grade</th>
+                        <th className="px-4 py-3 text-center">Grade</th>
                         <th className="px-4 py-3">Remarks</th>
                       </tr>
                     </thead>
@@ -513,9 +516,9 @@ export default async function GradesPage({
                                 LRN {learner?.lrn ?? "Unrecorded"}
                               </p>
                             </td>
-                            <td className="px-4 py-4">
+                            <td className="px-4 py-4 text-center">
                               <input
-                                className="input w-32"
+                                className="input mx-auto w-28 text-center font-semibold"
                                 defaultValue={grade?.numeric_grade ?? ""}
                                 max="100"
                                 min="0"
@@ -537,7 +540,7 @@ export default async function GradesPage({
                       })}
                     </tbody>
                   </table>
-                  <div className="border-t border-slate-200 bg-white p-4">
+                  <div className="flex justify-end border-t border-slate-200 bg-slate-50 p-4">
                     <SubmitButton pendingLabel="Saving grades...">
                       <Save size={17} />
                       Save grades
@@ -545,7 +548,7 @@ export default async function GradesPage({
                   </div>
                 </form>
               ) : (
-                <div className="mt-4">
+                <div className="p-4 pt-0">
                   <EmptyState
                     action={
                       !selectedGradePeriods.length ? (
