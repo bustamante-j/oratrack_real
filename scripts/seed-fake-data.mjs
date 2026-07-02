@@ -50,14 +50,19 @@ const legacyLower = legacyWord.toLowerCase();
 const legacyUpper = legacyWord.toUpperCase();
 const legacySeed = `oratrack-${legacyLower}`;
 const presentationSeed = "oratrack-presentation";
-const staffPassword = "Balili2026!";
-const adminEmail = "admin@gmail.com";
+const accountPassword = "12345678";
+const staffPassword = accountPassword;
+const adminEmail = "joshkane@edu.ph";
+const adminLegacyEmails = ["admin@gmail.com"];
 
 const staffUsers = [
   {
-    email: "maria.lacbayan@balilies.edu.ph",
-    legacyEmail: `${legacyLower}.adviser@oratrack.test`,
-    fullName: "Maria Teresa Lacbayan",
+    email: "joshua@balili.edu.ph",
+    legacyEmails: [
+      "maria.lacbayan@balilies.edu.ph",
+      `${legacyLower}.adviser@oratrack.test`,
+    ],
+    fullName: "Joshua Garcia",
     role: "adviser",
     phone: "09174386201",
     employeeNumber: "BES-2026-014",
@@ -65,9 +70,12 @@ const staffUsers = [
     gradeSpecialization: "Early Grade Literacy",
   },
   {
-    email: "jonathan.wacas@balilies.edu.ph",
-    legacyEmail: `${legacyLower}.teacher@oratrack.test`,
-    fullName: "Jonathan Wacas",
+    email: "diane@balili.edu.ph",
+    legacyEmails: [
+      "jonathan.wacas@balilies.edu.ph",
+      `${legacyLower}.teacher@oratrack.test`,
+    ],
+    fullName: "Diane Ramos",
     role: "subject_teacher",
     phone: "09268210477",
     employeeNumber: "BES-2026-027",
@@ -355,6 +363,15 @@ async function findUserByEmail(email) {
   }
 }
 
+async function findFirstUserByEmails(emails) {
+  for (const email of emails) {
+    const user = await findUserByEmail(email);
+    if (user) return user;
+  }
+
+  return null;
+}
+
 async function maybeOne(table, column, value) {
   const { data, error } = await supabase
     .from(table)
@@ -390,16 +407,20 @@ async function hasPublicEventWorkflowColumns() {
 }
 
 async function ensureAdminProfile() {
-  let user = await findUserByEmail(adminEmail);
+  const current = await findUserByEmail(adminEmail);
+  const legacy = current
+    ? null
+    : await findFirstUserByEmails(adminLegacyEmails);
+  let user = current ?? legacy;
 
   if (!user) {
     user = failIfError(
       await supabase.auth.admin.createUser({
         email: adminEmail,
-        password: "12345678",
+        password: accountPassword,
         email_confirm: true,
         user_metadata: {
-          full_name: "Herman Saweg",
+          full_name: "Josh Kane",
           seeded_for: presentationSeed,
           seed: null,
         },
@@ -409,9 +430,11 @@ async function ensureAdminProfile() {
   } else {
     failIfError(
       await supabase.auth.admin.updateUserById(user.id, {
+        email: adminEmail,
+        password: accountPassword,
         email_confirm: true,
         user_metadata: {
-          full_name: "Herman Saweg",
+          full_name: "Josh Kane",
           seeded_for: presentationSeed,
           seed: null,
         },
@@ -425,7 +448,7 @@ async function ensureAdminProfile() {
       {
         user_id: user.id,
         email: adminEmail,
-        full_name: "Herman Saweg",
+        full_name: "Josh Kane",
         role: "admin_principal",
         status: "active",
         phone: "09171234567",
@@ -440,9 +463,9 @@ async function ensureAdminProfile() {
 
 async function ensureStaffUser(seed) {
   const current = await findUserByEmail(seed.email);
-  const legacy = seed.legacyEmail
-    ? await findUserByEmail(seed.legacyEmail)
-    : null;
+  const legacy = current
+    ? null
+    : await findFirstUserByEmails(seed.legacyEmails ?? []);
   let user = current ?? legacy;
 
   if (!user) {
@@ -511,36 +534,46 @@ async function ensureStaffUser(seed) {
 async function retireUnneededLegacyStaff(staff) {
   const activeIds = new Set(staff.map((entry) => entry.userId));
 
-  for (const seed of staffUsers) {
-    const legacy = await findUserByEmail(seed.legacyEmail);
-    if (!legacy || activeIds.has(legacy.id)) continue;
+  const retirementGroups = [
+    {
+      fullName: "Josh Kane",
+      legacyEmails: adminLegacyEmails,
+    },
+    ...staffUsers,
+  ];
 
-    const archivedEmail = `archived-${legacy.id.slice(0, 8)}@oratrack.local`;
+  for (const seed of retirementGroups) {
+    for (const legacyEmail of seed.legacyEmails ?? []) {
+      const legacy = await findUserByEmail(legacyEmail);
+      if (!legacy || activeIds.has(legacy.id)) continue;
 
-    failIfError(
-      await supabase.auth.admin.updateUserById(legacy.id, {
-        email: archivedEmail,
-        email_confirm: true,
-        user_metadata: {
-          full_name: `${seed.fullName} Archive`,
-          seeded_for: presentationSeed,
-          seed: null,
-        },
-      }),
-      `Archive legacy auth user ${legacy.id}`,
-    );
+      const archivedEmail = `archived-${legacy.id.slice(0, 8)}@oratrack.local`;
 
-    failIfError(
-      await supabase
-        .from("profiles")
-        .update({
+      failIfError(
+        await supabase.auth.admin.updateUserById(legacy.id, {
           email: archivedEmail,
-          full_name: `${seed.fullName} Archive`,
-          status: "inactive",
-        })
-        .eq("user_id", legacy.id),
-      `Archive legacy profile ${legacy.id}`,
-    );
+          email_confirm: true,
+          user_metadata: {
+            full_name: `${seed.fullName} Archive`,
+            seeded_for: presentationSeed,
+            seed: null,
+          },
+        }),
+        `Archive legacy auth user ${legacy.id}`,
+      );
+
+      failIfError(
+        await supabase
+          .from("profiles")
+          .update({
+            email: archivedEmail,
+            full_name: `${seed.fullName} Archive`,
+            status: "inactive",
+          })
+          .eq("user_id", legacy.id),
+        `Archive legacy profile ${legacy.id}`,
+      );
+    }
   }
 }
 
@@ -1471,7 +1504,7 @@ async function seed() {
   console.log("Staff sign-ins:");
   console.log(`  ${adviser.email} / ${staffPassword}`);
   console.log(`  ${subjectTeacher.email} / ${staffPassword}`);
-  console.log(`Principal account retained: ${adminEmail} / 12345678`);
+  console.log(`Principal sign-in: ${adminEmail} / ${accountPassword}`);
   console.log(`School year: ${schoolYear.name}`);
 }
 
