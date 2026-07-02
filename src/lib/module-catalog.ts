@@ -143,7 +143,7 @@ export const adminModules: ModuleDefinition[] = [
       "Log prompts, scopes, and generated suggestions",
     ],
     emptyState:
-      "AI is available in safe stub mode until provider keys are configured.",
+      "AI uses ORATRACK-trained safe draft mode; OpenAI provider activation is controlled by environment keys.",
     auditEvents: ["ai_prompt_submitted", "ai_suggestion_generated"],
   },
 ];
@@ -268,7 +268,7 @@ export const teacherModules: ModuleDefinition[] = [
       "Require confirmation before storing output",
     ],
     emptyState:
-      "AI is ready for safe drafts once auth and provider keys are configured.",
+      "AI uses ORATRACK-trained safe draft mode with permission-scoped records.",
     auditEvents: ["ai_prompt_submitted", "ai_suggestion_generated"],
   },
 ];

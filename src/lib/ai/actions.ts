@@ -1,8 +1,9 @@
 "use server";
 
 import { getAiPermissionNotice, buildSafeDraft } from "@/lib/ai/policy";
+import { ORATRACK_AI_TRAINING_VERSION } from "@/lib/ai/knowledge";
 import { requireAuthenticatedProfile } from "@/lib/auth/session";
-import { hasAiProviderKey } from "@/lib/env";
+import { getAiModelName, hasAiProviderKey } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { aiAssistantFormSchema } from "@/lib/validation/domain";
 import type { Json } from "@/types/database";
@@ -189,13 +190,16 @@ export async function submitAiPromptAction(
 
   const supabase = await createSupabaseServerClient();
   const context = await buildPermissionContext(supabase, parsed.data.scope);
-  const draft = [
-    buildSafeDraft(parsed.data.intent, parsed.data.prompt),
-    "",
-    "Permission-scoped context snapshot:",
+  const model = getAiModelName();
+  const mode = hasAiProviderKey()
+    ? "provider-key-present-safe-draft"
+    : "local-safe-draft";
+  const draft = buildSafeDraft(parsed.data.intent, parsed.data.prompt, {
+    role: profile.role,
     context,
-  ].join("\n");
-  const mode = hasAiProviderKey() ? "safe-provider-ready" : "safe-stub";
+    model,
+    mode,
+  });
   const notice = getAiPermissionNotice(profile.role);
 
   await supabase.from("ai_activity_logs").insert({
@@ -206,8 +210,11 @@ export async function submitAiPromptAction(
     output_excerpt: excerpt(draft),
     proposed_action: {
       mode,
+      model,
+      provider: "OpenAI",
       writePolicy: "confirmation_required",
       scopeKind: parsed.data.scopeKind,
+      trainingVersion: ORATRACK_AI_TRAINING_VERSION,
     },
   });
 

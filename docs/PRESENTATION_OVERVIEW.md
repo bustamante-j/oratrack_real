@@ -61,6 +61,10 @@ In the presentation, emphasize that ORATRACK is not only a public school website
 - The full AI assistant page helps draft summaries, support notes, and school-related text.
 - AI outputs are review-first; users should check and confirm content before using it.
 - The AI assistant is meant to reduce writing time, not replace teacher judgment.
+- The AI has an ORATRACK-specific training layer covering the school portal, user roles, learner records, attendance, grades, literacy/numeracy, interventions, certificates, events, reports, and safety rules.
+- Provider target: OpenAI. Default model target: `gpt-5.5`, configurable with `OPENAI_MODEL`.
+- Current implementation uses safe draft mode and does not automatically write to the database.
+- More detail is available in `docs/AI_ASSISTANT.md`.
 
 ## Security
 

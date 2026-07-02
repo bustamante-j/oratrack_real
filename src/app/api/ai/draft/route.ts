@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 
+import { ORATRACK_AI_TRAINING_VERSION } from "@/lib/ai/knowledge";
 import { getAiPermissionNotice, buildSafeDraft } from "@/lib/ai/policy";
 import { getSessionProfile } from "@/lib/auth/session";
-import { hasAiProviderKey } from "@/lib/env";
+import { getAiModelName, hasAiProviderKey } from "@/lib/env";
 import { aiDraftRequestSchema } from "@/lib/validation/domain";
 
 export async function POST(request: Request) {
@@ -34,11 +35,23 @@ export async function POST(request: Request) {
     );
   }
 
+  const model = getAiModelName();
+  const mode = hasAiProviderKey()
+    ? "provider-key-present-safe-draft"
+    : "local-safe-draft";
+
   return NextResponse.json({
-    mode: hasAiProviderKey() ? "provider-not-yet-enabled" : "safe-stub",
+    mode,
+    provider: "OpenAI",
+    model,
+    trainingVersion: ORATRACK_AI_TRAINING_VERSION,
     notice: getAiPermissionNotice(session.profile.role),
     writePolicy:
       "No records were changed. User confirmation is required for writes.",
-    draft: buildSafeDraft(payload.data.intent, payload.data.prompt),
+    draft: buildSafeDraft(payload.data.intent, payload.data.prompt, {
+      role: session.profile.role,
+      model,
+      mode,
+    }),
   });
 }

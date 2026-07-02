@@ -33,9 +33,19 @@ Current default:
 - No direct writes
 - Proposed writes require user confirmation
 - AI activity should be logged
+- Uses an ORATRACK-specific training layer for roles, workflows, record types,
+  writing style, and safety rules
+- Stores runtime metadata such as draft mode, model target, scope kind, and
+  training version in AI activity logs
 
-The API route currently returns a safe draft stub until provider behavior and
-record-access functions are approved.
+Current model/provider notes:
+
+- Provider target: OpenAI
+- Default model target: `gpt-5.5`
+- Model override variable: `OPENAI_MODEL`
+- Provider key variable: `OPENAI_API_KEY`
+- Current behavior remains safe draft mode; the assistant must not be described
+  as an autonomous writer or fine-tuned private model
 
 ## Review Before Production
 

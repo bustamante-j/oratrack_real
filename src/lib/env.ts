@@ -21,3 +21,7 @@ export function getSupabaseServiceRoleKey() {
 export function hasAiProviderKey() {
   return Boolean(process.env.OPENAI_API_KEY);
 }
+
+export function getAiModelName() {
+  return process.env.OPENAI_MODEL || "gpt-5.5";
+}
